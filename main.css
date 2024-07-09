@@ -1,0 +1,213 @@
+body{
+    top: 0;
+    left: 0;
+    width: 100%;
+    overflow: scroll;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+}
+.header-section {
+    top: 0;
+    left: 0;
+    padding-top: 2px;
+    height: 60px;
+    position: fixed;
+    z-index: 9999;
+    background: rgba(9, 32, 76, 0.882);
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.main-section{
+    top: 60px;
+    left: 0;
+    padding-left: 0;
+    height: 1000px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: row;
+}
+.btn{
+    width: fit-content;
+}
+.side-section{
+    left: 0;
+    position: fixed;
+    padding-top: 10px;
+    margin-top: 60px;
+    margin-right: 20px;
+    width: 300px;
+    height: 1000px;
+    background: #43A047;
+}
+.menu-link{
+    text-decoration: none;
+    color: white;
+}
+footer {
+    background: rgba(9, 32, 76, 0.882);
+    text-align: center;
+    bottom: 0;
+    position:relative;
+    height: 200px;
+    padding: 20px; /* Adjust padding as needed */
+    color: white;
+    display: flex;
+    flex-direction: column;
+}
+.nav-bar{
+    display: flex;
+    flex-direction: column;
+}
+.nav-content{
+    width: 100%;
+    padding-top: 10px;
+    padding-left: 10px;
+    cursor: pointer;
+}
+.nav-content:hover{
+    background: rgba(9, 32, 76, 0.882);
+    cursor: pointer;
+}
+.content-section{
+    /*height:2000px;*/
+    width: 100%;
+    margin-left: 300px;
+    margin-top: 70px;
+    padding: 0;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    overflow: scroll;
+}
+#content-header{
+    top: 60px;
+    width: 80%;
+    float:left;
+    text-align: center;
+    z-index: 9999;
+    position: fixed;
+    background:gray;
+}
+.row-section{
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: row;
+}
+.card-img-top{
+    width: 30px;
+    height: 30px;
+}
+.card-header{
+    background: #43A047;
+    color: white;
+}   
+.card{
+    margin-left: 10px;
+}
+
+#titulo{
+    color: white;
+    text-decoration: white;
+    padding: 10px;
+}
+.menu-label{
+    margin-left: 10px;
+    text-decoration: white;
+    color: white;
+    cursor: pointer;
+}
+#quit{
+    height: 5px;
+}
+#quit-link{
+    height: 60%;
+}
+#info{
+    padding-left: 30px;
+    padding-top:50px;
+}
+#logo{
+    height: 50px;
+    order: 1;
+    margin-left:50px;
+    color: white;
+    display: flex;
+    flex-direction: row;
+}
+#img-logo{
+    height: 50px;
+}
+#header-right{
+    order: 2;
+    top: 10px;
+    margin-right: 100px;
+    width: fit-content;
+    height: fit-content;
+    background: red;
+    background-color: red;
+    color: white;
+    border-radius: 20px 20px;
+}
+#div-button{
+    width:fit-content;
+    height:auto;
+    color: #43A047;
+}
+.tb-data{
+    border: solid 1px;
+}
+.tb-data th{
+    border: solid 1px;
+    width: 300px;
+}
+
+@media (max-width:500px){
+#div-button{
+width:fit-content;
+height:auto;
+}
+}
+@media (max-width: 700px){
+.main-section{
+flex-direction: column;
+}
+.content-section{
+height:2000px;
+margin-top: 250px;
+margin-left:0;
+padding: 0;
+width: 100%;
+position: relative;
+display: flex;
+flex-direction: column;
+overflow-y: scroll;
+}
+.side-section{
+width: 100%;
+height: fit-content;
+z-index: 9999;
+display:none;
+}
+.row-section{
+display: flex;
+flex-direction: column;
+}
+.card{
+margin-top: 10px;
+}
+
+
+.rounded{
+width: fit-content;
+}
+
+}
+body {
+    font-family: 'Nunito', sans-serif;
+}
