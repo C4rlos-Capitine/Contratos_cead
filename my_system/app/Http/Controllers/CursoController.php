@@ -16,13 +16,14 @@ class CursoController extends Controller
     public function register_form()
     {
         $faculdades = Faculdade::all();
-       // $centros = Centro_recurso::all();
-        return view('curso.reg_form', ['faculdades'=>$faculdades]);
+        $centros = Centro_recurso::all();
+        return view('curso.reg_form', ['faculdades'=>$faculdades, 'centros'=>$centros]);
     }
 
     public function save(Request $data)
     {
         try {
+            //return response()->json(["response"=>$data->all()]);
             // Definição das regras de validação
             $rules = [
                 'designacao_curso' => 'required|string|unique:cursos',
@@ -54,6 +55,7 @@ class CursoController extends Controller
             $curso->sigla_curso = $data->input('sigla');
             $curso->id_faculdade_in_curso = $data->input('faculdade');
             $curso->id_docente_dir_curso = $data->input('dir_curso');
+            $curso->id_centro_in_curso = $data->input("centro");
             $curso->save();
 
             return response()->json(['response' => 'Curso Registado com sucesso']);
@@ -65,7 +67,9 @@ class CursoController extends Controller
 
     public function get_all() {
         $cursos = Curso::select('*')
-            ->join('faculdades', 'faculdades.id_faculdade', '=', 'cursos.id_faculdade_in_curso')->get();
+            ->join('faculdades', 'faculdades.id_faculdade', '=', 'cursos.id_faculdade_in_curso')
+            ->join('centro_recursos', 'centro_recursos.id_centro', '=', 'cursos.id_centro_in_curso')
+            ->get();
         $htmlSnippet = view('curso.vizualisar', ['cursos' => $cursos])->render();
         return $htmlSnippet;
     }
@@ -105,34 +109,6 @@ class CursoController extends Controller
         }
     }
 
-
-
-    public function get_disciplinas_byano(Request $request)
-    {
-        //return $request->all();
-        if($request->tipo_contrato == 1){
-            $disciplinas = Lecionado_em::select("*")
-            ->join('cursos', 'lecionado_ems.id_curso', '=', 'cursos.id_curso')
-            ->join('disciplinas', 'lecionado_ems.codigo_disciplina', '=', 'disciplinas.codigo_disciplina')
-            ->where('lecionado_ems.id_curso', '=', intval($request->id_curso))
-            ->where('lecionado_ems.ano', '=', intval($request->ano))
-            ->where('lecionado_ems.semestre', '=', intval($request->semestre))
-            ->where('disciplinas.id_cat_disciplina', '!=', 3)
-            ->get();
-            return response()->json($disciplinas);
-        }else{
-            $disciplinas = Lecionado_em::select("*")
-            ->join('cursos', 'lecionado_ems.id_curso', '=', 'cursos.id_curso')
-            ->join('disciplinas', 'lecionado_ems.codigo_disciplina', '=', 'disciplinas.codigo_disciplina')
-            ->where('lecionado_ems.id_curso', '=', intval($request->id_curso))
-            ->where('lecionado_ems.ano', '=', intval($request->ano))
-            ->where('lecionado_ems.semestre', '=', intval($request->semestre))
-            ->where('disciplinas.id_cat_disciplina', '=', 3)
-            ->get();
-            return response()->json($disciplinas);
-        }
-        
-    }
 
     public function disciplinas_nao_associada(Request $request){
         //return response()->json($request->all());

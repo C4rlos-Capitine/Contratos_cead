@@ -112,6 +112,15 @@
                     </select>
                 </div>
                 </div>
+                <div class="col-md-3">
+                    <label for="validationCustom04" class="form-label">Centro de Recursos<span style="color:red">*</span></label>
+                    <select id="centro" name="centro" class="form-select"required>
+                        <option selected disabled value="">Escolha..</option>   
+                        @foreach($centros as $centro)
+                            <option value="{{$centro->id_centro}}">{{$centro->nome_centro}}</option>
+                        @endforeach
+                    </select>
+                </div>
                 </form>
  
         <div class="row" id="div-button">

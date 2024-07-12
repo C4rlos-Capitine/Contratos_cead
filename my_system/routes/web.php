@@ -13,6 +13,8 @@ use App\Http\Controllers\LecionaController;
 use App\Http\Controllers\ContratoController;
 use App\Http\Controllers\RepresentanteController;
 use App\Http\Controllers\FlaskApiController;
+use App\Http\Controllers\CentroRecursoController;
+use App\Http\Controllers\ContratoLaboratorioController;
 
 
 
@@ -46,8 +48,12 @@ Route::middleware(['auth'])->group(function () {
 
     Route::get('contrato/gerar_pdf', [PDFController::class, 'generatePdf'])->middleware('auth');
     Route::get('contrato/pdf', [PDFController::class, 'generatePdf'])->middleware('auth');
+    Route::get('contrato/gerar_pdf_lab', [PDFController::class, 'generatePdf_lab'])->middleware('auth');
+    
     Route::post('/contrato/create', [ContratoController::class, 'create'])->name('create')->middleware('auth');
     Route::get('/contrato/ver', [ContratoController::class, 'ver'])->name('ver')->middleware('auth');
+    Route::get('/contrato/ver_lab', [ContratoLaboratorioController::class, 'ver'])->name('ver')->middleware('auth');
+    Route::post('/contrato/ver_lab_save', [ContratoLaboratorioController::class, 'save'])->name('save')->middleware('auth');
 
     Route::get('/representante/reg', [RepresentanteController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::get('/docente/ver_disciplinas', [ContratoController::class, 'get_disciplinas_contrato'])->name('get_disciplinas_contrato')->middleware('auth');
@@ -83,7 +89,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/disciplina/get_disciplinas_only', [DisciplinaController::class, 'get_disciplinas_only'])->name('get_disciplinas_only')->middleware('auth');
     Route::get('/disciplina/get_disciplinas_curso', [DisciplinaController::class, 'get_disciplinas_curso'])->name('get_disciplinas_curso')->middleware('auth');
     Route::get('/disciplina/check_if_alocada', [DisciplinaController::class, 'check_if_alocada'])->name('check_if_alocada')->middleware('auth');
-   
+    Route::get('/disciplina/get_by_categoria', [DisciplinaController::class, 'get_by_categoria'])->name('get_by_categoria')->middleware('auth');
+    
+
     Route::get('/docente/reg', [DocenteController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::post('/docente/save', [DocenteController::class, 'save'])->name('save')->middleware('auth');
     Route::get('/docente/vizualisar', [DocenteController::class, 'get_all'])->name('get_all')->middleware('auth');
@@ -108,10 +116,10 @@ Route::middleware(['auth'])->group(function () {
     Route::post('/faculdade/save', [FaculdadeController::class, 'save'])->name('save')->middleware('auth');
     Route::get('/faculdade/vizualisar', [FaculdadeController::class, 'get_all'])->name('get_all')->middleware('auth');
     Route::get('/faculdade/docentes', [FaculdadeController::class, 'get_docentes'])->name('get_docentes')->middleware('auth');
-    
+    //Route::get('/centros/teste', [CentroRecursoController::class, 'teste'])->name('teste');
    
 
    
 });
-
+Route::get('/centros/teste', [CentroRecursoController::class, 'teste'])->name('teste');
 Route::post('/disciplina/associar_save', [DisciplinaController::class, 'associar_ao_curso'])->name('associar_ao_curso');

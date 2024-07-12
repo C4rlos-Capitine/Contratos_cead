@@ -16,6 +16,7 @@ use App\Models\Docente;
 use App\Models\Curso;
 use App\Models\Leciona;
 use App\Models\Tipo_contrato;
+use App\Models\Contrato_laboratorio;
 
 
 
@@ -133,6 +134,26 @@ class PDFController extends Controller
         // Generate PDF from HTML
         $this->pdfService->generatePdf($html, $filename);
 
+    }
+
+    public function generatePdf_lab(Request $request)
+    {
+        $contrato = contrato_laboratorio::select("*")
+            ->join("cursos", "cursos.id_curso", "=", "contrato_laboratorios.id_curso")
+            ->join("disciplinas", "disciplinas.codigo_disciplina", "=", "contrato_laboratorios.codigo_disciplina")
+            ->join("docentes", "docentes.id_docente", "=", "contrato_laboratorios.id_tecnico")
+            ->where("id_tecnico", $request->id_docente)
+            ->where("ano_contrato", date("Y"))
+            ->get()->first();
+        
+
+        // Pass data to the Blade view
+        $bladeView = 'contrato_lab'; // Blade file name without '.blade.php' extension
+        $html = view($bladeView, compact('contrato'))->render();
+        $filename = 'contrato_lab.pdf';
+
+        // Generate PDF from HTML
+        $this->pdfService->generatePdf($html, $filename);
     }
 
 

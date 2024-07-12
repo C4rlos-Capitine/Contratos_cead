@@ -34,12 +34,21 @@ class MainController extends Controller
                 ->join('disciplinas', 'cursos.id_curso', '=', 'disciplinas.id_curso_in_disciplina')
                 ->where('cursos.id_curso', $curso->id_curso)
                 ->count();
+
+                $centro = DB::table('cursos')
+                    ->join('centro_recursos', 'cursos.id_centro_in_curso', '=', 'centro_recursos.id_centro')
+                    ->select('cursos.*', 'centro_recursos.*')
+                    ->where('cursos.id_curso', $curso->id_curso)
+                    ->get()->first();
+                
                 
                 $cada_curso[] = [
                     'id_curso' => $curso->id_curso,
                     'designacao_curso' => $curso->designacao_curso,
                     'nao_associadas' => $count,
                     'total_disciplinas' => $countLecionadoEmsCurso2,
+                    'nome_centro' => $centro->nome_centro,
+                    'id_centro' => $centro->id_centro
                 ];
 
             $totalDisciplinas += $count;
@@ -78,12 +87,20 @@ class MainController extends Controller
             ->join('disciplinas', 'cursos.id_curso', '=', 'disciplinas.id_curso_in_disciplina')
             ->where('cursos.id_curso', $curso->id_curso)
             ->count();
+
+            $centro = DB::table('cursos')
+                    ->join('centro_recursos', 'cursos.id_centro_in_curso', '=', 'centro_recursos.id_centro')
+                    ->select('cursos.*', 'centro_recursos.*')
+                    ->where('cursos.id_curso', $curso->id_curso)
+                    ->get()->first();
             
             $cada_curso[] = [
                 'id_curso' => $curso->id_curso,
                 'designacao_curso' => $curso->designacao_curso,
                 'nao_associadas' => $count,
                 'total_disciplinas' => $countLecionadoEmsCurso2,
+                'nome_centro' => $centro->nome_centro,
+                'id_centro' => $centro->id_centro
             ];
 
         $totalDisciplinas += $count;

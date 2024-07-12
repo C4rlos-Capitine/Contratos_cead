@@ -42,13 +42,14 @@
             <body>
 
             <table id="example" class="table table-striped" style="width:100%">
-                <thead><tr><th>Designação do curso</th><th>Faculdade</th><th>Sigla</th><th></th><th></th></tr></thead>
+                <thead><tr><th>Designação do curso</th><th>Faculdade</th><th>Sigla</th><th>Centro</th><th></th><th></th></tr></thead>
                 <tbody>
                 @foreach($cursos as $curso)
                     <tr>
                         <td>{{$curso->designacao_curso}}</td>
                         <td>{{$curso->sigla_faculdade}}</td>
                         <td>{{$curso->sigla_curso}}</td>
+                        <td>{{$curso->nome_centro}}</td>
                         <td><a id="{{$curso->id_curso}}" width="fit-content" href="/cead_template2/disciplina/vizualisar?id_curso={{$curso->id_curso}}" class="rounded bg-green-600 text-white px-2 py-1">Ver disciplinas</a></td>
                         <td><a id="{{$curso->id_curso}}" width="fit-content" href="/cead_template2/curso/sobre?id_curso={{$curso->id_curso}}" class="rounded bg-green-600 text-white px-2 py-1">Mais..</a></td>
                         

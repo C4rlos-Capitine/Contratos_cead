@@ -78,6 +78,16 @@ class DisciplinaController extends Controller
             return response()->json($disciplinas);
     }
 
+    public function get_by_categoria(Request $request)
+    {
+        $disciplinas = Disciplina::select('*') 
+            ->join('cursos', 'disciplinas.id_curso_in_disciplina', '=', 'cursos.id_curso')
+            ->where('id_curso', $request->id_curso)
+            ->where('id_cat_disciplina', $request->id_cat)
+            ->get();
+            return response()->json(['disciplinas'=>$disciplinas]);
+    }
+
     public function associar_form(){
         return view('disciplina.associar_com_curso');
     }
