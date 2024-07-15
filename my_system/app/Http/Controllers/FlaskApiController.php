@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use App\Models\Disciplina;
 use App\Models\Docente;
+use App\Models\Leciona;
 use Illuminate\Support\Facades\Log;
 
 class FlaskApiController extends Controller
@@ -13,35 +14,67 @@ class FlaskApiController extends Controller
     public function get_prediction_by_teacher(Request $request)
     {
         
-        $client = new Client(['base_uri' => 'http://127.0.0.1:5000']);
+        $client = new \GuzzleHttp\Client(['base_uri' => 'http://127.0.0.1:5000']);
+
+        $codAreas = Leciona::select('cod_area_in_leciona')
+            ->distinct()
+            ->where('id_docente_in_leciona', $request->id_docente)
+            ->get();
+
+        $n_areas =  $codAreas->count();
+        
+        $areas = [];
+        foreach ($codAreas as $area) {
+            $areas[] = ['cod_area_in_leciona' => $area->cod_area_in_leciona];
+        }
         
         try {
-            // Passando parâmetros na requisição GET
+            // Passando parâmetros na requisição POST
             $response = $client->request('GET', '/prever_disciplinas', [
                 'headers' => [
                     'Accept' => 'application/json',
+                    'Content-Type' => 'application/json',
                 ],
-                'query' => [
-                    'id_docente' => $request->id_docente, // Parâmetro que você deseja passar
+                'json' => [
+                    'id_docente' => $request->id_docente,
+                    'areas' => $areas,
+                    'n_areas' =>  $n_areas
                 ],
             ]);
-
-            $data = json_decode($response->getBody()->getContents(), true);
-           
+        
+            // Obtendo o corpo da resposta
+            $responseBody = json_decode($response->getBody(), true);
+        
             $disciplinas = [];
-            for ($i=0; $i < sizeof($data["disciplinas_previstas"]); $i++) { 
-               $disciplina = Disciplina::select('nome_disciplina','id_curso_in_disciplina', 'designacao_curso', 'codigo_disciplina')
-               ->join('cursos', 'id_curso', '=', 'id_curso_in_disciplina')
-               ->where('codigo_disciplina', $data["disciplinas_previstas"][$i])
-               ->get()->first();
-               $disciplinas[$i]['id_curso'] = $disciplina["id_curso_in_disciplina"];
-               $disciplinas[$i]['curso'] = $disciplina["nome_disciplina"];
-               $disciplinas[$i]['disciplina'] = $disciplina["designacao_curso"];
-               //$disciplinas[$i]['id_cat'] = $disciplina["id_cat_disciplina"];
-               $disciplinas[$i]['codigo'] = $disciplina["codigo_disciplina"];
+        
+            // Processando a resposta para buscar informações adicionais sobre as disciplinas
+            foreach ($responseBody['previsoes'] as $previsao) {
+                foreach ($previsao['disciplinas_previstas'] as $disciplinaPrevista) {
+                    $disciplina = Disciplina::select('nome_disciplina', 'id_curso_in_disciplina', 'designacao_curso', 'codigo_disciplina')
+                        ->join('cursos', 'id_curso', '=', 'id_curso_in_disciplina')
+                        ->where('codigo_disciplina', $disciplinaPrevista['codigo_disciplina'])
+                        ->first();
+        
+                    if ($disciplina) {
+                        $disciplinas[] = [
+                            'id_curso' => $disciplina->id_curso_in_disciplina,
+                            'curso' => $disciplina->nome_disciplina,
+                            'disciplina' => $disciplina->designacao_curso,
+                            'codigo' => $disciplina->codigo_disciplina,
+                            'probabilidade' => $disciplinaPrevista['probabilidade'] // Inclui a probabilidade no resultado
+                        ];
+                    }
+                }
             }
-            // Manipule os dados conforme necessário
-            return response()->json($disciplinas);
+
+            // Ordenar o array $docentes em função das probabilidades (decrescente)
+            usort($disciplinas, function($a, $b) {
+                return $b['probabilidade'] <=> $a['probabilidade'];
+            });
+        
+            // Retornar a resposta como JSON
+            return response()->json(['response'=>$disciplinas]);
+        
         } catch (\Exception $e) {
             // Trate erros de solicitação aqui
             return response()->json(['error' => 'Erro ao acessar a API Flask: '.$e->getMessage() ], 500);
@@ -51,57 +84,69 @@ class FlaskApiController extends Controller
     public function get_prediction_by_subject(Request $request)
     {
         $client = new Client(['base_uri' => 'http://127.0.0.1:5000']);
-        
+
+        $cod_area = Disciplina::select("cod_area_in_disciplina")->where('codigo_disciplina', $request->codigo_disciplina)->get()->first();
+        //return $cod_area;
         try{
-            $response = $client->request('GET', '/prever_professores', [
+            // Passando parâmetros na requisição GET
+            $response = $client->request('GET', '/prever_docentes', [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
                 'query' => [
-                    'codigo_disciplina' => $request->codigo_disciplina, // Parâmetro que você deseja passar
+                    'codigo_disciplina' => $request->codigo_disciplina,
+                    'cod_area' => $cod_area->cod_area_in_disciplina
                 ],
             ]);
+
             $data = json_decode($response->getBody()->getContents(), true);
+            $docentes_previstos = $data['docentes_previstos'];
             $docentes = [];
             $logs = [];
-            //return response()->json($data);
-            $professores_ids = $data['top_professores_ids'][0];
 
-    Log::info('IDs de top_professores_ids:', $professores_ids);
+            Log::info('IDs de top_professores_ids:', $docentes_previstos);
 
-    foreach ($professores_ids as $id) {
-        Log::info("Processando ID: $id"); // Log do ID sendo processado
+            foreach ($docentes_previstos as $docente_previsto) {
+                $id = $docente_previsto['docente'];
+                $probabilidade = $docente_previsto['probabilidade'];
 
-        // Consultar o docente pelo ID
-        $docente = Docente::select('id_docente', 'nome_docente', 'apelido_docente')
-                          ->where('id_docente', $id)
-                          ->first();
+                Log::info("Processando ID: $id"); // Log do ID sendo processado
 
-        if ($docente) {
-            Log::info("Docente encontrado: " . $docente->nome_docente); // Log do docente encontrado
+                // Consultar o docente pelo ID
+                $docente = Docente::select('id_docente', 'nome_docente', 'apelido_docente')
+                    ->where('id_docente', $id)
+                    ->first();
 
-            $docentes[] = [
-                'nome' => $docente['nome_docente'],
-                'apelido' => $docente['apelido_docente'],
-                'id' => $docente['id_docente']
-            ];
-            $logs[] = "Docente encontrado: " . $docente->nome_docente;
-        } else {
-            Log::warning("Docente não encontrado para ID: $id"); // Log de erro quando docente não encontrado
-            $logs[] = "Docente não encontrado para ID: $id";
-        }
-    }
+                if ($docente) {
+                    Log::info("Docente encontrado: " . $docente->nome_docente); // Log do docente encontrado
 
-    Log::info('Docentes array final:', $docentes); // Log do array final de docentes
+                    $docentes[] = [
+                        'nome' => $docente['nome_docente'],
+                        'apelido' => $docente['apelido_docente'],
+                        'id' => $docente['id_docente'],
+                        'probabilidade' => $probabilidade
+                    ];
+                    $logs[] = "Docente encontrado: " . $docente->nome_docente;
+                } else {
+                    Log::warning("Docente não encontrado para ID: $id"); // Log de erro quando docente não encontrado
+                    $logs[] = "Docente não encontrado para ID: $id";
+                }
+            }
 
-    // Inclua os logs na resposta
-    return response()->json([
-        'docentes' => $docentes,
-        'logs' => $logs,
-    ]);            
+            Log::info('Docentes array final:', $docentes); // Log do array final de docentes
+            // Ordenar o array $docentes em função das probabilidades (decrescente)
+            usort($docentes, function($a, $b) {
+                return $b['probabilidade'] <=> $a['probabilidade'];
+            });
+            // Inclua os logs na resposta
+            return response()->json([
+                'docentes' => $docentes,
+                'logs' => $logs,
+            ]);
+
         } catch (\Exception $e) {
             // Trate erros de solicitação aqui
-            return response()->json(['error' => 'Erro ao acessar o modelo de ML: '.$e->getMessage() ], 500);
+            return response()->json(['error' => 'Erro ao acessar o modelo de ML: ' . $e->getMessage()], 500);
         }
     }
 

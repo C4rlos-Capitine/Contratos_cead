@@ -37,9 +37,10 @@
         <div id="content-header"><label id="cont-title">Registar Disciplina</label></div>
             <div id="info">
                 <h3></h3>
+                <div id="feedback"></div>
                 <form id="disciplina-reg" class="needs-validation">
                     @csrf
-                    <div id="feedback"></div>
+                    
 
                     <div class="row">
                         <div class="col">
@@ -110,22 +111,35 @@
                                    
                                 </select>
                         </div>
-                        <div class="col">
+                        
+                    </div>
+                    <div class="row">
+                    <div class="col">
                             Horas de contacto
                         <select class="form-select" aria-label="Floating label select example" name="horas_c">
+                            <option selected>Selecione...</option>
+                            <option value="6">6</option>
+                            <option value="18">18</option>
+                            <option value="25">25</option>
+                            <option value="31">31</option>
+                            <option value="38">38</option>
+                            <option value="44">44</option>
+                            <option value="50">50</option>
+                            
+                            
+                            </select>
+                    </div>
+                    <div class="col">
+                            <label>área cientifica</label>
+                        <select class="form-select" aria-label="Floating label select example" name="cod_area">
                                     <option selected>Selecione...</option>
-                                    <option value="6">6</option>
-                                    <option value="18">18</option>
-                                    <option value="25">25</option>
-                                    <option value="31">31</option>
-                                    <option value="38">38</option>
-                                    <option value="44">44</option>
-                                    <option value="50">50</option>
-                                    
-                                   
+                                    @foreach($areas as $area)
+                                        <option value="{{$area->cod_area}}">{{$area->designacao_area}}</option>
+                                    @endforeach
                                 </select>
                         </div>
                     </div>
+                    
 
                     <div class="row" id="div-button">
                         <button class="rounded bg-green-600 text-white px-2 py-1" id="submit" onclick="reg_disciplina(event)">Registar</button>

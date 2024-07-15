@@ -44,7 +44,7 @@ function reg_curso() {
         }
     });
     
-    console.log("ola");
+    console.log($('#curso-reg').serialize());
     //event.preventDefault(); // Prevent the form from being submitted traditionally
     
     $.ajax({
@@ -91,7 +91,7 @@ function reg_disciplina(event)
             data: $('#disciplina-reg').serialize(),
             success: function (data) {
                 $('#feedback').html('<div class="alert alert-success">' + data.response + '</div>');
-                $('#feedback').delay(5000).hide(0);
+                
                 $('#disciplina-reg')[0].reset();
             },
             error: function () {
@@ -179,7 +179,7 @@ function reg_docente(event){
                 if (jQuery.isEmptyObject(data.errors)) {
                     console.log(data.response);
                     $('#feedback').html('<div class="alert alert-success">' + data.response + '</div>');
-                    $('#feedback').delay(5000).hide(0);
+                    
                     $('#docente-reg')[0].reset();
                 } else {
                     // Se houver erros, exiba-os

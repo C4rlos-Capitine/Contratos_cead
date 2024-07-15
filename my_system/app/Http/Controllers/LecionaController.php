@@ -26,5 +26,14 @@ class LecionaController extends Controller
         //echo "Number of records: " . $numberOfRecords;
 
     }
+
+    public function test(Request $request)
+    {
+        $codAreas = Leciona::select('cod_area_in_leciona')
+        ->distinct()
+        ->where('id_docente_in_leciona', $request->id_docente)
+        ->get();
+        return response(["areas"=>$codAreas]);
+    }
     
 }

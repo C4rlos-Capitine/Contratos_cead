@@ -88,6 +88,17 @@ class DatabaseSeeder extends Seeder
             'nome_Faculdade' => 'Faculdade de Engenharia e Tecnologia',
             'sigla_faculdade' => 'FET' 
         ]);
+        
+
+        \App\Models\Faculdade::create([
+            'nome_Faculdade' => 'Faculdade de Ciências Naturais e Matemática',
+            'sigla_faculdade' => 'FCNM' 
+        ]);
+
+        \App\Models\Faculdade::create([
+            'nome_Faculdade' => 'Faculdade de Ciências Sociais e Filosofia',
+            'sigla_faculdade' => 'FCSF' 
+        ]);
         \App\Models\estagio_contrato::create([
             'etapa'=>0,
             'descricao'=>'Sem contrato ou disciplinas alocada'
@@ -122,6 +133,36 @@ class DatabaseSeeder extends Seeder
         ]);
         \App\Models\Centro_recurso::create([
             'nome_centro' => "Namaancha"
+        ]);
+        //area cientifica
+
+        \App\Models\Area_cientifica::create([
+            'cod_area' => "INF",
+            'designacao_area' => "Informática"
+        ]);
+
+        \App\Models\Area_cientifica::create([
+            'cod_area' => "MAT",
+            'designacao_area' => "Matemática"
+        ]);
+
+        \App\Models\Area_cientifica::create([
+            'cod_area' => "FIS",
+            'designacao_area' => "Fisica"
+        ]);
+
+        \App\Models\Area_cientifica::create([
+            'cod_area' => "CFG",
+            'designacao_area' => "Componente de Form. Geral"
+        ]);
+
+        \App\Models\Area_cientifica::create([
+            'cod_area' => "CFP",
+            'designacao_area' => "Componente de Form. Pedagógica"
+        ]);
+        \App\Models\Area_cientifica::create([
+            'cod_area' => "PsiCoG",
+            'designacao_area' => "Psicologia Geral"
         ]);
     
     }

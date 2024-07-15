@@ -54,7 +54,9 @@ class CursoController extends Controller
             $curso->designacao_curso = $data->input('designacao_curso');
             $curso->sigla_curso = $data->input('sigla');
             $curso->id_faculdade_in_curso = $data->input('faculdade');
-            $curso->id_docente_dir_curso = $data->input('dir_curso');
+            if ($data->has('dir_curso')){
+                $curso->id_docente_dir_curso = $data->input('dir_curso');
+            }
             $curso->id_centro_in_curso = $data->input("centro");
             $curso->save();
 

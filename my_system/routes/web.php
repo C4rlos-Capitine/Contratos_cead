@@ -74,6 +74,7 @@ Route::middleware(['auth'])->group(function () {
 
     
     Route::get('/leciona/check_disciplina', [LecionaController::class, 'check_disciplinas_in_contrato'])->name('check_disciplinas_in_contrato')->middleware('auth');
+    Route::get('/leciona/test', [LecionaController::class, 'test'])->name('test')->middleware('auth');
 
     Route::get('/categoria/reg', [CategoriaController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::post('/categoria/save', [CategoriaController::class, 'save'])->name('save')->middleware('auth');

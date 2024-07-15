@@ -53,7 +53,7 @@
                 //docentes[] = data.docentes;
                 //var html_dir_curso = "<option disabled></option>";
                 var option1 = $("<option>");
-                option1.text("Selecione");
+                option1.text();
                 //option1.prop("disabled", true); 
                 select.append(option1);
                 for (var i = 0; i < docente.length; i++) {
@@ -111,16 +111,17 @@
                         
                     </select>
                 </div>
-                </div>
                 <div class="col-md-3">
                     <label for="validationCustom04" class="form-label">Centro de Recursos<span style="color:red">*</span></label>
                     <select id="centro" name="centro" class="form-select"required>
-                        <option selected disabled value="">Escolha..</option>   
+                        <option selected disabled>Escolha..</option>   
                         @foreach($centros as $centro)
                             <option value="{{$centro->id_centro}}">{{$centro->nome_centro}}</option>
                         @endforeach
                     </select>
                 </div>
+                </div>
+                
                 </form>
  
         <div class="row" id="div-button">

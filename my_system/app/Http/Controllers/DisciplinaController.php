@@ -7,6 +7,7 @@ use App\Models\Categoria;
 use App\Models\Disciplina;
 use App\Models\Curso;
 use App\Models\Leciona;
+use App\Models\Area_cientifica;
 use Illuminate\Support\Facades\DB;
 
 class DisciplinaController extends Controller
@@ -15,7 +16,8 @@ class DisciplinaController extends Controller
     {
         $categoria = Categoria::all();
         $cursos = Curso::all();
-        return view('disciplina.reg_form' , ['categorias'=>$categoria, 'cursos'=>$cursos]);
+        $area_cientifica = Area_cientifica::all();
+        return view('disciplina.reg_form' , ['categorias'=>$categoria, 'cursos'=>$cursos, 'areas'=>$area_cientifica]);
     }
 
     public function save(Request $data)
@@ -35,9 +37,12 @@ class DisciplinaController extends Controller
         $disciplina->ano = $data->input('ano_curso');
         $disciplina->semestre = $data->input('semestre_curso');
         $disciplina->horas_contacto = $data->input('horas_c');
+        $disciplina->cod_area_in_disciplina = $data->input('cod_area');
         $disciplina->save();
 
-        return response()->json(['response' => 'Disciplina Registada com sucesso']);
+        $resp = "Disciplina de" . $data->input('nome_disciplina') . "Registada com sucesso no curso de ";
+
+        return response()->json(['response' => $resp]);
     }
 
     public function get_disciplinas_only(){

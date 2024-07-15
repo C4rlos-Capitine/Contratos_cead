@@ -22,7 +22,9 @@ return new class extends Migration
             $table->integer('semestre');
             $table->string('sigla_disciplina');
             $table->integer('id_cat_disciplina');
+            $table->string("cod_area_in_disciplina");
             $table->integer('horas_contacto');
+            $table->foreign('cod_area_in_disciplina')->references('cod_area')->on('area_cientificas')->onDelete('cascade');
             $table->foreign('id_curso_in_disciplina')->references('id_curso')->on('cursos')->onDelete('cascade');
             $table->foreign('id_cat_disciplina')->references('id_cat_disciplina')->on('categorias')->onDelete('cascade');
             $table->timestamps();

@@ -13,11 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('area_cientificas', function (Blueprint $table) {
-            $table->string("cod_area");
-            $table->string("designacao_area");
-            $table->primary("cod_area");
-            $table->timestamps();
+        Schema::table('lecionas', function (Blueprint $table) {
+            $table->string('cod_area_in_leciona')->nullable();
         });
     }
 
@@ -28,6 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('area_cientificas');
+        Schema::table('lecionas', function (Blueprint $table) {
+            $table->dropColumn('cod_area_in_leciona');
+        });
     }
 };

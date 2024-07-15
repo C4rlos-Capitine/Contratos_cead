@@ -30,7 +30,7 @@ class TreinarModeloML extends Command
     {
         try {
             // Obter os dados da base de dados como array associativo
-            $dados = Leciona::select("id_docente_in_leciona", "codigo_disciplina_in_leciona")
+            $dados = Leciona::select("id_docente_in_leciona", "codigo_disciplina_in_leciona", "cod_area_in_leciona")
                             //->where("ano_contrato", 2024)
                             ->get()
                             ->toArray();
@@ -45,7 +45,7 @@ class TreinarModeloML extends Command
             file_put_contents($caminhoArquivo, $dadosJson);
             $Arquivo = base_path('python\dados.json');
             // Definir o caminho absoluto para o script Python de treinamento do modelo
-            $caminhoScriptPython = base_path('python/ml_treino2.py');
+            $caminhoScriptPython = base_path('python/ml_treino2_2.py');
 
             // Executar o comando Python utilizando exec() do PHP com o caminho do arquivo existente
             exec("python {$caminhoScriptPython} {$Arquivo} 2>&1", $output, $return_var);

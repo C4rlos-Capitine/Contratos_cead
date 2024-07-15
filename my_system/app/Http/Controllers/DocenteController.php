@@ -78,7 +78,7 @@ class DocenteController extends Controller
             $docente->id_faculdade_in_docente = $request->faculdade;
             $docente->save();
     
-            return response()->json(['response' => 'Docente Registado com sucesso']);
+            return response()->json(["response" => "Docente {$request->nome_docente} Registado com sucesso"]);
         } catch (\Exception $e) {
             return response()->json(['response' => $e->getMessage()], 500);
         }
@@ -232,12 +232,16 @@ class DocenteController extends Controller
                 return response()->json(['response' => "Disciplina já foi alocada para o ano de ".$request->ano."", 'status'=>0]);
             }
             
+            $area = Disciplina::where('codigo_disciplina', $request->codigo_disciplina)->first();
+            //return response()->json(['response' => $area]);
+
             $leciona = new Leciona;
             $leciona->id_docente_in_leciona = $request->id_docente;
             $leciona->id_curso_in_leciona = $request->id_curso;
             $leciona->codigo_disciplina_in_leciona = $request->codigo_disciplina;
             $leciona->id_tipo_contrato_in_leciona = $request->tipo_contrato;
             $leciona->ano_contrato = $request->ano;
+            $leciona->cod_area_in_leciona = $area->cod_area_in_disciplina;
             $leciona->save();
     
             $novo_registo = Leciona::select('*')

@@ -288,10 +288,11 @@ var buscar_docente = val => {
                 console.log(response)
                 var tabela = '<table class="table"><thead><tr><th scope="col">cod</th><th scope="col">curso</th><th scope="col">disciplina</th><th scope="col"></th></tr></thead>';
                 tabela += '<tbody>'
-                for(i=0; i<response.length; i++){
-                  console.log(response[i].codigo)
-                  tabela += '<tr><td scope="row">'+response[i].codigo+'</td><td>'+response[i].curso+'</td><td>'+response[i].disciplina+'</td><td><button id="buscar_dados"  onclick="add_disciplina2(\'' + response[i].codigo + '\', \'' + response[i].id_curso + '\')" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1">alocar</button></td></tr>'
-                }
+                response.response.forEach(function(item) {
+                    console.log(item.codigo);
+                    tabela += '<tr><td scope="row">'+item.codigo+'</td><td>'+item.curso+'</td><td>'+item.disciplina+'</td><td><button id="buscar_dados" onclick="add_disciplina2(\'' + item.codigo + '\', \'' + item.id_curso + '\')" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1">alocar</button></td></tr>';
+                });
+
                 tabela += '<tbody></table>'
                 $('#modal-lista').modal('show');
                 $('#lista-modal-content').html(tabela);
