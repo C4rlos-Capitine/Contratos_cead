@@ -25,6 +25,13 @@
             align-items: center;
             min-height: 100vh;
             margin: 0;
+            font-family: Helvetica;
+            font-weight: bold;
+            
+            background-image: url('contract.jpg');
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            background-size: cover;
         }
 
         .card-form {
@@ -34,6 +41,8 @@
             border-radius: 5px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             text-align: center;
+            /*background: #C8E6C9*/
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with 50% transparency */
         }
 
         /* Make form inputs responsive */
@@ -78,7 +87,7 @@
     <div class="row">
         <div class="col-md-6">
             <div class="field">
-                <label>Sistema de Gestão de Contratos de Tutoria do CEAD</label>
+                <label style="color:white">Sistema de Gestão de Contratos de Tutoria do CEAD</label>
             </div>
             @if ($errors->any())
                 <div class="bg-red-200 p-3">
@@ -98,8 +107,8 @@
                 <label for="floatingInput">Senha</label>
             </div>
             <div class="field">
-                <label for="remember">
-                    <input type="checkbox" name="remember" id="remember">guardar a sessão
+                <label for="remember" style="color:white">
+                    <input type="checkbox" name="remember" id="remember" >guardar a sessão
                 </label>
             </div>
         </div>
@@ -110,7 +119,7 @@
         </div>
     </div>
     <div class="text-center">
-        <button class="rounded bg-green-600 text-white px-2 py-1" type="submit">Login</button>
+        <button class="rounded bg-green-600 text-white px-2 py-1" type="submit">Entrar</button>
     </div>
 </form>
 </body>

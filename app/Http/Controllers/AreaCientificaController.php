@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\area_cientifica;
+use App\Models\Docente;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -12,6 +13,11 @@ class AreaCientificaController extends Controller
 {
     public function get_areas(){
         return response()->json( ['areas'=>$areas = area_cientifica::all()]);
+    }
+
+    public function get_areas2($id_docente){
+        $areas = area_cientifica::select("cod_area", "designacao_area")->join('area_docente', 'cod_area', '=', 'id_area')->where('id_docente', $id_docente)->get();
+        return response()->json(['areas'=>$areas]);
     }
 
     public function alocar_area(Request $request)

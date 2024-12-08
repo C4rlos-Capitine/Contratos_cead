@@ -15,6 +15,43 @@
             height:auto;
         }
     }
+
+        /* Estilização do dropdown */
+        .dropdown {
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 4px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown i {
+      cursor: pointer;
+      font-size: 20px;
+    }
     </style>
 
 <body class="antialiased">
@@ -52,7 +89,19 @@
                         <td>{{$docente->nome_docente}}-{{$docente->apelido_docente}}</td>
                         <td>{{$docente->designacao_nivel}}</td>
                         <td>{{$docente->genero}}</td>
-                        <td><button id="{{$docente->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="loadDisciplinasAlocadas(this.id)">ver disciplinas</button></td>
+                        <!--<td><button id="{{$docente->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="loadDisciplinasAlocadas(this.id)">ver disciplinas</button></td>-->
+                        <td>
+                            <div class="dropdown">
+                            <i class="fa-solid fa-ellipsis"></i>
+                                <div class="dropdown-content">
+                                    <a href="/docente/find/{{$docente->id_docente}}">Ver Informações</a>
+                                    <a href="#link2">Editar</a>
+                                    <a href="#">Associar Áreas Cientificas</a>
+                                    <a href="#" onclick="loadDisciplinasAlocadas(this.id)">Disciplinas</a>
+                                </div>
+                            </div>
+                        </td>
+<!--<td><button id="{{$docente->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="loadDisciplinasAlocadas(this.id)"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i>Mais..</button></td>-->
                     </tr>
                 @endforeach
             </tbody>

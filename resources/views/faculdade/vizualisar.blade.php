@@ -21,6 +21,9 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-faculdade-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
+    $(document).ready(function(){
+                    new DataTable('#example');
+                })
     </script>
 
 <main class="main-section">

@@ -38,7 +38,7 @@ class PDFController extends Controller
         return $docente;
     }
 
-    public static function getDisciplinasLecionadas($id_docente, $tipo_contrato)
+    public static function getDisciplinasLecionadas($id_docente, $tipo_contrato, $ano)
     {
   
         //return response()->json($request->all());
@@ -51,7 +51,7 @@ class PDFController extends Controller
                 ->where('lecionas.id_docente_in_leciona', $id_docente)
                 ->where('docentes.id_docente', $id_docente)
                 ->where('lecionas.id_tipo_contrato_in_leciona', $tipo_contrato)
-                ->where('lecionas.ano_contrato', date("Y"))
+                ->where('lecionas.ano_contrato', ano)
                 ->get();
 
             }else{
@@ -62,7 +62,7 @@ class PDFController extends Controller
                 ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
                 ->where('lecionas.id_docente_in_leciona', $id_docente)
                 ->where('docentes.id_docente', $id_docente) 
-                ->where('lecionas.ano_contrato', date("Y"))
+                ->where('lecionas.ano_contrato', $ano)
                 ->get();
             }
             return $disciplinas;
@@ -116,7 +116,7 @@ class PDFController extends Controller
 
     public function generatePdf(Request $request){
         $docente = PDFController::getDocente($request->id_docente);
-        $disciplinas = PDFController::getDisciplinasLecionadas($request->id_docente, $request->tipo_contrato);
+        $disciplinas = PDFController::getDisciplinasLecionadas($request->id_docente, $request->tipo_contrato, $request->ano);
 
         if (empty($docente)){
             return response()->json(['response'=>'docente inexistente']);

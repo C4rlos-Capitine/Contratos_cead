@@ -443,23 +443,21 @@ function remover(id){
                 <div id="feedback"></div>
            
                 <div class="row">
-                  <div class="col">
+                
                     <label class="input-label" for="floatingInput">Nome do docente</label>
                     <div class="form-floating mb-3" style="width:50%">
                         <input required="true"  type="text" class="form-control" onkeyup="buscar_docente(this.value)" id="docente" name="docente" placeholder="Docente">
                         <label class="input-label" for="floatingInput">Docente</label>
                         <ul class="list"></ul>
                     </div>
-                    </div>
-                    <div class="col-md-3">
-                        <button id="buscar_dados" type="submit" onclick="buscar_dados()" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1">Buscar disciplinas</button>
-                    </div>
+                    
+                    
                     <div class="col-md-3">
                     <label class="input-label" for="floatingInput">Ano do contrato</label>
                       <input required="true" id="ano_contrato" type="number" name="ano_contrato" min="1900" max="2100" step="1" class="form-control">
                     </div>
                 <div class="col-md-3">
-                 
+                <label class="input-label" for="floatingInput">Tipo de Contrato</label>
                  <select id="tipo_contrato" name="tipo_contrato" class="form-select" required>
                     <option selected disabled value="">Tipo de Contrato</option>   
                     @foreach($tipo_contrato as $tipo)
@@ -474,7 +472,10 @@ function remover(id){
                 
                 <!--</div>-->
             </div>
-            <div class="row">
+            <div class="col-md-3" style="padding-left:30px">
+                <button id="buscar_dados" type="submit" onclick="buscar_dados()" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1">Buscar disciplinas</button>
+            </div>
+            <div class="row" style="padding-left:30px">
                 <!--<div class="column">-->
                 <div class="col-md-3">
                 <label>Curso<span style="color:red">*</span></label>
@@ -497,8 +498,9 @@ function remover(id){
                     <option value="4">4 Ano</option>
                     </select>
                 </div>
+                <div class="row" style="padding-left:20px">
                 <div class="col-md-3">
-                  <label>Semestre<label>Curso<span style="color:red">*</span></label></label>
+                  <label>Semestre<span style="color:red">*</span></label></label>
                     <select id="semestre" name="semestre" class="form-select"required>
                     <option selected disabled value="">Semestre</option>
                     <option value="1">1 semestre</option>
@@ -509,12 +511,12 @@ function remover(id){
                 <!--</div>-->
                 <!--<div class="column">-->
                 <div class="col-md-3">
-                    <label>Disciplina/Modulo<label>Curso<span style="color:red">*</span></label></label>
+                    <label>Disciplina/Modulo<span style="color:red">*</span></label></label>
                     <select id="disciplina" name="disciplina" class="form-select" required>
                     <option selected disabled value="">Disciplinas</option>   
                     </select>
                 </div>
-                <!--</div>-->
+                </div>
                 
             </div>
         <!--</form>-->

@@ -109,7 +109,7 @@ class FlaskApiController extends Controller
         //return $cod_area;
         try{
             // Passando parâmetros na requisição GET
-            $response = $client->request('GET', '/prever_professores', [
+            $response = $client->request('GET', '/prever_docentes', [
                 'headers' => [
                     'Accept' => 'application/json',
                 ],

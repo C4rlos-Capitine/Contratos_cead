@@ -106,7 +106,7 @@ class ContratoController extends Controller
     public function get_disciplinas_contrato(Request $request)
     {
         try {
-            //return response()->json($request->all())
+            //return response()->json($request->all());
             $docente = ContratoController::getDocente($request->id_docente);
             $disciplinas = Leciona::select("*")
                 ->join('docentes', 'lecionas.id_docente_in_leciona', '=', 'docentes.id_docente')
@@ -115,6 +115,7 @@ class ContratoController extends Controller
                 ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
                 ->where('lecionas.id_docente_in_leciona', $request->id_docente)
                 ->where('docentes.id_docente', $request->id_docente)
+                ->where('lecionas.ano_contrato', $request->ano)
                 //  ->where('lecionas.id_tipo_contrato_in_leciona', $request->tipo_contrato)
                 ->get();
 

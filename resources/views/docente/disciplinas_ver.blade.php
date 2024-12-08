@@ -54,7 +54,7 @@
                 </tbody>
                 </table>
                 <div class="col-md-3">
-                <button id="{{$docente->id_docente}}" type="submit" width="fit-content"  onclick="pdf(this.id)" class="rounded bg-green-600 text-white px-2 py-1">ver contrato</button>
+                <button id="{{$docente->id_docente}}" type="submit" width="fit-content"  onclick="pdf(this.id, '{{$disciplina->ano_contrato}}')" class="rounded bg-green-600 text-white px-2 py-1">ver contrato</button>
             </div>
             </div>
         </div>
@@ -63,8 +63,8 @@
     </main>
     @include('../footer')
     <script>
-         function pdf(id){
-             window.location.href = "/contrato/gerar_pdf?id_docente="+id;
+         function pdf(id, ano){
+             window.location.href = "/contrato/gerar_pdf?id_docente="+id+"&ano="+ano;
         }
     </script>
 </body>

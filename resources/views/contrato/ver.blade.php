@@ -115,8 +115,8 @@
                         <td>{{$contrato->carga_horaria}}</td>
                         <td>{{$contrato->remuneracao}}</td>
                         <td>{{$contrato->ano_contrato}}</td>
-                        <td><button id="{{$contrato->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="pdf(this.id)">Gerar pdf</button></td>
-                        <td><button id="{{$contrato->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="load_disciplinas(this.id)">Disciplinas</button></td>
+                        <td><button id="{{$contrato->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="pdf(this.id, '{{$contrato->ano_contrato}}')">Gerar pdf</button></td>
+                        <td><button id="{{$contrato->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="load_disciplinas(this.id, '{{$contrato->ano_contrato}}')">Disciplinas</button></td>
                     </tr>
                 @endforeach
             </tbody>
@@ -155,11 +155,12 @@
     </main>
     @include('../footer')
     <script>
-        function pdf(id){
-             window.location.href = "/contrato/gerar_pdf?id_docente="+id;
+        function pdf(id, ano){
+            console.log(ano);
+             window.location.href = "/contrato/gerar_pdf?id_docente="+id+"&ano="+ano;
         }
-        function load_disciplinas(id){
-            window.location.href = "/docente/ver_disciplinas?id_docente="+id;
+        function load_disciplinas(id, ano){
+            window.location.href = "/docente/ver_disciplinas?id_docente="+id+"&ano="+ano;
         }
             //document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".close-btn").addEventListener("click", function(){

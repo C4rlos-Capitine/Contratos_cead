@@ -86,15 +86,26 @@ class DocenteController extends Controller
             return response()->json(['response' => $e->getMessage()], 500);
         }
     }
+
+    public function ver_info($id_docente = null){
+        try{
+            $docente = Docente::select("*")->where('id_docente', '=', $id_docente)->get()->first();
+            return view('docente.info', ['docente'=>$docente]);
+
+        }catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()], 500);
+        }
+        
+    }
     
     
 
-    public function find(Request $request)
+    public function find($id_docente=null)
     {
         $docente = Docente::select('*')
             ->join('nivels', 'nivels.id_nivel', '=', 'docentes.id_nivel')
             ->join('faculdades', 'faculdades.id_faculdade', '=', 'docentes.id_faculdade_in_docente')
-            ->where('email', $request->email)
+            ->where('id_docente', $id_docente)
             ->first();
         //$docente = Docente::where('email', $request->email)
         //return response()->json($docente);

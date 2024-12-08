@@ -217,8 +217,10 @@ function get_areas(id_docente) {
             // Iterate over the data and create table rows
             response.areas.forEach(area => {
                 const row = $('<tr></tr>');
+                row.attr('id', `${area.cod_area}`);
                 row.append($('<td></td>').text(area.cod_area));
                 row.append($('<td></td>').text(area.designacao_area));
+                
                 //row.append($('<td></td>').text(areas.apelido));
 
                 // Properly embed variables in button HTML using template literals
@@ -228,6 +230,44 @@ function get_areas(id_docente) {
                 tbody.append(row);
             });
             $('#modal-lista').modal('show');
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+function get_areas2(id_docente) {
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    console.log('/areas/get_areas/'+id_docente)
+    $.ajax({
+        type: 'GET',
+        url: '/areas/get_areas/'+id_docente,
+       // data: { id_docente: id_docente }, // Passa o id_docente aqui
+        success: function (response) {
+            console.log(response);
+            console.log(response);
+            const tbody = $('#docentes-table2');
+            tbody.empty(); // Clear the table before filling
+            $('#list_docentes_title2').text(`Lista de áreas ${id_docente}`);
+
+            // Iterate over the data and create table rows
+            response.areas.forEach(area => {
+                const row = $('<tr></tr>');
+                row.append($('<td></td>').text(area.cod_area));
+                row.append($('<td></td>').text(area.designacao_area));
+                //row.append($('<td></td>').text(areas.apelido));
+
+                // Properly embed variables in button HTML using template literals
+                //const buttonHtml = `<button id="'${area.cod_area}'" onclick="alocar_area('${id_docente}', '${area.cod_area}')">Alocar</button>`;
+                
+                tbody.append(row);
+            });
+            $('#modal-lista2').modal('show');
         },
         error: function () {
             alert("error");
@@ -253,12 +293,14 @@ function alocar_area(docente, area){
             if (jQuery.isEmptyObject(data.errors)) {
                 console.log(data.response);
                 console.log(data);
-                $('#feedback2').html('<div class="alert alert-success">' + data.response + '</div>');
+                $('#feedback2').html('<div class="alert alert-success">' + data.response + '[área '+area+']</div>');
                 
                 // Chama a função get_areas passando o id_docente
                // get_areas(data.id_docente);
                document.getElementById(area).innerText = "Alocado";
-               document.getElementById(area).disabled=true;
+               //document.getElementById(area).disabled=true;
+               $(`#${area}`).remove();
+               
             } else {
                
                 $('#feedback2').html('<div class="alert alert-danger">' + data.erro_message + '</div>');

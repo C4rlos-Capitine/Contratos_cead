@@ -47,6 +47,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/docente/ml_call', [FlaskApiController::class, 'get_prediction_by_teacher'])->name('get_prediction_by_teacher')->middleware('auth');
     Route::get('/docente/ml_call2', [FlaskApiController::class, 'get_prediction_by_subject'])->name('get_prediction_by_subject')->middleware('auth');
     Route::get('/areas/get_areas', [AreaCientificaController::class, 'get_areas'])->name('get_areas')->middleware('auth');
+    Route::get('/areas/get_areas/{id_docente}', [AreaCientificaController::class, 'get_areas2'])->name('get_areas2')->middleware('auth');
     Route::post('/areas/alocar_area', [AreaCientificaController::class, 'alocar_area'])->name('alocar_area')->middleware('auth');
     //alocar_area
     Route::get('contrato/gerar_pdf', [PDFController::class, 'generatePdf'])->middleware('auth');
@@ -103,7 +104,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/docente/alocar', [DocenteController::class, 'alocar_disciplina'])->name('alocar_disciplina')->middleware('auth');
     Route::post('/docente/alocar/add_disciplina', [DocenteController::class, 'add_disciplina'])->name('add_disciplina');
     Route::get('/docente/get_disciplinas', [DocenteController::class, 'get_disciplinas'])->name('get_disciplinas')->middleware('auth');
-    Route::get('/docente/find', [DocenteController::class, 'find'])->name('find')->middleware('auth');
+    Route::get('/docente/find/{id_docente}', [DocenteController::class, 'find'])->name('find')->middleware('auth');
     Route::get('/docente/count', [DocenteController::class, 'get_count'])->name('get_count')->middleware('auth');
     Route::get('/docente/quantas_disciplinas_ano', [DocenteController::class, 'quantas_disciplinas_ano'])->name('quantas_disciplinas_ano')->middleware('auth');
     Route::get('/docente/by_genero', [DocenteController::class, 'get_count_genero'])->name('get_count_genero')->middleware('auth');
