@@ -19,7 +19,7 @@
    @include('header2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('load-contrato-view-lab').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
+        document.getElementById('load-contrato-gerar').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
     $(document).ready(function(){
                     new DataTable('#example');
@@ -47,15 +47,11 @@
                 <div class="invalid-feedback">
                 Ano invávido
                 </div>
-                <button class="rounded bg-green-600 text-white px-2 py-1" onclick="get_contratosLab()">Buscar</button>
+                <button class="rounded bg-green-600 text-white px-2 py-1" onclick="get_docentesAlocados_ano()">Buscar</button>
           </div>
             <table id="example" class="table table-striped" style="width:100%;">
-                <thead><tr><th>Técnico</th>
-                                <th>Curso</th>
-                                <th>Nome da Disciplina</th>
-                                <th></th>
-                                </tr></thead>
-                <tbody id='tecnicos'>
+                <thead><tr><th>Docente</th><th>ver disciplinas</th><th></th></tr></thead>
+                <tbody id='docentes_alocados'>
 
                 </tbody>
             </table>
@@ -75,6 +71,24 @@
                     </button>
                 </div>
                 <div class="modal-body">
+                    <table class="table table-striped">
+                    <div id="feedback"></div>
+                        <div class="col-md-3">
+                            
+                        <label class="input-label" for="floatingInput">Disciplinas alocadas</label>
+                    <!--<input required="true" id="ano_contrato" type="number" name="ano_contrato" min="1900" max="2100" step="1" class="form-control">-->
+                        </div>
+                        <thead>
+                            <tr>
+                                <th>Nome da Disciplina</th>
+                                <th>Curso</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="disciplinas">
+                            <!-- As linhas de dados serão inseridas aqui -->
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>

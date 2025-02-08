@@ -13,9 +13,17 @@ class MainController extends Controller
       
     public function __invoke(){
         $cursos = Curso::all();
+
         $totalDisciplinas = 0;
         $cursosCount = $cursos->count();
         $cada_curso = [];
+
+        $countDisciplinas = DB::table('disciplinas')->count('codigo_disciplina');
+                $countLecionas = DB::table('lecionas')
+            ->where('ano_contrato', date("Y"))
+            ->count('codigo_disciplina_in_leciona');
+
+
 
         foreach ($cursos as $curso) {
             //$count = DB::table('disciplinas')
@@ -55,9 +63,15 @@ class MainController extends Controller
         }
         $total_docentes = Docente::count();
         $total_contratados = Contrato::where('ano_contrato', date('Y'))->count();
+        $count_contratos_assinados_docentes = Contrato::where('ano_contrato', date('Y'))
+                 ->where('assinado_docente', 'Sim')
+                 ->count('id_docente_in_contrato');
+        $count_contratos_assiandos_up = Contrato::where('ano_contrato', date('Y'))
+        ->where('assinado_up', 'Sim')
+        ->count('id_docente_in_contrato');
         //return response()->json(['curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso]);
         //return $htmlSnippet = view('estatisticas', ['curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso])->render();
-    return view('welcome', ['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados]);
+    return view('welcome', ['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados, 'total_disciplinas'=>$countDisciplinas, 'total_alocadas'=>$countLecionas, 'assinados_docentes'=>$count_contratos_assinados_docentes, 'assinados_up'=>$count_contratos_assiandos_up]);
     }
 
 
@@ -68,6 +82,11 @@ class MainController extends Controller
     $totalDisciplinas = 0;
     $cursosCount = $cursos->count();
     $cada_curso = [];
+
+    $countDisciplinas = DB::table('disciplinas')->count('codigo_disciplina');
+    $countLecionas = DB::table('lecionas')
+    ->where('ano_contrato', $ano)
+    ->count('codigo_disciplina_in_leciona');
 
     foreach ($cursos as $curso) {
         //$count = DB::table('disciplinas')
@@ -107,8 +126,15 @@ class MainController extends Controller
     }
     $total_docentes = Docente::count();
     $total_contratados = Contrato::where('ano_contrato', $ano)->count();
+
+    $count_contratos_assinados_docentes = Contrato::where('ano_contrato', $ano)
+    ->where('assinado_docente', 'Sim')
+    ->count('id_docente_in_contrato');
+    $count_contratos_assiandos_up = Contrato::where('ano_contrato', $ano)
+    ->where('assinado_up', 'Sim')
+    ->count('id_docente_in_contrato');
     //return response()->json(['curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso]);
     //return response()->json(['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados, 'ano'=>$ano]);
-    return view('welcome2', ['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados, 'ano'=>$ano]);
+    return view('welcome2', ['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados, 'ano'=>$ano, 'total_disciplinas'=>$countDisciplinas, 'total_alocadas'=>$countLecionas, 'assinados_docentes'=>$count_contratos_assinados_docentes, 'assinados_up'=>$count_contratos_assiandos_up]);
     }
 }

@@ -24,7 +24,7 @@
    
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!--<script src="{{ asset('graficos.js') }}"></script>-->
-    <script src="{{asset('javascript/buscar.js')}}"></script>
+   <!-- <script src="{{asset('javascript/buscar.js')}}"></script>-->
    <!-- <link href="{{asset('estatisticas_layout.css')}}" rel="stylesheet">-->
     <meta name="csrf-token" content="{{ csrf_token() }}">
    

@@ -19,6 +19,8 @@ return new class extends Migration
             $table->year('ano_contrato');
             $table->integer('carga_horaria');
             $table->integer('remuneracao');
+            $table->string('assinado_docente');
+            $table->string('assinado_up');
             $table->primary(array('id_docente_in_contrato', 'ano_contrato', 'id_tipo_contrato_in_contrato'));
             $table->foreign('id_docente_in_contrato')->references('id_docente')->on('docentes')->onDelete('cascade');
             $table->foreign('id_tipo_contrato_in_contrato')->references('id_tipo_contrato')->on('contratos')->onDelete('cascade');

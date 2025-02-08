@@ -9,6 +9,7 @@ use App\Models\Curso;
 use App\Models\Leciona;
 use App\Models\Area_cientifica;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class DisciplinaController extends Controller
 {
@@ -22,12 +23,63 @@ class DisciplinaController extends Controller
 
     public function save(Request $data)
     {
-        /*$data->validate([
-            'codigo_disciplina' => ['string', 'required', Rule::exists('codigo_disciplina', 'disciplinas')],
-            'nome_disciplina' => ['string', 'required', Rule::exists('codigo_disciplina', 'disciplinas')],
-        ]);
-*/
-        //return response()->json($data);
+        //return response()->json(['response'=>$data->all()]);
+        try{
+           // \Log::info('Valores recebidos para exclusão:', $data->all());
+        $rules = [
+            'codigo_disciplina' => 'required',
+            'codigo_disciplina' => 'unique:disciplinas,codigo_disciplina',
+            'nome_disciplina' => 'required',
+            'id_categoria' => 'required',
+            'sigla'=>'required',
+            'id_curso'=>'required',
+            'horas_c'=>'required',
+            'cod_area'=>'required',
+            'ano_curso'=>'required',
+            'semestre_curso'=>'required'
+            // Add other validation rules as needed
+        ];
+
+         // Custom error messages
+         $messages = [
+           'codigo_disciplina.required' => 'Informe o código da disciplina',
+           'codigo_disciplina.unique' => 'O Código já existe',
+           'nome_disciplina.required' => 'Informe o Nome da Disciplina',
+           'id_categoria.required' => 'Selecione a Categoria da disciplina',
+           'sigla.required' => 'Informe a Sigla',
+           'id_curso.required'=>'Selecione o Curso',
+           'ano_curso.required' => 'Informe o ano em que a disciplina será lecionada',
+           'horas_c.required'=>'Selecione as horas de contacto',
+           'cod_area.required'=>'Selecione a área cientifica',
+           'semestre_curso.required'=>'Selecione o semestre'
+            // Add other custom error messages as needed
+        ];
+
+        $validator = Validator::make($data->all(), $rules, $messages);
+        
+        // Check if validation fails
+
+        if ($validator->fails()) {
+            return response()->json(['errors' => $validator->errors(), 'status'=>0]);
+        }
+
+
+
+        $count = Disciplina::where('id_curso_in_disciplina', $data->input('id_curso'))
+        ->where('semestre', $data->input('semestre_curso'))
+        ->where('ano', $data->input('ano_curso'))
+        ->count('codigo_disciplina');
+
+        if($count>=6){
+            $erros = [
+                'Erro relacionado ao Número máximo de disciplinas',
+                'O semestre '.$data->input('semestre_curso').' do ano '.$data->input('ano_curso') .' já tem 6 disciplinas',
+                
+            ];
+            return response()->json(['errors' => $erros, 'status'=>0]);
+        }
+
+
         $disciplina = new Disciplina;
         $disciplina->codigo_disciplina = $data->input('codigo_disciplina');
         $disciplina->nome_disciplina = $data->input('nome_disciplina');
@@ -42,7 +94,12 @@ class DisciplinaController extends Controller
 
         $resp = "Disciplina de" . $data->input('nome_disciplina') . "Registada com sucesso no curso de ";
 
-        return response()->json(['response' => $resp]);
+        return response()->json(['response' => $resp, 'status'=>1]);
+        }catch(\Exception $e){
+            //\Log::info('Exceção capturada', ['mensagem' => $e->getMessage()]);
+
+            return response()->json(['response' => $e->getMessage(), 'status'=>0], 500);   
+        }
     }
 
     public function get_disciplinas_only(){

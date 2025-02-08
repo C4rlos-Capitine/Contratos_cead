@@ -28,6 +28,9 @@
         padding: 5px;
         text-align: left;
     }
+    #modal-info{
+      z-index: 9999;
+    }
     </style>
 
     
@@ -38,6 +41,11 @@
             //new DataTable('#example');
             $('#close-modal').on('click', function() {
                 $('.modal').hide();   
+            });
+
+            $('.fa-circle-info').on('click', function(){
+              var infoModal = new bootstrap.Modal(document.getElementById('modal-info'));
+              infoModal.show();
             });
             
             
@@ -61,6 +69,15 @@ bt_submeter = document.getElementById("submit");
 
 console.log(input);
 function buscar_dados(){
+  var ano  = document.getElementById("ano_contrato");
+
+  if(ano.value === ''){
+    //alert('O campo ano está vazio!')
+    $('#modal-msg').modal('show');
+    $('#msg').text('O campo ano está vazio!');
+    return;
+  }
+  
   $.ajaxSetup({
     headers: {
       'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -70,50 +87,51 @@ function buscar_dados(){
 console.log("ola");
 //event.preventDefault(); // Prevent the form from being submitted traditionally
 
-console.log(document.getElementById('tipo_contrato').value);
-$.ajax({
-  type: 'GET',
-  url: '/docente/get_disciplinas',
-  data: { id_docente: document.getElementById("id_docente").value, tipo_contrato: document.getElementById('tipo_contrato').value, ano: document.getElementById("ano_contrato").value },
-  success: function (data) {
-    console.log(data.response);
-    if(data.response.length==0){
-      alert("Docente sem disciplina alocada")
-    }
-    // Assuming data is an array of objects with properties 'column1' and 'column2'
-    var table = document.getElementById("tb-data");
-    var tbody = table.getElementsByTagName("tbody")[0];
-       // Get all rows in tbody except the first one
-      var rowsToRemove = tbody.querySelectorAll("tr:not(:first-child)");
 
-      // Remove the rows
-      rowsToRemove.forEach(function (row) {
-      tbody.removeChild(row);
+//console.log(document.getElementById('tipo_contrato').value);
+$(document).ready(function () {
+  $.ajax({
+    type: 'GET',
+    url: '/docente/get_disciplinas',
+    data: {
+      id_docente: $("#id_docente").val(),
+      //tipo_contrato: $("#tipo_contrato").val(),
+      ano: $("#ano_contrato").val()
+    },
+    success: function (data) {
+      console.log(data.response);
+
+      if (data.response.length === 0) {
+        alert("Docente sem disciplina alocada");
+        return;
+      }
+
+      var $tbody = $("#tb-data tbody");
+
+      // Remove todas as linhas, exceto a primeira
+      $tbody.find("tr:not(:first-child)").remove();
+
+      // Adiciona as novas linhas com os dados recebidos
+      data.response.forEach(function (item) {
+        var row = `
+          <tr id="${item.codigo_disciplina_in_leciona}">
+            <td>${item.nome_disciplina}</td>
+            <td>${item.horas_contacto}</td>
+            <td>${item.designacao_curso}</td>
+            <td>${item.ano}</td>
+            <td>${item.semestre}</td>
+            <td>
+              <button onclick="remover('${$("#id_docente").val()}', '${item.codigo_disciplina_in_leciona}', ${item.ano})">Remover</button>
+            </td>
+          </tr>
+        `;
+        $tbody.append(row);
       });
-
-    // Loop through the data and add rows to the table
-    data.response.forEach(function (item) {
-      var row = tbody.insertRow();
-
-      // Add cells to the row and populate with data
-      var cell1 = row.insertCell(0);
-      var cell2 = row.insertCell(1);
-      var cell3 = row.insertCell(2);
-      var cell4 = row.insertCell(3);
-      var cell5 = row.insertCell(4);
-      var cell6 = row.insertCell(5);
-      cell1.innerHTML = item.nome_disciplina;
-      cell2.innerHTML = item.horas_contacto;
-      cell3.innerHTML = item.designacao_curso;
-      cell4.innerHTML = item.ano;
-      cell5.innerHTML = item.semestre;
-      cell6.innerHTML = '<button type="hidden" onclick="remover(this.id)">Remover</button>';
-      // Add more cells and properties as needed
-    });
-  },
-  error: function () {
-    alert("error");
-  }
+    },
+    error: function () {
+      alert("error");
+    }
+  });
 });
 
 }
@@ -180,9 +198,7 @@ function displayNames(value, input) {
     if(document.getElementById('ano_contrato').value == ""){
       alert("Informe o ano");
     }
-    if(document.getElementById('tipo_contrato').value == ''){
-      alert("Selecione o tipo de contrato")
-    }
+
     $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -197,7 +213,7 @@ function displayNames(value, input) {
             id_docente: document.getElementById('id_docente').value,
             id_curso: id_curso,
             codigo_disciplina: codigo_disciplina,
-            tipo_contrato: document.getElementById('tipo_contrato').value,
+           // tipo_contrato: document.getElementById('tipo_contrato').value,
             ano: document.getElementById("ano_contrato").value  
 
         },
@@ -379,35 +395,52 @@ for (var i = 0; i < disciplinas.length; i++) {
 
 var arrDisciplinas = [];
 
-function remover(id){
-  var oTable = document.getElementById('tb-table');
+function remover(id_docente, cod_disciplina) {
+    console.log(id_docente);
+    console.log(cod_disciplina);
+    var ano_contrato = document.getElementById("ano_contrato").value
 
-  var rowLength = oTable.rows.length;
-  var estado = false;
-  for (i = 0; i < rowLength; i++){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') // Ensure CSRF token is included
+        }
+    });
 
-      //gets cells of current row  
-      var oCells = oTable.rows.item(i).cells;
-
-      var cellLength = oCells.length;
-
-      for(var j = 0; j < cellLength; j++){
-
-          var cellVal = oCells.item(j).innerHTML;
-          if(cellVal == id){
-              estado = true;
-              break;
-          }                               
-              //alert(cellVal);
-      }
-      if(estado==true){
-          document.getElementById("tb-table").deleteRow(i);
-          break;
-      }
-  }
+    $.ajax({
+        type: 'DELETE', // Use POST and spoof the DELETE method
+        url: '/disciplina_rm/rm',
+        data: {
+            _method: 'DELETE', // Spoof DELETE method
+            id_docente: id_docente,
+            cod_disciplina: cod_disciplina,
+            ano: ano_contrato
+        },
+        success: function (data) {
+            console.log(data);
+            if ($.isEmptyObject(data.errors)) {
+                
+                if(data.success==1){
+               
+                  $('#feedback').html('<div class="alert alert-success">' + data.response + '</div>');
+                  $(`#${cod_disciplina}`).remove();
+                }else{
+                  $('#feedback').html('<div class="alert alert-danger">' + data.response + '</div>');
+                }
+                
+            } else {
+                var errorsHtml = '<div class="alert alert-danger"><ul>';
+                $.each(data.errors, function (key, value) {
+                    errorsHtml += '<li>' + value + '</li>';
+                });
+                errorsHtml += '</ul></div>';
+                $('#feedback').html(errorsHtml);
+            }
+        },
+        error: function () {
+            alert("Error occurred during the request.");
+        }
+    });
 }
-
-
 
 
 
@@ -425,6 +458,7 @@ function remover(id){
 <main class="main-section">
         @include('side')
     <div class="content-section">
+    
     <div class="modal fade bd-example-modal-lg" id="modal-lista" style="margin-top:300px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
                 <div class="modal-dialog modal-lg">
                     
@@ -437,7 +471,7 @@ function remover(id){
         <div id="content-header"><label id="cont-title">Alocar disciplinas à docente</label></div>
         
             <div id="info">
-              
+            <i class="fa-sharp fa-solid fa-circle-info" style="cursor: pointer"></i>
             @csrf
 		<!--<form id="adicionar-disc">-->
                 <div id="feedback"></div>
@@ -448,7 +482,7 @@ function remover(id){
                     <div class="form-floating mb-3" style="width:50%">
                         <input required="true"  type="text" class="form-control" onkeyup="buscar_docente(this.value)" id="docente" name="docente" placeholder="Docente">
                         <label class="input-label" for="floatingInput">Docente</label>
-                        <ul class="list"></ul>
+                        <ul class="list" style="background:#E0E0E0"></ul>
                     </div>
                     
                     
@@ -456,16 +490,6 @@ function remover(id){
                     <label class="input-label" for="floatingInput">Ano do contrato</label>
                       <input required="true" id="ano_contrato" type="number" name="ano_contrato" min="1900" max="2100" step="1" class="form-control">
                     </div>
-                <div class="col-md-3">
-                <label class="input-label" for="floatingInput">Tipo de Contrato</label>
-                 <select id="tipo_contrato" name="tipo_contrato" class="form-select" required>
-                    <option selected disabled value="">Tipo de Contrato</option>   
-                    @foreach($tipo_contrato as $tipo)
-                        <option value="{{$tipo->id_tipo_contrato}}">{{ $tipo->designacao_tipo_contrato }}</option>
-                    @endforeach
-                 
-                 </select>
-             </div>
         
             </div>
                 <!--<div class="column">-->
@@ -530,6 +554,13 @@ function remover(id){
 
             <form method="POST" id="form">
             @csrf
+           
+            <input type="hidden" name="id_docente" id="id_docente">
+            <input type="hidden" name="id_nivel" id="id_nivel">
+            <input type="hidden" name="valor_nivel" id="valor_nivel">
+            <input type="hidden" name="designacao_nivel" id="designacao_nivel">
+            
+            </form>
             <table id="tb-data" class="table table-striped" width="60%">
                 <thead>
                     <tr><th id="header" colspan="6" scope="col">Modulos Lecionados</th></tr>
@@ -537,25 +568,20 @@ function remover(id){
                         <th scope="col">Modulo</th><th scope="col">Horas de Contacto</th><th scope="col">Curso</th><th scope="col">Ano</th><th scope="col">Semestre</th><th scope="col">action</th>
                     </tr>
                 </thead>
-                    <tbody>
+                    <tbody id="disci">
                         
                     </tbody>
                 
             </table>
-            <input type="hidden" name="id_docente" id="id_docente">
-            <input type="hidden" name="id_nivel" id="id_nivel">
-            <input type="hidden" name="valor_nivel" id="valor_nivel">
-            <input type="hidden" name="designacao_nivel" id="designacao_nivel">
-            
-            </form>
             <div class="col-md-3" style="margin-left:50px">
-                <button type="submit" width="fit-content"  onclick="gerar_pdf()" class="rounded bg-green-600 text-white px-2 py-1">Gerar contrato</button>
+                <button type="submit" width="fit-content"  onclick="gerar_contrato()" class="rounded bg-green-600 text-white px-2 py-1">Gerar contrato</button>
             </div>
         </div>
     </div>
-    
+
 </main>
-<div class="modal" style="margin-top:100px">
+
+<div id="modal-msg" class="modal" style="margin-top:100px">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -572,44 +598,33 @@ function remover(id){
     </div>
   </div>
 </div>
+
+<div class="modal fade" id="modal-info" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Informação</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Estimado(a) {{auth()->user()->name}} para alocar disciplinas ou ver disciplinas alocadas à um tutor informe o ano, e depois escreva o nome do docente, selecione o docente na lista de recomendações, e por fim clique em buscar
+      </div>
+      <div class="modal-footer">
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
 @include('../footer')
 <script>
 
-  function gerar_pdf()
-  {
-    //window.location.href = "/cead_template/contrato/gerar_pdf?id_docente="+document.getElementById('id_docente').value;
-   
-    $.ajaxSetup({
-        headers: {
-          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-        }
-    });
-    console.log("ola");
-    event.preventDefault(); // Prevent the form from being submitted traditionally
+function gerar_contrato(){
+  var id = document.getElementById("id_docente").value;
+  gerar(id);
+}
 
-    console.log("ola");
-    $.ajax({
-        type: 'POST',
-        url: '/contrato/create',
-        data: {id_docente: document.getElementById('id_docente').value, tipo_contrato: document.getElementById('tipo_contrato').value, ano: document.getElementById("ano_contrato").value},
-        success: function (data) {
-            console.log(data.response);
-           // $('#feedback').html('alert(<div class="alert alert-success">' + data.response + '</div>)');
-           //alert(data.response);
-           if(data.status == "success"){
-            $('.modal-body').html('<div class="alert alert-success">' + data.response + '</div>');
-           }else{
-            $('.modal-body').html('<div class="alert alert-danger">' + data.response + '</div>');
-           }
-          
-          $('.modal').show();
-        },
-        error: function () {
-            alert("error");
-        }
-    });
-  }
-    
   document.getElementById("semestre").addEventListener('change', (event) => {
     
     console.log("ola");
@@ -625,7 +640,80 @@ function remover(id){
             ano: document.getElementById('ano').value,
             semestre: document.getElementById('semestre').value,
             id_curso: document.getElementById('curso').value,
-            tipo_contrato: document.getElementById('tipo_contrato').value
+           // tipo_contrato: document.getElementById('tipo_contrato').value
+        },
+        success: function (data) {
+            console.log(data);
+            var html = "";
+            for(var a = 0; a< data.length; a++){
+                if(data[a].codigo_docente="null"){
+                    html += "<option value="+data[a].codigo_disciplina+">"+data[a].nome_disciplina+"</option>";
+                }
+                
+            }
+            document.getElementById("disciplina").innerHTML = html;
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+    
+});
+
+
+  
+document.getElementById("curso").addEventListener('change', (event) => {
+    
+    console.log("ola");
+    console.log(document.getElementById('ano').value);
+    //event.preventDefault(); // Prevent the form from being submitted traditionally
+
+    console.log("ola");
+    $.ajax({
+        type: 'GET',
+        url: '/curso/get_disciplinas_nao_associada',
+        data: {
+            ano_contrato: document.getElementById('ano_contrato').value,
+            ano: document.getElementById('ano').value,
+            semestre: document.getElementById('semestre').value,
+            id_curso: document.getElementById('curso').value,
+           // tipo_contrato: document.getElementById('tipo_contrato').value
+        },
+        success: function (data) {
+            console.log(data);
+            var html = "";
+            for(var a = 0; a< data.length; a++){
+                if(data[a].codigo_docente="null"){
+                    html += "<option value="+data[a].codigo_disciplina+">"+data[a].nome_disciplina+"</option>";
+                }
+                
+            }
+            document.getElementById("disciplina").innerHTML = html;
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+    
+});
+
+  
+document.getElementById("ano").addEventListener('change', (event) => {
+    
+    console.log("ola");
+    console.log(document.getElementById('ano').value);
+    //event.preventDefault(); // Prevent the form from being submitted traditionally
+
+    console.log("ola");
+    $.ajax({
+        type: 'GET',
+        url: '/curso/get_disciplinas_nao_associada',
+        data: {
+            ano_contrato: document.getElementById('ano_contrato').value,
+            ano: document.getElementById('ano').value,
+            semestre: document.getElementById('semestre').value,
+            id_curso: document.getElementById('curso').value,
+            //tipo_contrato: document.getElementById('tipo_contrato').value
         },
         success: function (data) {
             console.log(data);
@@ -648,7 +736,12 @@ function remover(id){
 </script>
 <!--<script src="{{ asset('javascript/funcoes_alocar.js') }}"></script>-->
 </body>
-            
+
+    
+    <!-- Button trigger modal -->
+
+<!-- Modal -->
+
 
 <?php
 //}

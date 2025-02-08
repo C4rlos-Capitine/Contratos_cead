@@ -56,13 +56,51 @@
                 </form>
 
             </form>
-            
-            <div class="row" id="div-button">
-                    <button class="rounded bg-green-600 text-white px-2 py-1" id="submit" width="fit-content" onclick="reg_faculdade()">Registar</button>
-                </div>
+            <div class="row">
+                <div style="padding:20px" class="row" id="div-button"><button class="rounded bg-green-600 text-white px-2 py-1" id="submit" width="fit-content" onclick="reg_faculdade()">Registar</button> </div>
+                <div style="padding:20px" class="row" id="div-button"><button class="rounded bg-green-600 text-white px-2 py-1" id="submit" width="fit-content" onclick="get_faculdades()">Ver</button></div>
+            </div>   
 </div>
 </div>
+
+
+
+
+
 </main>
+
+<!-- bootstrap modal-->
+<div class="modal fade bd-example-modal-lg" id="modal-lista-faculdades" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="list_docentes_title"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                    <div id="feedback"></div>
+                        <div class="col-md-3">
+                            
+                        <label class="input-label" for="floatingInput">Faculdades</label>
+                        </div>
+                        <thead>
+                            <tr>
+                                <th>Nome</th>
+                                <th>Sigla</th>
+                            </tr>
+                        </thead>
+                        <tbody id="faculdades">
+                            <!-- As linhas de dados serão inseridas aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
 @include('../footer')
 </body>
 </html>

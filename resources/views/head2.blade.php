@@ -38,6 +38,7 @@
         <script src="{{ asset('javascript/template-controller.js') }}"></script>
         <script src="{{asset('javascript/docente_verificar_campos.js')}}"></script>
         <script src="{{asset('javascript/add_disciplina.js')}}"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
        <!--<script src="{{ asset('javascript/template-controller2.js') }}"></script>-->
 <!-- Other JS files -->
    <!-- ... -->

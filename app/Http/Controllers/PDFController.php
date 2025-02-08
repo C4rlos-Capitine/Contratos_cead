@@ -17,7 +17,7 @@ use App\Models\Curso;
 use App\Models\Leciona;
 use App\Models\Tipo_contrato;
 use App\Models\Contrato_laboratorio;
-
+use Illuminate\Support\Facades\DB;
 
 
 class PDFController extends Controller
@@ -114,9 +114,9 @@ class PDFController extends Controller
 
     }
 
-    public function generatePdf(Request $request){
-        $docente = PDFController::getDocente($request->id_docente);
-        $disciplinas = PDFController::getDisciplinasLecionadas($request->id_docente, $request->tipo_contrato, $request->ano);
+    public function generatePdf($id_docente=null,$ano=null){
+        $docente = PDFController::getDocente($id_docente);
+        $disciplinas = PDFController::getDisciplinasLecionadas($id_docente, 1, $ano);
 
         if (empty($docente)){
             return response()->json(['response'=>'docente inexistente']);
@@ -136,15 +136,17 @@ class PDFController extends Controller
 
     }
 
-    public function generatePdf_lab(Request $request)
+    public function generatePdf_lab($ano = null, $id_tecnico=null)
     {
-        $contrato = contrato_laboratorio::select("*")
-            ->join("cursos", "cursos.id_curso", "=", "contrato_laboratorios.id_curso")
-            ->join("disciplinas", "disciplinas.codigo_disciplina", "=", "contrato_laboratorios.codigo_disciplina")
-            ->join("docentes", "docentes.id_docente", "=", "contrato_laboratorios.id_tecnico")
-            ->where("id_tecnico", $request->id_docente)
-            ->where("ano_contrato", date("Y"))
-            ->get()->first();
+            $contrato = DB::table('contrato_labs')
+        ->join('tecnicos', 'tecnicos.id_tecnico', '=', 'contrato_labs.id_tecnico')
+        ->join('cursos', 'cursos.id_curso', '=', 'contrato_labs.id_curso')
+        ->join('disciplinas', 'disciplinas.codigo_disciplina', '=', 'contrato_labs.codigo_disciplina')
+        ->where('ano_contrato', $ano)
+        ->where('tecnicos.id_tecnico', $id_tecnico)
+        ->select('contrato_labs.*', 'tecnicos.nome_tecnico', 'tecnicos.apelido_tecnico', 'tecnicos.bi', 'tecnicos.nuit', 'tecnicos.nacionalidade', 'cursos.designacao_curso') // Specify the columns you need
+        ->first(); // Fetch only one record
+
         
 
         // Pass data to the Blade view

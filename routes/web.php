@@ -16,7 +16,9 @@ use App\Http\Controllers\RepresentanteController;
 use App\Http\Controllers\FlaskApiController;
 use App\Http\Controllers\CentroRecursoController;
 use App\Http\Controllers\ContratoLaboratorioController;
-
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\TecnicoController;
+use App\Http\Controllers\Contracto_labController;
 
 
 /*
@@ -37,6 +39,7 @@ Route::get('/user_log', [AuthController::class, 'show'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
 
 
+
 Route::get('/logout', [AuthController::class, 'logout']);
 
 
@@ -50,21 +53,41 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/areas/get_areas/{id_docente}', [AreaCientificaController::class, 'get_areas2'])->name('get_areas2')->middleware('auth');
     Route::post('/areas/alocar_area', [AreaCientificaController::class, 'alocar_area'])->name('alocar_area')->middleware('auth');
     //alocar_area
-    Route::get('contrato/gerar_pdf', [PDFController::class, 'generatePdf'])->middleware('auth');
-    Route::get('contrato/pdf', [PDFController::class, 'generatePdf'])->middleware('auth');
-    Route::get('contrato/gerar_pdf_lab', [PDFController::class, 'generatePdf_lab'])->middleware('auth');
-    
+    Route::get('contrato/{id_docente}/{ano}', [PDFController::class, 'generatePdf'])->middleware('auth');
+    Route::get('contrato/{id_docente}/{ano}', [PDFController::class, 'generatePdf'])->middleware('auth');
+    Route::get('contrato/lab/{ano}/{id_tecnico}', [PDFController::class, 'generatePdf_lab'])->middleware('auth');
+
+    Route::post('/user/save', [UserController::class, 'save'])->name('save')->middleware('auth');
+    Route::get('/user/reg',[UserController::class, 'reg_user'])->name('reg_user')->middleware('auth');//showUsers
+    Route::get('/user/ver',[UserController::class, 'showUsers'])->name('showUsers')->middleware('auth');
+    Route::get('/user/my_profile',[UserController::class, 'user_profile'])->name('user_profile')->middleware('auth');
+    Route::post('/user/edit_data',[UserController::class, 'edit_data'])->name('edit_data')->middleware('auth');
+    Route::post('/user/change_password',[UserController::class, 'change_password'])->name('change_password')->middleware('auth');
+    ///user/change_password
+  
+    //gerar_contrato
     Route::post('/contrato/create', [ContratoController::class, 'create'])->name('create')->middleware('auth');
     Route::get('/contrato/ver', [ContratoController::class, 'ver'])->name('ver')->middleware('auth');
+    Route::get('/contrato/gerar', [ContratoController::class, 'gerar_contrato'])->name('gerar_contrato')->middleware('auth');
+    Route::get('/contrato/docentes_alocados', [ContratoController::class, 'get_docentes_com_disc_aloc'])->name('get_docentes_com_disc_aloc')->middleware('auth');
     Route::get('/contrato/ver_lab', [ContratoLaboratorioController::class, 'ver'])->name('ver')->middleware('auth');
-    Route::post('/contrato/ver_lab_save', [ContratoLaboratorioController::class, 'save'])->name('save')->middleware('auth');
+    Route::post('/contrato/ver_lab_save', [ContratoLaboratorioController::class, 'save'])->name('save')->middleware('auth');//teste
+    Route::post('/contrato/teste', [ContratoController::class, 'teste'])->name('teste')->middleware('auth');
+    Route::post('/contrato/set_assinado_docente', [ContratoController::class, 'set_assinado_docente'])->name('set_assinado_docente')->middleware('auth');
+    Route::post('/contrato/set_assinado_up', [ContratoController::class, 'set_assinado_up'])->name('set_assinado_up')->middleware('auth');
+    //get_docentes_com_disc_aloc
+    Route::post('/lab/save', [Contracto_labController::class, 'save'])->name('save')->middleware('auth');
+    Route::get('/lab/all/{ano}', [Contracto_labController::class, 'all'])->name('all')->middleware('auth');
+    
+  
 
     Route::get('/representante/reg', [RepresentanteController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::get('/docente/ver_disciplinas', [ContratoController::class, 'get_disciplinas_contrato'])->name('get_disciplinas_contrato')->middleware('auth');
     Route::get('/contrato/ver_disciplina_by_email', [ContratoController::class, 'disciplina_by_email'])->name('disciplina_by_email')->middleware('auth');
     Route::post('/contrato/novos_contratos', [ContratoController::class, 'create_contratos_para_ano'])->name('create_contratos_para_ano')->middleware('auth');
-    
-
+    Route::get('/contrato/get_assinados_docentes', [ContratoController::class, 'get_assinados_docentes'])->name('get_assinados_docentes')->middleware('auth');
+    Route::get('/contrato/get_assinados_up', [ContratoController::class, 'get_assinados_up'])->name('get_assinados_up')->middleware('auth');
+//get_assinados_up
     Route::get('/curso/reg', [CursoController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::post('/curso/save', [CursoController::class, 'save'])->name('save')->middleware('auth');
     Route::get('/curso/ver', [CursoController::class, 'get_all'])->name('get_all')->middleware('auth');
@@ -79,6 +102,7 @@ Route::middleware(['auth'])->group(function () {
     
     Route::get('/leciona/check_disciplina', [LecionaController::class, 'check_disciplinas_in_contrato'])->name('check_disciplinas_in_contrato')->middleware('auth');
     Route::get('/leciona/test', [LecionaController::class, 'test'])->name('test')->middleware('auth');
+    Route::delete('/disciplina_rm/rm', [LecionaController::class, 'delete'])->name('delete')->middleware('auth');
 
     Route::get('/categoria/reg', [CategoriaController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::post('/categoria/save', [CategoriaController::class, 'save'])->name('save')->middleware('auth');
@@ -120,9 +144,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/faculdade/reg', [FaculdadeController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::post('/faculdade/save', [FaculdadeController::class, 'save'])->name('save')->middleware('auth');
     Route::get('/faculdade/vizualisar', [FaculdadeController::class, 'get_all'])->name('get_all')->middleware('auth');
+    Route::get('/faculdade/list', [FaculdadeController::class, 'get_list'])->name('get_list')->middleware('auth');
     Route::get('/faculdade/docentes', [FaculdadeController::class, 'get_docentes'])->name('get_docentes')->middleware('auth');
     //Route::get('/centros/teste', [CentroRecursoController::class, 'teste'])->name('teste');
-   
+
+    Route::get('/tec/reg',[TecnicoController::class, 'form'])->name('form')->middleware('auth');
+    Route::post('/tec/save',[TecnicoController::class, 'save'])->name('save')->middleware('auth');//getAllTecnicos
+    Route::get('/tec/all',[TecnicoController::class, 'get_all'])->name('get_all')->middleware('auth');
 
    
 });

@@ -1,5 +1,7 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     @include('head')
     <style>
         
@@ -8,7 +10,9 @@
             color: white;
         }   
         .card{
-            margin-left: 10px;
+            margin: 10px;
+            /*max-width: 250px;*/
+            
         }
         .about-us{
             margin-top: 20px;
@@ -179,6 +183,131 @@ $(document).ready(function(){
         });
     }
 
+
+
+
+    function get_estatisticas_assinadosDocentes() {
+        return new Promise(function(resolve, reject) {
+            var dataAtual = new Date();
+
+// Obter o ano atual
+            var anoAtual = dataAtual.getFullYear();
+            console.log(anoAtual);
+            $.ajax({
+                type: 'GET',
+                url: '/contrato/get_assinados_docentes',
+                data: {ano: anoAtual},
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    get_estatisticas_assinadosDocentes().then(function(data) {
+        var ctx = document.getElementById('myChart4').getContext('2d');
+        renderChart4(data, ctx);
+    }).catch(function(error) {
+        console.error('Error fetching data:', error);
+    });
+
+    function renderChart4(data, ctx) {
+        ctx = document.getElementById('myChart4');
+
+        data = {
+            labels: ['assinados', 'não assinados'],
+            datasets: [{
+            label: 'Contratos assinados pelos docentes',
+            data: [data.docentes_assinaram, data.nao_assinaram],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)'
+            ],
+            hoverOffset: 4
+            }]
+        };
+
+        const options = {
+            responsive: true, // Ensures chart resizes correctly
+            plugins: {
+            legend: {
+                position: 'top',
+            }
+            }
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,   // Properly defining data
+            options: options // Properly defining options
+        });
+    }
+
+
+    
+    function get_estatisticas_assinadosUp() {
+        return new Promise(function(resolve, reject) {
+            var dataAtual = new Date();
+
+// Obter o ano atual
+            var anoAtual = dataAtual.getFullYear();
+            console.log(anoAtual);
+            $.ajax({
+                type: 'GET',
+                url: '/contrato/get_assinados_up',
+                data: {ano: anoAtual},
+                success: function (data) {
+                    resolve(data);
+                },
+                error: function (error) {
+                    reject(error);
+                }
+            });
+        });
+    }
+
+    get_estatisticas_assinadosUp().then(function(data) {
+        var ctx = document.getElementById('myChart5').getContext('2d');
+        renderChart5(data, ctx);
+    }).catch(function(error) {
+        console.error('Error fetching data:', error);
+    });
+
+    function renderChart5(data, ctx) {
+        ctx = document.getElementById('myChart5');
+
+        data = {
+            labels: ['assinados', 'não assinados'],
+            datasets: [{
+            label: 'Contratos assinados pelo representante da UP',
+            data: [data.assinados, data.nao_assinaram],
+            backgroundColor: [
+                'rgb(255, 99, 132)',
+                'rgb(54, 162, 235)'
+            ],
+            hoverOffset: 4
+            }]
+        };
+
+        const options = {
+            responsive: true, // Ensures chart resizes correctly
+            plugins: {
+            legend: {
+                position: 'top',
+            }
+            }
+        };
+
+        new Chart(ctx, {
+            type: 'doughnut',
+            data: data,   // Properly defining data
+            options: options // Properly defining options
+        });
+    }
+
     
     
 
@@ -209,34 +338,44 @@ $(document).ready(function(){
         <aside class="side-section">
         
         <div class="nav-bar">
+        
             @if(auth()->user()->tipo_user == 1)
                 <div id="home1" class="nav-content clickable" data-value="/"><i class="fa-solid fa-house" style="color: #e6ebf5;"></i><label class="menu-label">Início</label></div>
-                
+                <div id="load-user-profile" class="nav-content clickable" data-value="/user/my_profile"><i class="fa-solid fa-user" style="color: #ebeef4;"></i><label class="menu-label">Meu Perfil</label></div>
+                <div id="load-user-form" class="nav-content clickable" data-value="/user/reg"><i class="fa-solid fa-user" style="color: #ebeef4;"></i><label class="menu-label">Utilizadores</label></div>
                 <!--<div id="home" class="nav-content clickable" data-value="/cead_template2/curso/estatistica"><i class="fa-solid fa-chart-simple" style="color: #ebeef4;"></i><label class="menu-label">Estatisticas</label></div>-->
-                <div id="load-faculdade-form" data-value="/faculdade/reg" class="nav-content clickable"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar Faculdade</label></div>
-                <div id="load-representante-form" class="nav-content clickable" data-value="/representante/reg"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar Representante</label></div>
+                <div id="load-faculdade-form" data-value="/faculdade/reg" class="nav-content clickable"><i class="fa-solid fa-graduation-cap" style="color: #eff1f6;"></i><label class="menu-label">Faculdades</label></div>
+               <!-- <div id="load-representante-form" class="nav-content clickable" data-value="/representante/reg"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar Representante</label></div>-->
                 <div id="load-curso-form" data-value="/curso/reg" class="nav-content clickable"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar curso</label></div>
                 <div id="load-cat-disciplina-form" data-value="/categoria/reg" class="nav-content clickable" ><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar Categoria de disciplina</label></div>
                 <div id="load-disciplina-form" data-value="/disciplina/reg" class="nav-content clickable" ><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar Disciplina</label></div>
                 <div id="load-docente-form" data-value="/docente/reg" class="nav-content clickable"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Registar Docente</label></div>
+                <div id="load-tecnico-form" data-value="/tec/reg" class="nav-content clickable"><i class="fa-solid fa-pen-to-square" style="color: #eff1f6;"></i><label class="menu-label">Técnico de Laboratório</label></div>
                 <!--
                 <div id="load-curso-disciplina-form" data-value="/cead_template2/disciplina/associar" class="nav-content clickable"><i class="fa-solid fa-files" style="color: #e4e5ec;"></i><label class="menu-label">Associar disciplina a curso</label></div>
--->
+
                 <div id="load-faculdade-view" data-value="/faculdade/vizualisar" class="nav-content clickable"><i class="fa-solid fa-table-list" style="color: #eff0f0;"></i><label class="menu-label">Visualizar Faculdades</label></div>
-                
+                -->
                 <div id="load-discilplina-alocar-form" data-value="/docente/alocar" class="nav-content clickable"><i class="fa-solid fa-chalkboard-user" style="color: #f0f2f5;"></i><label class="menu-label">Alocar disciplinas</label></div>
                 <div id="load-curso-view" data-value="/curso/ver" class="nav-content clickable"><i class="fa-solid fa-table-list" style="color: #eff0f0;"></i><label class="menu-label">Visualizar Cursos</label></div>
                 <div id="load-docente-view"  data-value="/docente/vizualisar" class="nav-content clickable"><i class="fa-solid fa-table-list" style="color: #eff0f0;"></i><label class="menu-label">Visualizar Docentes</label></div>
                 <div id="load-contrato-view" data-value="/contrato/ver" class="nav-content clickable"><i class="fa-solid fa-file-contract" style="color: #e9eaed;"></i><label class="menu-label">Contratos de tutoria</label></div>
                 <div id="load-contrato-view-lab" data-value="/contrato/ver_lab" class="nav-content clickable"><i class="fa-solid fa-file-contract" style="color: #e9eaed;"></i><label class="menu-label">Contratos de técnico de laboratório</label></div>
-                <div id="load-contrato-form" class="nav-content clickable"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Gerar Contrato</label></div>
-            @else
+                <div id="load-contrato-gerar" class="nav-content clickable" data-value="/contrato/gerar"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Gerar Contrato</label></div>
+            @elseif(auth()->user()->tipo_user == 2)
                 <input id="user-email" class="user-email" value="{{auth()->user()->email}}" type="hidden">
-                <!-- onclick="load_data_docente()" -->
-                <div id="load-docente-data" data-value="/docente/find?email={{auth()->user()->email}}" class="nav-content clickable" ><i class="fa-solid fa-user" style="color: #f8f9fc;"></i><label class="menu-label">Meus dados</label></div>
-                <div id="load-docente-contrato" data-value="/contrato/ver_disciplina_by_email?email={{auth()->user()->email}}" class="nav-content clickable"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Contratos</label></div>
-                <div id="load-docente-contrato" data-value="#" class="nav-content clickable"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Submeter contrato</label></div>
-                
+                <div id="home1" class="nav-content clickable" data-value="/"><i class="fa-solid fa-house" style="color: #e6ebf5;"></i><label class="menu-label">Início</label></div>
+                <div id="load-user-profile" class="nav-content clickable" data-value="/user/my_profile"><i class="fa-solid fa-user" style="color: #ebeef4;"></i><label class="menu-label">Meu Perfil</label></div>
+                <div id="load-faculdade-view" data-value="/faculdade/list" class="nav-content clickable"><i class="fa-solid fa-graduation-cap" style="color: #eff1f6;"></i><label class="menu-label">Faculdades</label></div>
+                <div id="load-curso-view" data-value="/curso/ver" class="nav-content clickable"><i class="fa-solid fa-table-list" style="color: #eff0f0;"></i><label class="menu-label">Cursos</label></div>
+                <div id="load-docente-view"  data-value="/docente/vizualisar" class="nav-content clickable"><i class="fa-solid fa-table-list" style="color: #eff0f0;"></i><label class="menu-label">Visualizar Docentes</label></div>
+                <div id="load-discilplina-alocar-form" data-value="/docente/alocar" class="nav-content clickable"><i class="fa-solid fa-chalkboard-user" style="color: #f0f2f5;"></i><label class="menu-label">Alocar disciplinas</label></div>
+                <div id="load-contrato-view" data-value="/contrato/ver" class="nav-content clickable"><i class="fa-solid fa-file-contract" style="color: #e9eaed;"></i><label class="menu-label">Contratos de tutoria</label></div>
+                <div id="load-contrato-view-lab" data-value="/contrato/ver_lab" class="nav-content clickable"><i class="fa-solid fa-file-contract" style="color: #e9eaed;"></i><label class="menu-label">Contratos de técnico de laboratório</label></div>
+               <!-- <div id="load-docente-data" data-value="/docente/find?email={{auth()->user()->email}}" class="nav-content clickable" ><i class="fa-solid fa-user" style="color: #f8f9fc;"></i><label class="menu-label">Meus dados</label></div>-->
+               <!-- <div id="load-docente-contrato" data-value="/contrato/ver_disciplina_by_email?email={{auth()->user()->email}}" class="nav-content clickable"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Contratos</label></div>-->
+                <!--<div id="load-docente-contrato" data-value="#" class="nav-content clickable"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Submeter contrato</label></div>-->
+                <div id="load-contrato-gerar" class="nav-content clickable" data-value="/contrato/gerar"><i class="fa-solid fa-file-pen" style="color: #eceff3;"></i><label class="menu-label">Gerar Contrato</label></div>
             @endif
         </div>
     </aside>
@@ -269,6 +408,17 @@ $(document).ready(function(){
         </div>
 
             <br>
+            <div class="row-section" >
+                @if($total_disciplinas == $total_alocadas)
+                    <div class="alert alert-success" role="alert">
+                        Já foram alocadas todas as disciplinas para os contratos de {{date("Y")}}
+                    </div>
+                @else
+                <div class="alert alert-warning" role="alert">
+                        Foram alocadas {{$total_alocadas}} das {{$total_disciplinas}}
+                    </div>
+                @endif
+            </div>
           
             <div class="row-section" style="padding:0">
                 <div class="card">
@@ -283,32 +433,23 @@ $(document).ready(function(){
             </div>
             <div class="row-section" style="padding:0">
                 <div class="card">
-                    <img src="grafic2.png" class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Contratos de {{date("Y")}}</h5>
-                        <p class="card-text" id="total-contratos">Docentes contratados para tutorias: .</p>
-                        <p class="card-text"><small class="text-muted">Contratos de tutorias</small></p>
-                    </div>
+                    <canvas id="myChart4"></canvas>
                 </div>
-
                 <div class="card">
-                    <img src="{{asset('grafic2.png')}}"class="card-img-top">
-                    <div class="card-body">
-                        <h5 class="card-title">Contratos de {{date("Y")}}</h5>
-                        <p class="card-text" id="total-contratos">Cursos: {{ $total_cursos }}.</p>
-                        <p class="card-text"><small class="text-muted">Contratos de tutorias</small></p>
-                    </div>
+                    <canvas id="myChart5"></canvas>
                 </div>
-
-                <div class="card">
-                    <img src="{{asset('grafic2.png')}}"class="card-img-top">
+                
+                <div class="card bg-light mb-3" style="max-width: 18rem;">
+                    <div class="card-header">Contratados</div>
                     <div class="card-body">
                         <h5 class="card-title">Docentes: {{ $total_docentes }}</h5>
-                        <p class="card-text" id="total-contratos">Contratados: {{$contratados}}.</p>
-                        <p class="card-text"><small class="text-muted">Contratos de tutorias</small></p>
-                    </div>
+                    <p class="card-text">Contratados para tutoria {{$contratados}}.</p>
                 </div>
+                </div>
+
             </div>
+            
+
 
             @php
             $controlador = 1;

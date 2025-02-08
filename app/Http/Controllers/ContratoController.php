@@ -8,6 +8,9 @@ use App\Models\Docente;
 use App\Models\Leciona;
 use App\Models\ano_contrato;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
+
 
 
 class ContratoController extends Controller
@@ -16,6 +19,9 @@ class ContratoController extends Controller
     {
         try{
             //return response()->json(["response"=>$request->all()]);
+            if(ContratoController::check_if_alocada($request->ano, $request->id_docente)){
+                return response()->json(['response' => 'Contrato já existe', 'status'=>"error"]);
+            }
             $docente = ContratoController::getDocente($request->id_docente);
       
             $disciplinas = ContratoController::getDisciplinasLecionadas($request->id_docente, $request->tipo_contrato);
@@ -35,6 +41,8 @@ class ContratoController extends Controller
             $contrato->ano_contrato = $request->ano;
             $contrato->carga_horaria = $hcontacto;
             $contrato->remuneracao = $total_ganho;
+            $contrato->assinado_docente = "Não";
+            $contrato->assinado_up = "Não";
             $contrato->save();
             
         return response()->json(['response' => 'Contrato Registado com sucesso', 'status'=>"success"]);
@@ -44,6 +52,11 @@ class ContratoController extends Controller
             //return response()->json(['response' => "O contrato já existe", 'status'=>"error"]);
         }
 
+    }
+
+    public function teste(Request $request){
+    $resp = ContratoController::check_if_alocada($request->tipo_contrato, $request->id_docente);
+    return response()->json($resp);
     }
 
     public function ver()
@@ -152,6 +165,13 @@ class ContratoController extends Controller
         }
     }
 
+    
+    private function check_if_alocada($ano_contrato, $id_docente){
+        return Contrato::select("id_docente_in_contrato")
+            ->where('id_docente_in_contrato', $id_docente)
+            ->where('ano_contrato', $ano_contrato)->exists();
+    }
+
 
     public function create_contratos_para_ano(Request $request){
         try{
@@ -182,6 +202,82 @@ class ContratoController extends Controller
             return response()->json(['response' => $e->getMessage(), 'errors'=>'Erro']);
         }
     }
+
+    public function gerar_contrato(){
+
+        
+        return view('contrato.gerar');
+    }
+
+    public function set_assinado_docente(Request $request){
+        try {
+            Log::info('Requisição Recebida:', $request->all()); 
+            $affected = DB::table('contratos')
+              ->where('id_docente_in_contrato', $request->id_docente)
+              ->where('ano_contrato', $request->ano)
+              ->update(['assinado_docente' => 'Sim']);
+        
+            return response()->json(["response" => "Contrato actualizado com sucesso"]);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
+
+    }
+
+    public function set_assinado_up(Request $request){
+        try {
+
+            $affected = DB::table('contratos')
+              ->where('id_docente_in_contrato', $request->id_docente)
+              ->where('ano_contrato', $request->ano)
+              ->update(['assinado_up' => 'Sim']);
+        
+            return response()->json(["response" => "Contrato actualizado com sucesso"]);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
+
+    }
+
+    public function get_docentes_com_disc_aloc(Request $request)
+    {
+        $ano = $request->ano; // Extraia o ano do request para facilitar o uso na subconsulta.
+
+        $docentes = Docente::whereIn('id_docente', function ($query) use ($ano) {
+            $query->select('id_docente_in_leciona')
+                ->from('lecionas')
+                ->where('ano_contrato', $ano);
+        })->select('id_docente', 'nome_docente')->get();
+
+        return response()->json(['docentes' => $docentes]);
+    }
+
+    public function get_assinados_docentes(Request $request){
+        
+        $total_contratados = Contrato::where('ano_contrato', $request->ano)->count();
+        $count_contratos_assinados_docentes = Contrato::where('ano_contrato', $request->ano)
+                 ->where('assinado_docente', 'Sim')
+                 ->count('id_docente_in_contrato');
+       // $count_contratos_assiandos_up = Contrato::where('ano_contrato', $request->ano)
+        //->where('assinado_up', 'Sim')
+        //->count('id_docente_in_contrato'); 'asinnados_up'=>$count_contratos_assiandos_up
+        $nao_asinaram = $total_contratados - $count_contratos_assinados_docentes;
+        return response()->json(['total_contr'=>$total_contratados, 'docentes_assinaram'=>$count_contratos_assinados_docentes, 'nao_assinaram'=>$nao_asinaram ]);
+    }
+
+    public function get_assinados_up(Request $request){
+        
+        $total_contratados = Contrato::where('ano_contrato', $request->ano)->count();
+        $count_contratos_assinados_docentes = Contrato::where('ano_contrato', $request->ano)
+                 ->where('assinado_up', 'Sim')
+                 ->count('id_docente_in_contrato');
+       // $count_contratos_assiandos_up = Contrato::where('ano_contrato', $request->ano)
+        //->where('assinado_up', 'Sim')
+        //->count('id_docente_in_contrato'); 'asinnados_up'=>$count_contratos_assiandos_up
+        $nao_asinaram = $total_contratados - $count_contratos_assinados_docentes;
+        return response()->json(['total_contr'=>$total_contratados, 'assinados'=>$count_contratos_assinados_docentes, 'nao_assinaram'=>$nao_asinaram ]);
+    }
+
     
         
     

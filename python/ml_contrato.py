@@ -81,7 +81,7 @@ def prever_professores():
                     for professor_id, probabilidade in zip(top_professores_ids[0], top_probabilidades)]
 
         # Retornar a resposta como JSON
-        return jsonify({'codigo_disciplina': codigo_disciplina, 'top_professores': resposta})
+        return jsonify({'codigo_disciplina': codigo_disciplina, 'docentes_previstos': resposta})
 
     except Exception as e:
         # Em caso de erro, retornar um JSON com o erro

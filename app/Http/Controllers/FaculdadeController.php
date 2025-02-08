@@ -49,10 +49,25 @@ class FaculdadeController extends Controller
     
     
     public function get_all() {
-        $faculdade = Faculdade::all();
-        //return response()->json($faculdade);
-        return view('faculdade.vizualisar', ['faculdades' => $faculdade]);
+        try{
+            $faculdade = Faculdade::all();
+            return response()->json(['faculdades'=>$faculdade]);
+        //return view('faculdade.vizualisar', ['faculdades' => $faculdade]);
         //return $htmlSnippet;
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
+    }
+
+    public function get_list(){
+        try{
+            $faculdade = Faculdade::all();
+            //return response()->json(['faculdades'=>$faculdade]);
+            return view('faculdade.vizualisar', ['faculdades' => $faculdade]);
+        //return $htmlSnippet;
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
     }
 
     public function get_disciplinas(Request $request)

@@ -43,7 +43,7 @@ function buscar_dados(){
            cell3.innerHTML = item.designacao_curso;
            cell4.innerHTML = item.ano;
            cell5.innerHTML = item.semestre;
-           cell6.innerHTML = '<button type="hidden" onclick="remover(this.id)">Remover</button>';
+           cell6.innerHTML = '<button onclick="remover('+document.getElementById("id_docente").value+', '+item.codigo_disciplina_in_leciona+', '+item.ano+')">Remover</button>';
            // Add more cells and properties as needed
        });
        },

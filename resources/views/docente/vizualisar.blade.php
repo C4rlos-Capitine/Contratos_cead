@@ -60,6 +60,19 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-docente-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
+
+    function open_model(id){
+      $('#modal-lista-disciplinas').modal('show');
+      //disciplinas_docente(id);
+      console.log(id);
+      $('#id_docente').val(id);
+    }
+    function loadDisc(){
+     // var id = $('#id_docente').val
+     var id = document.getElementById('id_docente').value;
+      console.log(id)
+      disciplinas_docente(id)
+    }
     </script>
 
 <main class="main-section">
@@ -72,14 +85,11 @@
                 $(document).ready(function(){
                     new DataTable('#example');
                 })
-            
+
+                
             </script>
 
             <body>
-            <div class="popup" width="80%">
-                <span class="close-btn">&times;</span>
-                <div class="popup-body"></div>
-            </div>
                 <main class="main">
             <table id="example" class="table table-striped" style="width:100%">
                 <thead><tr><th>Nome Completo</th><th>Nivel</th><th>genero</th><th></th></tr></thead>
@@ -94,10 +104,8 @@
                             <div class="dropdown">
                             <i class="fa-solid fa-ellipsis"></i>
                                 <div class="dropdown-content">
-                                    <a href="/docente/find/{{$docente->id_docente}}">Ver Informações</a>
-                                    <a href="#link2">Editar</a>
-                                    <a href="#">Associar Áreas Cientificas</a>
-                                    <a href="#" onclick="loadDisciplinasAlocadas(this.id)">Disciplinas</a>
+                                    <a href="/docente/find/{{$docente->id_docente}}"><i class="fa-solid fa-info" style="color: #4CAF50;margin:5px"></i>Detalhes</a>
+                                    <button id="{{$docente->id_docente}}" onclick="open_model(this.id)"><i class="fa-solid fa-table-list" style="color: #4CAF50;margin:5px"></i>Disciplinas</button>
                                 </div>
                             </div>
                         </td>
@@ -107,12 +115,49 @@
             </tbody>
             </table>
             </main>
-           
+           <input type="hidden" id="id_docente" name="id_docente"/>
             </div>
         </div>
     </main>
+      <!-- bootstrap modal-->
+      <div class="modal fade bd-example-modal-lg" id="modal-lista-disciplinas" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="list_docentes_title"></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <table class="table table-striped">
+                    <div id="feedback"></div>
+                    <label>Escreva o ano e clique em buscar para visualizar as disciplinas alocadas no dado ano</label>
+                        <div class="col-md-3">
+                            
+                        <label class="input-label" for="floatingInput">Ano</label>
+                        <input required="true" id="ano_contrato" type="number" name="ano_contrato" min="1900" max="2100" step="1" class="form-control">
+                        <button class="rounded bg-green-600 text-white px-2 py-1" onclick="loadDisc()">Buscar</button>
+                        </div>
+                        <thead>
+                            <tr>
+                                <th>Nome da Disciplina</th>
+                                <th>Curso</th>
+
+                            </tr>
+                        </thead>
+                        <tbody id="disciplinas">
+                            <!-- As linhas de dados serão inseridas aqui -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
     @include('../footer')
     <script>
+
+   
             //document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".close-btn").addEventListener("click", function(){
         document.body.classList.remove("active-popup");
@@ -134,7 +179,7 @@
         $.ajax({
           type: 'GET',
           url: '/docente/get_disciplinas',
-          data: { id_docente: id },
+          data: { id_docente: id, ano:  },
           success: function (data) {
             console.log(data.response);
             var html = "";

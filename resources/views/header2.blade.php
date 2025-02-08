@@ -9,6 +9,7 @@
 
 
     <label id="titulo">Sistema Gestão de Contratos do CEAD</label>
+    <label style="color:white; padding: 10px;"><a href="/user/my_profile">user: {{auth()->user()->name}}</a></label>
 </div>
 
 <!-- <button id="bt-quit">sair<i id="quit" class="fa-solid fa-power-off" style="color: #f4f0f0;"></i></button>-->

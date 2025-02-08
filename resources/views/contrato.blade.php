@@ -15,6 +15,7 @@
             text-align: center;
         }
         header{
+ 
             text-align: center;
         }
         footer{
@@ -93,7 +94,7 @@
     $imageSrc = 'data:image/png;base64,' . $imageData; // Construct the image source
     @endphp
 
-    <img src="{{ $imageSrc }}" width="90%" height="70px" alt="Image">
+    <img src="{{ $imageSrc }}" width="90%" height="150px" alt="Image">
 
 
     </header>

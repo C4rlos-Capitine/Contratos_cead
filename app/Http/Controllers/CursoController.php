@@ -126,10 +126,7 @@ class CursoController extends Controller
 
     public function disciplinas_nao_associada(Request $request){
         //return response()->json($request->all());
-        $operador = "=";
-        if($request->tipo_contrato == 1){
-            $operador = "!=";
-        }
+
         $result = Disciplina::select('disciplinas.*')
         ->join('cursos', 'cursos.id_curso', '=', 'disciplinas.id_curso_in_disciplina')
         ->where('cursos.id_curso', $request->id_curso)

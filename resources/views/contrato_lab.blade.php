@@ -93,7 +93,7 @@
     $imageSrc = 'data:image/png;base64,' . $imageData; // Construct the image source
     @endphp
 
-    <img src="{{ $imageSrc }}" width="90%" height="70px" alt="Image">
+    <img src="{{ $imageSrc }}" width="90%" height="150px" alt="Image">
 
 
     </header>
@@ -101,7 +101,7 @@
     <div class="doc-title"><h2>TERMO DO CONTRATO</h2></div>
         <p>Entre a Universidade Pedagógica de Maputo, representada pela Profª. Doutora Marisa Guião de Mendonça, 
             no âmbito da Delegação de competências conforme a alínea i), do nº 1, do Despacho nº 03/GR-023.6/UP/2019, de 01 de Abril, doravante designada por "Contratante" e 
-            o <b>{{$contrato->nome_docente}}</b><b>{{$contrato->apelido_docente}}</b>, titular do BI nº. <b>{{$contrato->bi}}</b>, NUIT nº. <b>{{$contrato->nuit}}</b>, de nacionalidade <b>{{$contrato->nacionalidade}}</b>, doravante designado(a) por "Contratado(a)", 
+            o <b>{{$contrato->nome_tecnico}}</b><b>{{$contrato->apelido_tecnico}}</b>, titular do BI nº. <b>{{$contrato->bi}}</b>, NUIT nº. <b>{{$contrato->nuit}}</b>, de nacionalidade <b>{{$contrato->nacionalidade}}</b>, doravante designado(a) por "Contratado(a)", 
             é celebrado o presente Contrato, nos termos do Decreto nº 89/99 de 28 de Dezembro que se regerá pelas seguintes cláusulas:
         </p>
         {{$contrato->designacao_curso}}

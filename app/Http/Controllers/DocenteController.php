@@ -158,7 +158,7 @@ class DocenteController extends Controller
     public function alocar_disciplina(){
         $cursos = Curso::all();
         $tipos_contrato = Tipo_contrato::all();
-        return view('docente.alocar_disciplinas_form', ['cursos' => $cursos, 'tipo_contrato'=>$tipos_contrato]);
+        return view('docente.alocar_disciplinas_form', ['cursos' => $cursos]);
     }
 
     public static function quantas_disciplinas_ano($id_docente, $ano)
@@ -208,13 +208,20 @@ class DocenteController extends Controller
             $rules = [
                 'ano' => 'required',
                 'id_docente' => 'required',
+                'codigo_disciplina' => 'required',
+                'id_curso' => 'required',
+                //'tipo_contrato' => 'required'
                 // Add other validation rules as needed
             ];
 
              // Custom error messages
              $messages = [
                'ano.required' => 'Informe o ano do contrato',
-               'id_docente' => '[ERRO: ID_Docente não encontrado]'
+               'id_docente' => '[ERRO: ID_Docente não encontrado]',
+               'id_docente.required' => 'Pesquise o docente e clique no docente que aparecer na lista que aparecer',
+               'id_curso.required' => 'Curso não selecionado',
+               'codigo_disciplina.required' => 'Selecione a a Disciplina',
+               //'tipo_contrato.required' => 'Selecione o tipo de contrato'
                 // Add other custom error messages as needed
             ];
     
@@ -223,7 +230,7 @@ class DocenteController extends Controller
     
             // Check if validation fails
             if ($validator->fails()) {
-                return response()->json(['response' => $validator->errors(), 'status'=>0]);
+                return response()->json(['errors' => $validator->errors(), 'status'=>0]);
             }
 
 
@@ -254,7 +261,7 @@ class DocenteController extends Controller
             $leciona->id_docente_in_leciona = $request->id_docente;
             $leciona->id_curso_in_leciona = $request->id_curso;
             $leciona->codigo_disciplina_in_leciona = $request->codigo_disciplina;
-            $leciona->id_tipo_contrato_in_leciona = $request->tipo_contrato;
+            $leciona->id_tipo_contrato_in_leciona = 1;
             $leciona->ano_contrato = $request->ano;
             $leciona->cod_area_in_leciona = $area->cod_area_in_disciplina;
             $leciona->save();
@@ -267,7 +274,7 @@ class DocenteController extends Controller
             ->where('lecionas.id_docente_in_leciona', '=', $request->id_docente)
             ->where('lecionas.id_curso_in_leciona', '=', $request->id_curso)
             ->where('lecionas.codigo_disciplina_in_leciona', '=', $request->codigo_disciplina)
-            ->where('lecionas.id_tipo_contrato_in_leciona', $request->tipo_contrato)
+            ->where('lecionas.id_tipo_contrato_in_leciona', 1)
             ->get();
 
             //'response' => 'disciplina alocada com sucesso', 
@@ -288,7 +295,7 @@ class DocenteController extends Controller
             }
             //$lastRow = ano_contrato::latest()->first();
             //return response()->json(["response"=>$lastRow]);
-            if(isset($request->tipo_contrato)){
+
                 $disciplinas = Leciona::select("*")
                     ->join('docentes', 'lecionas.id_docente_in_leciona', '=', 'docentes.id_docente')
                     ->join('cursos', 'lecionas.id_curso_in_leciona', '=', 'cursos.id_curso')
@@ -296,25 +303,10 @@ class DocenteController extends Controller
                     ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
                     ->where('lecionas.id_docente_in_leciona', $request->id_docente)
                     ->where('docentes.id_docente', $request->id_docente)
-                    ->where('lecionas.id_tipo_contrato_in_leciona', $request->tipo_contrato)
+                    ->where('lecionas.id_tipo_contrato_in_leciona', 1)
                     ->where('lecionas.ano_contrato', $ano)
                     ->get();
 
-                }else{
-                    $disciplinas = Leciona::select("*")
-                    ->join('docentes', 'lecionas.id_docente_in_leciona', '=', 'docentes.id_docente')
-                    ->join('cursos', 'lecionas.id_curso_in_leciona', '=', 'cursos.id_curso')
-                    ->join('disciplinas', 'lecionas.codigo_disciplina_in_leciona', '=', 'disciplinas.codigo_disciplina')
-                    ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
-                    ->leftJoin('lecionado_ems', function ($join) {
-                        $join->on('lecionado_ems.id_curso', '=', 'lecionas.id_curso_in_leciona')
-                            ->on('lecionado_ems.codigo_disciplina', '=', 'lecionas.codigo_disciplina_in_leciona');
-                    })
-                    ->where('lecionas.id_docente_in_leciona', $request->id_docente)
-                    ->where('docentes.id_docente', $request->id_docente)
-                    ->where('lecionas.ano_contrato', $ano)
-                    ->get();
-                }
             return response()->json(['response' => $disciplinas], 201);
         } catch (\Exception $e) {
             return response()->json(['response' => $e->getMessage()], 500);

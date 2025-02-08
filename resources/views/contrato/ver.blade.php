@@ -25,6 +25,54 @@
      .modal-backdrop {
         z-index: 1040; /* Lower than the default z-index of the modal */
     }
+
+
+       /* Estilização do dropdown */
+       .dropdown {
+      position: relative;
+      display: inline-block;
+
+    }
+
+    .dropdown-content {
+      display: none;
+      position: absolute;
+      right: 0;
+      background-color: #f9f9f9;
+      min-width: 160px;
+      width: 300px;
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+      z-index: 1;
+      border-radius: 4px;
+    }
+
+    .dropdown-content a {
+      color: black;
+      padding: 12px 16px;
+      text-decoration: none;
+      display: block;
+    }
+
+    .dropdown-content a:hover {
+      background-color: #f1f1f1;
+      padding: 20px;
+    }
+
+    .dropdown:hover .dropdown-content {
+      display: block;
+    }
+
+    .dropdown i {
+      cursor: pointer;
+      font-size: 20px;
+    }
+    .mini-menu{
+        width: 100%;
+    }
+    .mini-menu:hover {
+        background: #C8E6C9 !important;
+    }
+
     </style>
 
 <body class="antialiased">
@@ -41,6 +89,7 @@
         @include('side')
     <div class="content-section">
       <div id="content-header"><label id="cont-title">Contratos</label></div>
+      <div id="feedback"></div>
         <div id="info">
         <button id="bt_novo_contrato" class="rounded bg-green-600 text-white px-2 py-1" width="fit-content">Novos contratos<i class="fa-solid fa-plus"></i></button>
                
@@ -105,18 +154,30 @@
                 <h1>Contratos</h1>
                
             <table id="example" class="table table-striped" style="width:100%">
-                <thead><tr><th>Nome Completo</th><th>Nivel</th><th>tipo</th><th>Carga H</th><th>remuneração</th><th>ano</th><th></th><th></th></tr></thead>
+                <thead><tr><th>Nome Completo</th><th>Assinado pelo docente</th><th>Assinado pela UP</th><th>ano</th><th></th></tr></thead>
                 <tbody>
                 @foreach($contratos as $contrato)
                     <tr>
                         <td>{{$contrato->nome_docente}}-{{$contrato->apelido_docente}}</td>
-                        <td>{{$contrato->designacao_nivel}}</td>
-                        <td>{{$contrato->designacao_tipo_contrato}}</td>
-                        <td>{{$contrato->carga_horaria}}</td>
-                        <td>{{$contrato->remuneracao}}</td>
+                        <td>{{$contrato->assinado_docente}}</td>
+                        <td>{{$contrato->assinado_up}}</td>
                         <td>{{$contrato->ano_contrato}}</td>
-                        <td><button id="{{$contrato->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="pdf(this.id, '{{$contrato->ano_contrato}}')">Gerar pdf</button></td>
-                        <td><button id="{{$contrato->id_docente}}" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="load_disciplinas(this.id, '{{$contrato->ano_contrato}}')">Disciplinas</button></td>
+                        <td>
+                        <div class="dropdown">
+                            <i class="fa-solid fa-ellipsis"></i>
+                                <div class="dropdown-content">
+                                    <button class="mini-menu" id="{{$contrato->id_docente}}" width="fit-content" onclick="pdf(this.id, '{{$contrato->ano_contrato}}')" ><i class="fa-solid fa-file-contract" style="color: #4CAF50;margin:5px"></i>Ver o Contrato</button></br>
+                                    <button class="mini-menu" id="{{$contrato->id_docente}}" width="fit-content" onclick="load_disciplinas(this.id, '{{$contrato->ano_contrato}}')" ><i class="fa-solid fa-table-list" style="color: #4CAF50;margin:5px"></i>Disciplinas</button>
+                                    @if($contrato->assinado_docente=="Não")
+                                        <button class="mini-menu" id="{{$contrato->id_docente}}" onclick="update_contrato_assinado1(this.id, '{{ $contrato->ano_contrato }}')"><i class="fa-solid fa-check"></i>Marcar como assinado pelo docente</button>
+                                    @endif
+                                    @if($contrato->assinado_up=="Não")
+                                        <button class="mini-menu" id="{{$contrato->id_docente}}" onclick="update_contrato_assinado2(this.id, '{{ $contrato->ano_contrato }}')" ><i class="fa-solid fa-check"></i>Marcar como assinado pelo Representante da UP</button>
+                                    @endif
+                                </div>
+                            </div>
+                            
+                        </td>
                     </tr>
                 @endforeach
             </tbody>
@@ -157,7 +218,7 @@
     <script>
         function pdf(id, ano){
             console.log(ano);
-             window.location.href = "/contrato/gerar_pdf?id_docente="+id+"&ano="+ano;
+             window.location.href = "/contrato/"+id+"/"+ano;
         }
         function load_disciplinas(id, ano){
             window.location.href = "/docente/ver_disciplinas?id_docente="+id+"&ano="+ano;
