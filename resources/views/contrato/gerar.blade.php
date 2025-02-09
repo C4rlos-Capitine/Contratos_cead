@@ -19,7 +19,7 @@
    @include('header2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('load-contrato-gerar').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
+        document.getElementById('load-contrato-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
     $(document).ready(function(){
                     new DataTable('#example');

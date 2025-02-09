@@ -172,6 +172,25 @@ footer {
 width:fit-content;
 height:auto;
 }
+#content-header{
+    width: 100%;
+}
+
+#menu-icon{
+    padding-bottom: 0;
+    cursor: pointer;
+}
+
+
+.elemento {
+    display: none; /* Oculta o elemento */
+  }
+  
+  .elemento.visivel {
+    display: block; /* Ou flex, grid, etc., dependendo do layout desejado */
+  }
+  
+
 }
 @media (max-width: 700px){
 .main-section{
@@ -194,6 +213,10 @@ height: fit-content;
 z-index: 9999;
 display:none;
 }
+.side-section{
+
+}
+
 .row-section{
 display: flex;
 flex-direction: column;

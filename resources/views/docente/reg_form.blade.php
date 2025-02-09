@@ -24,7 +24,7 @@
    @include('header2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('load-docente-form').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
+        document.getElementById('load-docente-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
         var bi;
         var nuit;
         console.log('validacao.js');
