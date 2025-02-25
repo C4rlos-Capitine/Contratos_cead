@@ -20,6 +20,7 @@ use App\Models\Contrato_laboratorio;
 use Illuminate\Support\Facades\DB;
 
 
+
 class PDFController extends Controller
 {
 
@@ -48,6 +49,7 @@ class PDFController extends Controller
                 ->join('cursos', 'lecionas.id_curso_in_leciona', '=', 'cursos.id_curso')
                 ->join('disciplinas', 'lecionas.codigo_disciplina_in_leciona', '=', 'disciplinas.codigo_disciplina')
                 ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
+                ->join('centro_recursos', 'cursos.id_centro_in_curso', '=', 'centro_recursos.id_centro')
                 ->where('lecionas.id_docente_in_leciona', $id_docente)
                 ->where('docentes.id_docente', $id_docente)
                 ->where('lecionas.id_tipo_contrato_in_leciona', $tipo_contrato)
@@ -60,6 +62,7 @@ class PDFController extends Controller
                 ->join('cursos', 'lecionas.id_curso_in_leciona', '=', 'cursos.id_curso')
                 ->join('disciplinas', 'lecionas.codigo_disciplina_in_leciona', '=', 'disciplinas.codigo_disciplina')
                 ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
+                ->join('centro_recursos', 'cursos.id_centro_in_curso', '=', 'centro_recursos.id_centro')//id_centro_in_curso
                 ->where('lecionas.id_docente_in_leciona', $id_docente)
                 ->where('docentes.id_docente', $id_docente) 
                 ->where('lecionas.ano_contrato', $ano)

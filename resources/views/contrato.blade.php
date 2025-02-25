@@ -11,7 +11,8 @@
             line-height: 1.5;
         }
         main{
-            padding: 20px;
+            width: 90%;
+            padding: 3%;
             text-align: center;
         }
         header{
@@ -61,23 +62,30 @@
             padding: 5px;
         }
 
-        .footer-section{
-            margin: 80px;
+       /* .footer-section{ width: 100%;margin: 0; display: flex; flex-direction: row;justify-content: space-between;text-align:center; padding: 20px;}*/
+
+        .footer-section {
+            width:100%;
+            text-align: center;
             display: flex;
-            flex-direction: row;
             justify-content: space-between;
-            text-align:center;
-
+            align-items: center; /* Garante alinhamento vertical */
+            padding-left: 10%;
             /*background-color: #f0f0f0;*/
-            padding: 20px;
         }
 
-       
-        .footer-child{
-            display: inline-block;
-            width: 45%; /* Adjust the width as needed */
-            vertical-align: top; /* Align elements from the top */
+        .footer-section div {
+            flex: 1; /* Faz com que as divs ocupem o espaço necessário */
         }
+
+        .footer-child {
+            text-align: center;
+        }
+
+        .footer-child {
+            text-align: center;
+        }
+
         #data{
             width: 100%;
             text-align:center;
@@ -166,8 +174,8 @@
                     <td class="outros-col">{{ $disciplina->horas_contacto }} hs</td>
                     <td class="outros-col">{{ $disciplina->designacao_curso }}</td>
                     <td class="outros-col">{{ $disciplina->ano }}º</td>
-                    <td class="outros-col">{{ $smestre }}</td>
-                    <td class="outros-col">Lhangane</td>
+                    <td class="outros-col">{{ $smestre }} Semestre</td>
+                    <td class="outros-col">{{ $disciplina->nome_centro}}</td>
                 </tr>
             @endforeach
             
@@ -275,20 +283,23 @@
 <p>1.	Os litígios que eventualmente surgirem na interpretação e aplicação do presente Contrato, serão resolvidos por comum acordo das partes, segundo as regras de boa-fé e equidade.</p>
 <p>2.	Na falta de acordo, o litígio será dirimido pelo Tribunal competente para o efeito.</p>
 
+<section id="data">Maputo,_______de_______________20__</section>
+
+
     </main>
-    <section id="data">Maputo,_______de____________20__</section>
     <footer class="footer-section">
         <div class="footer-child" align="left" style="width: 50%;float: left;">
-            <label>O/A Contrante</label><br><br>
-            <label>______________________________</label><br>
-            <small>(Profª. Doutora Marisa Guião de Mendonça)</small>
+            <label style="font-weight: bold; padding-left:20px">O Contratante</label><br><br>
+            <label>______________________________________</label><br>
+            <small style="margin:10%;width:100%">(Profª. Doutora Marisa Guião de Mendonça)</small>
         </div>
         <div class="footer-child" align="left" style="width: 50%;float: left;">
-            <label>O/A Contratado</label><br><br>
-            <label>____________________________</label><br>
-            <small>({{ $nivel }} {{$docente->nome_docente}})</small>
+            <label style="font-weight: bold;padding-left:20px">O Contratado</label><br><br>
+            <label>____________________________________</label><br>
+            <small style="margin:10%;width:100%">({{ $nivel }} {{$docente->nome_docente}})</small>
         </div>
     </footer>
+
 
 <style>
      #table-footer{

@@ -27,13 +27,13 @@ def prever_combinacoes():
         n_areas = request.json['n_areas']
         n_prevestias = 0
         if(n_areas == 1): 
-            n_prevestias = 7
+            n_prevestias = 10
         elif (n_areas == 2):
-            n_prevestias = 6 
+            n_prevestias = 8 
         elif (n_areas == 3):
-            n_prevestias = 4
+            n_prevestias = 6
         else:
-            n_prevestias = 3
+            n_prevestias = 4
         
         # Criar uma lista para armazenar as previsões
         previsoes = []

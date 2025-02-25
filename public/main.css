@@ -87,7 +87,7 @@ footer {
 }
 #content-header{
     top: 60px;
-    width: 80%;
+    width: 100%;
     float:left;
     text-align: center;
     z-index: 9999;
@@ -109,6 +109,9 @@ footer {
 }   
 .card{
     margin-left: 10px;
+}
+#content-header{
+    
 }
 
 #titulo{
