@@ -16,7 +16,7 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-faculdade-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
@@ -25,13 +25,12 @@
                     new DataTable('#example');
                 })
     </script>
-
-<main class="main-section">
-<body>
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Home</label></div>
-        <div id="info">
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
 
 
             <script>
@@ -56,7 +55,6 @@
         
             </div>
             </div>
-        </main>
-        @include('../footer')
+            </div>
     </body>
 </html>

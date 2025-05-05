@@ -17,10 +17,13 @@ class DatabaseSeeder extends Seeder
     public function run()
     {
         // \App\Models\User::factory(10)->create();
-
+        \App\Models\table_representante_ativo::create([
+            'id_representante' => 1
+        ]);
+/*
         \App\Models\User::create([
              'name' => '01.abcd.2020',
-             'email' => 'carlos2@example.com',
+             'email' => 'carlos@gmail.com',
              'password' => Hash::make('zxcvbnm'),
              'tipo_user' => 1
          ]);
@@ -41,15 +44,23 @@ class DatabaseSeeder extends Seeder
         //Registo Niveis dos docentes
         \App\Models\Nivel::create([
             'designacao_nivel'=>'Licenciado',
-            'remuneracao_hora'=>800,
+            'remuneracao_hora'=>900,
         ]);
         \App\Models\Nivel::create([
             'designacao_nivel'=>'Mestrado',
             'remuneracao_hora'=>1000,
         ]);
         \App\Models\Nivel::create([
-            'designacao_nivel'=>'Doutorado',
+            'designacao_nivel'=>'Doutorado Auxiliar',
+            'remuneracao_hora'=>1100,
+        ]);
+        \App\Models\Nivel::create([
+            'designacao_nivel'=>'Prof. Doutor associado',
             'remuneracao_hora'=>1200,
+        ]);
+        \App\Models\Nivel::create([
+            'designacao_nivel'=>'Prof. Catedrático',
+            'remuneracao_hora'=>1300,
         ]);
 
         //Registo dos tipos de contratos
@@ -164,6 +175,7 @@ class DatabaseSeeder extends Seeder
             'cod_area' => "PsiCoG",
             'designacao_area' => "Psicologia Geral"
         ]);
+        */
     
     }
 }

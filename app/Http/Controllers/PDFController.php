@@ -17,6 +17,7 @@ use App\Models\Curso;
 use App\Models\Leciona;
 use App\Models\Tipo_contrato;
 use App\Models\Contrato_laboratorio;
+use App\Models\clausula_contrato;
 use Illuminate\Support\Facades\DB;
 
 
@@ -139,6 +140,58 @@ class PDFController extends Controller
 
     }
 
+    private static function get_clausulas(){
+        $clausulas = DB::table('clausula_contrato')
+            ->select('clausula_contrato.*')
+            ->orderBy('ordem_clausula', 'asc')
+            ->get();
+        return $clausulas;
+    }
+
+    
+public function generatePdf_contrato($id_docente = null, $ano = null)
+{
+    $docente = PDFController::getDocente($id_docente);
+    $disciplinas = PDFController::getDisciplinasLecionadas($id_docente, 1, $ano);
+    $clausulas = PDFController::get_clausulas();
+    $contrato = DB::table('contratos')->where('id_docente_in_contrato', $id_docente)
+        ->where('ano_contrato', $ano)
+        ->first();
+    if (empty($docente)) {
+        return response()->json(['response' => 'docente inexistente']);
+    }
+
+    if (empty($disciplinas)) {
+        return response()->json(['response' => 'docente sem disciplinas']);
+    }
+
+    // Substituir placeholders no texto da cláusula inicial
+
+        foreach ($clausulas as $clausula) {
+            $clausula->descricao_clausula = str_replace(
+                ['{{nivel}}', '{{nome_docente}}', '{{bi}}', '{{nuit}}', '{{nacionalidade}}', '{{ano}}', '{{remuneracao_hora}}', '{{carga_horaria}}' ],
+                [
+                    '<b>' . $docente->nivel . '</b>',
+                    '<b>' . $docente->nome_docente . '</b>',
+                    '<b>' . $docente->bi . '</b>',
+                    '<b>' . $docente->nuit . '</b>',
+                    '<b>' . $docente->nacionalidade . '</b>',
+                    '<b>' . $ano . '</b>',
+                    '<b>' . $docente->remuneracao_hora . '</b>',
+                    '<b>' . $contrato->carga_horaria . '</b>'
+                ],
+                $clausula->descricao_clausula
+            );
+        }
+
+    // Passar os dados para a view
+    $bladeView = 'contrato_tutoria'; // Nome do arquivo Blade
+    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas'))->render();
+    $filename = 'contrato.pdf';
+
+    // Gerar o PDF
+    $this->pdfService->generatePdf($html, $filename);
+}
     public function generatePdf_lab($ano = null, $id_tecnico=null)
     {
             $contrato = DB::table('contrato_labs')

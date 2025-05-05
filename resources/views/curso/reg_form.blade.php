@@ -22,7 +22,7 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+
 
 
    <script defer>
@@ -73,11 +73,14 @@
         });
     }
     </script>
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Registar curso</label></div>
-        <div id="info">
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+            <div id="info">
+            <h1 class="mt-4">Registar Curso</h1>
 
            
 
@@ -128,6 +131,6 @@
                 <button class="rounded bg-green-600 text-white px-2 py-1" id="submit" width="fit-content" onclick="reg_curso()">Registar curso</button>
         </div>
     </div>
-</main>
-@include('../footer')
+</div>
+
 </body>

@@ -23,19 +23,21 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+ 
 
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-faculdade-form').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
     </script>
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Registar Faculdade</label></div>
-        <div id="info">
-
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+            <div id="info">
+            <h1 class="mt-4">Registar Faculdade</h1>
                 <div id="feedback"></div>
                 <form id="faculdade-reg">
                 @csrf
@@ -55,19 +57,19 @@
                 </div>
                 </form>
 
-            </form>
             <div class="row">
                 <div style="padding:20px" class="row" id="div-button"><button class="rounded bg-green-600 text-white px-2 py-1" id="submit" width="fit-content" onclick="reg_faculdade()">Registar</button> </div>
                 <div style="padding:20px" class="row" id="div-button"><button class="rounded bg-green-600 text-white px-2 py-1" id="submit" width="fit-content" onclick="get_faculdades()">Ver</button></div>
-            </div>   
+            </div>  
+</div> 
 </div>
 </div>
+</div>
 
 
 
 
 
-</main>
 
 <!-- bootstrap modal-->
 <div class="modal fade bd-example-modal-lg" id="modal-lista-faculdades" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">

@@ -22,7 +22,7 @@
     }
     </style>
 <body class="antialiased">
-   @include('../header2')
+
 
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
@@ -30,11 +30,14 @@
     });
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Detalhes do curso de: {{$cursos->designacao_curso}}</label></div>
-        <div id="info">
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+            <div id="info">
+            <h1 class="mt-4">Detalhes do curso de: {{$cursos->designacao_curso}}a</h1>
 
         <div id="feedback"></div>
         <form id="curso-reg">
@@ -52,8 +55,8 @@
                 <div class="row">
                 <div class="col-md-3">
                     <label for="validationCustom04" class="form-label">Faculdade</label>
-                    <select id="faculdade" name="faculdade" class="form-select" id="validationCustom04"  disabled>
-                       <option selected disabled>{{$cursos->nome_faculdade}}</option>
+                    <select id="faculdade" name="faculdade" class="form-select" id="validationCustom04">
+                       <option selected>{{$cursos->nome_faculdade}}</option>
                     </select>
                 </div>
                 <div class="col-md-3">
@@ -85,6 +88,6 @@
 
             
         </div>
-    </main>
-    @include('../footer')
+</div>
+
 </body>

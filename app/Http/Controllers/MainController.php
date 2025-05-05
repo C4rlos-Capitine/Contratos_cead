@@ -6,7 +6,13 @@ use App\Models\Curso;
 use App\Models\Disciplina;
 use App\Models\Docente;
 use App\Models\Contrato;
+use App\Models\Faculdade;
+use App\Models\Nivel;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+
+
+
 
 class MainController extends Controller
 {
@@ -71,7 +77,19 @@ class MainController extends Controller
         ->count('id_docente_in_contrato');
         //return response()->json(['curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso]);
         //return $htmlSnippet = view('estatisticas', ['curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso])->render();
-    return view('welcome', ['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados, 'total_disciplinas'=>$countDisciplinas, 'total_alocadas'=>$countLecionas, 'assinados_docentes'=>$count_contratos_assinados_docentes, 'assinados_up'=>$count_contratos_assiandos_up]);
+        $user = Auth::user();
+        if($user->tipo_user==1||$user->tipo_user==2){
+            return view('welcome', ['users'=>auth()->user(), 'curso' => $cursos, 'total_cursos' => $cursosCount, 'cada_curso' => $cada_curso, 'total_docentes'=>$total_docentes, 'contratados'=> $total_contratados, 'total_disciplinas'=>$countDisciplinas, 'total_alocadas'=>$countLecionas, 'assinados_docentes'=>$count_contratos_assinados_docentes, 'assinados_up'=>$count_contratos_assiandos_up]);
+        }else{
+            $docente = Docente::select('*')
+            ->join('nivels', 'nivels.id_nivel', '=', 'docentes.id_nivel')
+            ->join('faculdades', 'faculdades.id_faculdade', '=', 'docentes.id_faculdade_in_docente')
+            ->where('id_user', $user->id)
+            ->first();
+        //$docente = Docente::where('email', $request->email)
+        //return response()->json($docente);
+            return view('docente.dados', ['docente' => $docente, 'niveis'=>Nivel::all(), 'faculdades'=>Faculdade::all()])->render();
+        }
     }
 
 

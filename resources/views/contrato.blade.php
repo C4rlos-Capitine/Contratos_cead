@@ -8,7 +8,7 @@
         body{
             font-family: Garamond;
             font-size: 12px;
-            line-height: 1.5;
+            line-height: 1.7;
         }
         main{
             width: 90%;
@@ -30,21 +30,16 @@
             text-align: justify;
             line-height: 1.2;
         }
-        .table{
-            width: 100%;
-            text-align: center;
-            
-        }
         table {
             border-collapse: collapse;
-            border-style: solid;
+ 
+            border: sol; /* Set border to 1px solid black */
         }
         th, td {
-            border: 1px solid #000; /* Set border to 1px solid black */
-            padding: 1px;
-            
-            text-align: center;
-            text-align: justify;
+            border:  0.5px solid #000;; /* Define borda de 1px sólida preta */
+            text-align: center; /* Centraliza o conteúdo horizontalmente */
+            vertical-align: middle; /* Centraliza o conteúdo verticalmente */
+            padding: 5px; /* Adiciona espaçamento interno */
         }
         .alineas{
             margin-left: 50px;

@@ -13,9 +13,12 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('contratos', function (Blueprint $table) {
-            $table->string('assinado_docente')->default("Não");
-            $table->string('assinado_up')->default("Não");
+        Schema::create('ficheiros', function (Blueprint $table) {
+            $table->id('id_ficheiro');
+            $table->integer('id_docente_in_ficheiro');
+            $table->integer('ano_in_ficheiro');
+            $table->string('path');
+            $table->timestamps();
         });
     }
 
@@ -26,8 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('contratos', function (Blueprint $table) {
-            //
-        });
+        Schema::dropIfExists('ficheiros');
     }
 };

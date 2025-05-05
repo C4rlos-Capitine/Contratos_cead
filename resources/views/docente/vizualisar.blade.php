@@ -55,7 +55,6 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-docente-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
@@ -74,13 +73,15 @@
       disciplinas_docente(id)
     }
     </script>
-
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Home</label></div>
-        <div id="info">
-                        
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+      
+            <div id="info">
+            <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/docente/reg">Registar Tutor</a>  
             <script>
                 $(document).ready(function(){
                     new DataTable('#example');
@@ -90,8 +91,7 @@
             </script>
 
             <body>
-                <main class="main">
-            <table id="example" class="table table-striped" style="width:100%">
+            <table id="example" class="table table-hover" style="width:100%">
                 <thead><tr><th>Nome Completo</th><th>Nivel</th><th>genero</th><th></th></tr></thead>
                 <tbody>
                 @foreach($docentes as $docente)
@@ -114,11 +114,11 @@
                 @endforeach
             </tbody>
             </table>
-            </main>
+        
            <input type="hidden" id="id_docente" name="id_docente"/>
             </div>
         </div>
-    </main>
+
       <!-- bootstrap modal-->
       <div class="modal fade bd-example-modal-lg" id="modal-lista-disciplinas" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
@@ -154,7 +154,7 @@
             </div>
         </div>
     </div>
-    @include('../footer')
+
     <script>
 
    

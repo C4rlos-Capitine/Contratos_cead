@@ -26,16 +26,16 @@
         });
     </script>
 <body class="antialiased">
-@include('header2')
 
-<main class="main-section">
-    @include('side')
-    <div class="content-section">
-        <div id="content-header">
-            <label id="cont-title">Registrar Usuário</label>
-        </div>
+@include('side2')
+        
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+    <div class="container-fluid">
+       
         <div id="info">
-            <h3>Registrar Novo Usuário</h3>
+        <h1 class="mt-4">Registar Utilizador</h1>
             <div id="feedback"></div>
             <form id="user-reg">
                 @csrf <!-- Token de segurança para formulários em Laravel -->
@@ -64,24 +64,25 @@
                     </div>
                     <div class="col">
                         <div class="form-group">
-                            <label>Tipo de Usuário</label>
+                            <label>Tipo de Utilizador</label>
                             <select class="form-control" id="tipo_user" name="tipo_user" required>
                                 <option value="1">Administrador</option>
-                                <option value="2">Usuário Comum</option>
+                                <option value="2">Gestor de Contratos</option>
                             </select>
                         </div>
     
-    </div>
+                    </div>
                 </div>
-
+                <div class="row">
+                    <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="reg_usuario()">Registrar Utilizador<i class="fa-solid fa-user-plus action-secondary "></i></button></div>
+                    <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="get_users()">Ver Utilizador<i class="fa-solid fa-users action-secondary "></i></button></div>
+                </div>
                 </div>
             </form>
-            <div class="row">
-            <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="reg_usuario()">Registrar Usuário</button></div>
-            <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="get_users()">Ver Usuários</button></div>
+
     </div>
     </div>
-</main>
+    </div>
 
 
 <!-- bootstrap modal-->
@@ -118,6 +119,5 @@
         </div>
     </div>
 
-@include('../footer')
 </body>
 </html>

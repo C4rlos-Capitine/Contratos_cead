@@ -35,6 +35,17 @@ body{
 .btn{
     width: fit-content;
 }
+
+.action {
+    cursor: pointer;
+    margin-right: 5px;
+    color: #43A047;
+}
+.action-secondary {
+    cursor: pointer;
+    color: #f0f0f0;
+    margin-left: 5px;
+}
 .side-section{
     left: 0;
     position: fixed;
@@ -94,7 +105,13 @@ footer {
     position: fixed;
     background:gray;
 }
+.alert{
+    width: 100%;
+    margin-top: 10px;
+}
 .row-section{
+    text-align: center;
+    width: 100%;
     margin-bottom: 10px;
     display: flex;
     flex-direction: row;
@@ -108,7 +125,7 @@ footer {
     color: white;
 }   
 .card{
-    margin-left: 10px;
+    margin-left: 20px;
 }
 #content-header{
     
@@ -132,8 +149,23 @@ footer {
     height: 60%;
 }
 #info{
-    padding-left: 30px;
-    padding-top:50px;
+    padding: 1.5rem;
+    font-size: 1.1rem;
+    background-color: #F5F5F5 !important;
+    margin-top: 1.5rem;
+    background-color: #F5F5F5 !important; /*by Carlos */
+
+}
+
+.new-reg{
+    margin-left: 1.5rem;
+    margin-top: 2.5rem;
+}
+
+#example{
+    width: 100%;
+    padding: 0;
+    overflow: scroll;
 }
 #logo{
     height: 50px;

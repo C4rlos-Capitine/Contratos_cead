@@ -6,11 +6,15 @@ use Illuminate\Http\Request;
 use App\Models\Contrato;
 use App\Models\Docente;
 use App\Models\Leciona;
+use App\Models\ficheiro;
 use App\Models\ano_contrato;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
+use Illuminate\Support\Facades\Storage;
+use Symfony\Component\HttpFoundation\Response;
 
 
 class ContratoController extends Controller
@@ -43,6 +47,8 @@ class ContratoController extends Controller
             $contrato->remuneracao = $total_ganho;
             $contrato->assinado_docente = "Não";
             $contrato->assinado_up = "Não";
+            $contrato->estado = "Na Up";
+            $contrato->resultado_ta = "Pendente";
             $contrato->save();
             
         return response()->json(['response' => 'Contrato Registado com sucesso', 'status'=>"success"]);
@@ -53,19 +59,162 @@ class ContratoController extends Controller
         }
 
     }
+    public function upload(Request $request) {
+        try {
+            if ($request->hasFile('ficheiro')) {
+                $file = $request->file('ficheiro');
+                $path = $file->store('uploads'); // Armazena o arquivo na pasta 'uploads'
+    
+                $ficheiro = new ficheiro;
+                $ficheiro->id_docente_in_ficheiro = $request->id;
+                $ficheiro->ano_in_ficheiro = $request->ano;
+                $ficheiro->path = $path;
+                $ficheiro->save();
+    
+                $user = Auth::user();
+                Log::info("request data", ['response' => $user->id]);
+    
+                // Redireciona para a rota 'detalhes' com os parâmetros necessários
+                return redirect()->route('detalhes', ['ano' => $request->ano, 'id_docente' => $request->id])
+                    ->with('success', 'Arquivo enviado com sucesso!');
+            } else {
+                return redirect()->back()->withErrors(['ficheiro' => 'Arquivo não enviado.']);
+            }
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+            return redirect()->back()->withErrors(['error' => $e->getMessage()]);
+        }
+    } 
+    
+    public function downloadFicheiroPorDocenteEAno($ano, $id_docente)
+    {
+        try {
+
+    
+            // Busca o ficheiro com base no docente e no ano
+            $ficheiro = ficheiro::where('id_docente_in_ficheiro', $id_docente)
+                                ->where('ano_in_ficheiro', $ano)
+                                ->first();
+            Log::info("request data", ['response'=>$ficheiro]);
+            if (!$ficheiro) {
+                return response()->json(['error' => 'Ficheiro não encontrado para este docente e ano.'], 404);
+            }
+    
+            if (!Storage::exists($ficheiro->path)) {
+                return response()->json(['error' => 'Arquivo não existe no armazenamento.'], 404);
+            }
+    
+            // Faz o download do ficheiro
+            return Storage::download($ficheiro->path, basename($ficheiro->path));
+    
+        } catch (\Exception $e) {
+            \Log::error("Erro ao baixar o ficheiro: " . $e->getMessage());
+            return response()->json(['error' => 'Erro ao tentar baixar o ficheiro.'], 500);
+        }
+    }
+    
 
     public function teste(Request $request){
     $resp = ContratoController::check_if_alocada($request->tipo_contrato, $request->id_docente);
     return response()->json($resp);
     }
 
+    public function set_enviados_ta(Request $request){
+        try {
+            Log::info("request data", ['response'=>$request->all()]);
+            $affected = DB::table('contratos')
+              ->where('ano_contrato', $request->ano_contrato)
+              ->update([
+                  'estado' => 'No TA',
+                  'data_chegada_no_ta' => $request->data
+              ]);
+        
+            return response()->json(["response" => "Atualizado com sucesso"]);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
+    }
+
+    public function aprovar(Request $request){
+        try {
+            Log::info("request data", ['response'=>$request->all()]);
+            $affected = DB::table('contratos')
+              ->where('ano_contrato', $request->ano_contrato)
+              ->where('id_docente_in_contrato', $request->id_docente)
+              ->update([
+                  'resultado_ta' => 'Aprovado',
+              ]);
+        
+            return response()->json(["response" => "Atualizado com sucesso (Contrato Aprovado)"]);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
+    }
+
+    public function reprovar(Request $request){
+        try {
+            Log::info("request data", ['response'=>$request->all()]);
+            $affected = DB::table('contratos')
+              ->where('ano_contrato', $request->ano_contrato)
+              ->where('id_docente_in_contrato', $request->id_docente)
+              ->update([
+                  'resultado_ta' => 'Reprovado',
+              ]);
+        
+            return response()->json(["response" => "Atualizado com sucesso (Reprovado)"]);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+        }
+    }
+    
+
     public function ver()
     {
+        $anos = ano_contrato::select('*')->get();
         $contratos = Contrato::select('*')
         ->join('docentes', 'docentes.id_docente', '=', 'id_docente_in_contrato')
         ->join('tipo_contratos', 'contratos.id_tipo_contrato_in_contrato', '=', 'tipo_contratos.id_tipo_contrato')
         ->get();
-        return view('contrato.ver', ['contratos'=>$contratos]);
+        return view('contrato.ver', ['contratos'=>$contratos, 'anos'=>$anos]);
+       // return response()->json($contratos);
+    }
+
+    public function detalhes($ano=null, $id_docente=null){
+        $docente = Docente::select('*')
+        ->join('nivels', 'nivels.id_nivel', '=', 'docentes.id_nivel')
+        ->join('faculdades', 'faculdades.id_faculdade', '=', 'docentes.id_faculdade_in_docente')
+        ->where('id_docente', $id_docente)
+        ->first();
+        $disciplinas = ContratoController::disciplinas($ano, $id_docente);
+        $contrato = contrato::select('*')->where('ano_contrato', $ano)->where('id_docente_in_contrato', $id_docente)->get()->first();
+        return view('contrato.detalhes', ['docente' => $docente,  'contrato'=>$contrato, 'disciplinas'=>$disciplinas])->render();
+    }
+
+    public function ver_contratos_no_ta2($ano = null)
+    {
+
+        Log::info("request data", ['response'=>$ano]);
+        $contratos = Contrato::select('*')
+        ->join('docentes', 'docentes.id_docente', '=', 'id_docente_in_contrato')
+        ->join('tipo_contratos', 'contratos.id_tipo_contrato_in_contrato', '=', 'tipo_contratos.id_tipo_contrato')
+        ->where('ano_contrato', $ano)
+        ->where('estado', 'No Ta')
+        ->get();
+        return view('contrato.no_ta', ['contratos'=>$contratos]);
+       // return response()->json($contratos);
+    }
+
+    public function ver_contratos_no_ta()
+    {
+
+        Log::info("request data", ['response'=>date('Y')]);
+        $contratos = Contrato::select('*')
+        ->join('docentes', 'docentes.id_docente', '=', 'id_docente_in_contrato')
+        ->join('tipo_contratos', 'contratos.id_tipo_contrato_in_contrato', '=', 'tipo_contratos.id_tipo_contrato')
+        ->where('ano_contrato', date('Y'))
+        ->where('estado', 'No Ta')
+        ->get();
+        return view('contrato.no_ta', ['contratos'=>$contratos]);
        // return response()->json($contratos);
     }
 
@@ -85,6 +234,21 @@ class ContratoController extends Controller
             ->where('email', $email)
             ->first();
         return $docente;
+    }
+    public static function getContratosDocente(){
+        $user = Auth::user();
+         Log::info("request data", ['response'=>$user->id]);
+        if($user->tipo_user==3){
+            $contratos = Contrato::select("*")
+            ->join('docentes', 'docentes.id_docente', '=', 'id_docente_in_contrato')
+            ->join('tipo_contratos', 'contratos.id_tipo_contrato_in_contrato', '=', 'tipo_contratos.id_tipo_contrato')
+            ->where('id_user', $user->id)->get();
+            Log::info("Número de contratos encontrados", ['count' => $contratos->count()]);
+            return view('docente.ver', ['contratos'=>$contratos, 'count'=>$contratos->count(), 'ficheiro_enviado'=>'Anexo do contrato carregado com sucesso']);
+        }else{
+            return view('error');
+        }
+
     }
     public static function getDisciplinasLecionadas($id_docente, $tipo_contrato)
     {
@@ -116,22 +280,27 @@ class ContratoController extends Controller
     }
 
 
-    public function get_disciplinas_contrato(Request $request)
+    private static function disciplinas($ano, $id_docente){
+        $disciplinas = Leciona::select("*")
+        ->join('docentes', 'lecionas.id_docente_in_leciona', '=', 'docentes.id_docente')
+        ->join('cursos', 'lecionas.id_curso_in_leciona', '=', 'cursos.id_curso')
+        ->join('disciplinas', 'lecionas.codigo_disciplina_in_leciona', '=', 'disciplinas.codigo_disciplina')
+        ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
+        ->where('lecionas.id_docente_in_leciona', $id_docente)
+        ->where('docentes.id_docente', $id_docente)
+        ->where('lecionas.ano_contrato', $ano)
+        //  ->where('lecionas.id_tipo_contrato_in_leciona', $request->tipo_contrato)
+        ->get();
+        return $disciplinas;
+    }
+
+
+    public function get_disciplinas_contrato($ano = null, $id_docente)
     {
         try {
-            //return response()->json($request->all());
-            $docente = ContratoController::getDocente($request->id_docente);
-            $disciplinas = Leciona::select("*")
-                ->join('docentes', 'lecionas.id_docente_in_leciona', '=', 'docentes.id_docente')
-                ->join('cursos', 'lecionas.id_curso_in_leciona', '=', 'cursos.id_curso')
-                ->join('disciplinas', 'lecionas.codigo_disciplina_in_leciona', '=', 'disciplinas.codigo_disciplina')
-                ->join('categorias', 'disciplinas.id_cat_disciplina', '=', 'categorias.id_cat_disciplina') // Add this join
-                ->where('lecionas.id_docente_in_leciona', $request->id_docente)
-                ->where('docentes.id_docente', $request->id_docente)
-                ->where('lecionas.ano_contrato', $request->ano)
-                //  ->where('lecionas.id_tipo_contrato_in_leciona', $request->tipo_contrato)
-                ->get();
+            $docente = ContratoController::getDocente($id_docente);
 
+            $disciplinas = ContratoController::disciplinas($ano, $id_docente);
                 
             return view('docente.disciplinas_ver',['disciplinas' => $disciplinas, 'docente'=>$docente]);
         } catch (\Exception $e) {

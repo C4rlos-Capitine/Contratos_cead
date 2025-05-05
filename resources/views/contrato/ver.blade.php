@@ -19,7 +19,7 @@
         z-index: 9999;
     }
     .modal-opened {
-        opacity: 0.5;
+        
         pointer-events: none;
     }
      .modal-backdrop {
@@ -76,7 +76,7 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+
 
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
@@ -85,82 +85,50 @@
     </script>
 <!-- Scrollable modal -->
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-      <div id="content-header"><label id="cont-title">Contratos</label></div>
-      <div id="feedback"></div>
-        <div id="info">
-        <button id="bt_novo_contrato" class="rounded bg-green-600 text-white px-2 py-1" width="fit-content">Novos contratos<i class="fa-solid fa-plus"></i></button>
-               
-            <script>
-                $(document).ready(function(){
-                    new DataTable('#example');
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+      
+            <div id="info">
+                <p>Contratos</p>
+        <button id="bt_novo_contrato" class="rounded bg-green-600 text-white px-2 py-1" width="fit-content" onclick="load_form()">Novos contratos<i class="fa-solid fa-plus"></i></button>
+        <button id="bt_novo_contrato" class="rounded bg-green-600 text-white px-2 py-1" width="fit-content" onclick="load_form_sendTa()">Marcar como enviado para TA</button>
+             
+               <script>
 
-                     /*$('#bt_novo_contrato').on('click', function(){
-                         $('.modal').show();
-                     });
-                    $('#close-modal').on('click', function(){
-                        $('.modal').hide();
-                    });*/
-                   
-                    $('#bt_novo_contrato').on('click', function(){
-                        $('body').addClass('modal-opened');
-                        $('.modal').show();
-                    });
-
-                    $('#close-modal').on('click', function(){
-                        $('body').removeClass('modal-opened');
-                        $('.modal').hide();
-                    });
-                    
-                    $('#registar_novos').on('click', function(){
-                        console.log("ola")
-                        $.ajaxSetup({
-                            headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                            }
-                        });
-
-                        $.ajax({
-                            type: 'post',
-                            url: '/contrato/novos_contratos',
-                            data: {ano_contrato: document.getElementById('ano').value},
-                            success: function (response) {
-                                console.log(response);
-                                if (jQuery.isEmptyObject(response.errors)) {
-                                    $('#feedback').html('<div class="alert alert-success">' + response.response + '</div>');
-                                }else{
-                                    var errorsHtml = '<div class="alert alert-danger"><ul>';
-                                    $.each(response.errors, function (key, value) {
-                                        errorsHtml += '<li>' + value + '</li>';
-                                        console.log(value)
-                                    });
-                                    errorsHtml += '</ul></div>';
-                                    $('#feedback').html(errorsHtml);
-                                }
-                            },
-                            error: function () {
-                                alert("error");
-                            }
-                        });
-                    })
+                   $(document).ready(function(){
+                       new DataTable('#example');
    
-                });
-               
-            </script>
-
+          
+                      
+                       $('#bt_novo_contrato').on('click', function(){
+                           $('body').addClass('modal-opened');
+                           $('#init-contract').show();
+                       });
+   
+                       $('#close-modal').on('click', function(){
+                           $('body').removeClass('modal-opened');
+                           $('#init-contract').hide();
+                       });
+      
+                   });
+                  
+               </script>
          
                 <h1>Contratos</h1>
                
-            <table id="example" class="table table-striped" style="width:100%">
-                <thead><tr><th>Nome Completo</th><th>Assinado pelo docente</th><th>Assinado pela UP</th><th>ano</th><th></th></tr></thead>
+            <table id="example" class="table table-hover" style="width:100%">
+                <thead><tr><th>Nome Completo</th><th>Assinado pelo docente</th><th>Assinado pela UP</th><th>Estado</th><th>ano</th><th></th></tr></thead>
                 <tbody>
                 @foreach($contratos as $contrato)
                     <tr>
                         <td>{{$contrato->nome_docente}}-{{$contrato->apelido_docente}}</td>
                         <td>{{$contrato->assinado_docente}}</td>
                         <td>{{$contrato->assinado_up}}</td>
+                        <td>{{$contrato->estado}}</td>
                         <td>{{$contrato->ano_contrato}}</td>
                         <td>
                         <div class="dropdown">
@@ -168,6 +136,8 @@
                                 <div class="dropdown-content">
                                     <button class="mini-menu" id="{{$contrato->id_docente}}" width="fit-content" onclick="pdf(this.id, '{{$contrato->ano_contrato}}')" ><i class="fa-solid fa-file-contract" style="color: #4CAF50;margin:5px"></i>Ver o Contrato</button></br>
                                     <button class="mini-menu" id="{{$contrato->id_docente}}" width="fit-content" onclick="load_disciplinas(this.id, '{{$contrato->ano_contrato}}')" ><i class="fa-solid fa-table-list" style="color: #4CAF50;margin:5px"></i>Disciplinas</button>
+                                    <a class="mini-menu" id="{{$contrato->id_docente}}" width="fit-content" href="/contrato/detalhes/{{$contrato->ano_contrato}}/{{$contrato->id_docente}}"><i class="fa-sharp fa-solid fa-circle-info" style="color: #4CAF50;margin:5px"></i>Detalhes</a>
+                <!-- /contrato/detalhes/{ano}/{id_docente} -->
                                     @if($contrato->assinado_docente=="Não")
                                         <button class="mini-menu" id="{{$contrato->id_docente}}" onclick="update_contrato_assinado1(this.id, '{{ $contrato->ano_contrato }}')"><i class="fa-solid fa-check"></i>Marcar como assinado pelo docente</button>
                                     @endif
@@ -183,12 +153,14 @@
             </tbody>
             </table>
           
-        
-            <div class="popup" width="80%">
-                <span class="close-btn">&times;</span>
+       
             </div>
+        </div>
+
+     
+  
             <!-- modal -->
-            <div class="modal" tabindex="-1">
+            <div class="modal" id="init-contract" tabindex="-1">
                 <div class="modal-dialog">
                     <div class="modal-content">
                     <div class="modal-header">
@@ -204,24 +176,136 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" id="close-modal" class="rounded bg-red-600 text-white px-2 py-1" data-bs-dismiss="modal">Fechar</button>
-                        <button type="button" id="registar_novos" class="rounded bg-green-600 text-white px-2 py-1">Registar</button>
+                        <button type="button" id="close-modal" class="rounded bg-red-600 text-white px-2 py-1" data-bs-dismiss="modal" onclick="hide_form()">Fechar</button>
+                        <button type="button" id="registar_novos" class="rounded bg-green-600 text-white px-2 py-1" onclick="save_novo_contrato()">Registar</button>
                     </div>
                     </div>
                 </div>
             </div>
             <!-- end modal -->
+
+             <!-- modal -->
+             <div class="modal" id="send-to-ta" tabindex="-1">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Enviar para Tribunal administrativo</h5>
+                        <button type="button"  class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <div id="feedback"></div>
+                        <div class="row">
+                            <div class="col-md-6">
+                            <label for="validationCustom04" class="form-label">Anos<span style="color:red">*</span></label>
+                            <select id="ano_contr" name="ano" class="form-select" required>
+                                <option selected disabled value="">Escolha..</option>
+                                @foreach($anos as $ano)
+                                    <option value="{{$ano->ano_contrato}}">{{$ano->ano_contrato}}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="validationCustom04" class="form-label">Data de Envio<span style="color:red">*</span></label>
+                            <input required="true" id="data" type="date" class="form-control" name="data" placeholder="data">
+                        </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="close-modal" class="rounded bg-red-600 text-white px-2 py-1" data-bs-dismiss="modal" onclick="hide_form_sendTa()">Fechar</button>
+                        <button type="button" id="registar_novos" class="rounded bg-green-600 text-white px-2 py-1" onclick="save_set_ta()">Guardar</button>
+                    </div>
+                    </div>
+                </div>
             </div>
-        </div>
-    </main>
-    @include('../footer')
+            <!-- end modal -->
+
     <script>
+        function load_form(){
+            $('body').addClass('modal-opened');
+            $('#init-contract').show();
+        }
+
+        function load_form_sendTa(){
+            $('body').addClass('modal-opened');
+            $('#send-to-ta').show();
+        }
+        function save_novo_contrato(){
+            console.log("ola")
+            $.ajaxSetup({
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: 'post',
+                url: '/contrato/novos_contratos',
+                data: {ano_contrato: document.getElementById('ano').value},
+                success: function (response) {
+                    console.log(response);
+                    if (jQuery.isEmptyObject(response.errors)) {
+                        $('#feedback').html('<div class="alert alert-success">' + response.response + '</div>');
+                    }else{
+                        var errorsHtml = '<div class="alert alert-danger"><ul>';
+                        $.each(response.errors, function (key, value) {
+                            errorsHtml += '<li>' + value + '</li>';
+                            console.log(value)
+                        });
+                        errorsHtml += '</ul></div>';
+                        $('#feedback').html(errorsHtml);
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+
+        function save_set_ta(){
+            console.log("ola")
+            $.ajaxSetup({
+                headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $.ajax({
+                type: 'post',
+                url: '/contrato/send_to_ta',
+                data: {ano_contrato: document.getElementById('ano_contr').value, data: document.getElementById('data').value},
+                success: function (response) {
+                    console.log(response);
+                    if (jQuery.isEmptyObject(response.errors)) {
+                        $('#feedback').html('<div class="alert alert-success">' + response.response + '</div>');
+                    }else{
+                        var errorsHtml = '<div class="alert alert-danger"><ul>';
+                        $.each(response.errors, function (key, value) {
+                            errorsHtml += '<li>' + value + '</li>';
+                            console.log(value)
+                        });
+                        errorsHtml += '</ul></div>';
+                        $('#feedback').html(errorsHtml);
+                    }
+                },
+                error: function () {
+                    alert("error");
+                }
+            });
+        }
+        function hide_form(){
+            $('body').removeClass('modal-opened');
+            $('#init-contract').hide();
+        }
+        function hide_form_sendTa(){
+            $('body').removeClass('modal-opened');
+            $('#send-to-ta').hide();
+        }
         function pdf(id, ano){
             console.log(ano);
              window.location.href = "/contrato/"+id+"/"+ano;
         }
         function load_disciplinas(id, ano){
-            window.location.href = "/docente/ver_disciplinas?id_docente="+id+"&ano="+ano;
+            window.location.href = "/docente/ver_disciplinas/"+ano+"/"+id;
         }
             //document.addEventListener("DOMContentLoaded", function () {
     document.querySelector(".close-btn").addEventListener("click", function(){

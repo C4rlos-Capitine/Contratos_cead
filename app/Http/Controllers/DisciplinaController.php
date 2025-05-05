@@ -107,12 +107,12 @@ class DisciplinaController extends Controller
             ->join('categorias', 'categorias.id_cat_disciplina', '=', 'disciplinas.id_cat_disciplina')->get();
             return response()->json($disciplina);
     }
-    public function get_all(Request $request) {
-        $curso = Curso::select('designacao_curso')->where('id_curso', $request->id_curso)->first();
+    public function get_all($id_curso = null) {
+        $curso = Curso::select('designacao_curso')->where('id_curso', $id_curso)->first();
         $disciplina = Disciplina::select('*') 
             ->join('cursos', 'cursos.id_curso', '=', 'disciplinas.id_curso_in_disciplina')
             ->join('categorias', 'categorias.id_cat_disciplina', '=', 'disciplinas.id_cat_disciplina')
-            ->where('cursos.id_curso', $request->id_curso)
+            ->where('cursos.id_curso', $id_curso)
             ->orderByDesc('ano')
             ->get();
     

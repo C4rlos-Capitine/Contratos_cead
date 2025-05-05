@@ -16,23 +16,17 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
-   <script defer>
-    document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('load-contrato-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
-    });
-    $(document).ready(function(){
-                    new DataTable('#example');
-                })
-    </script>
 
-<main class="main-section">
-<body>
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Home</label></div>
-        <div id="info">
 
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+      
+            <div id="info">
+                <p>Contratos de Tecnicos de Laboratório</p>
 
             <script>
                 $(document).ready(function(){
@@ -49,7 +43,7 @@
                 </div>
                 <button class="rounded bg-green-600 text-white px-2 py-1" onclick="get_contratosLab()">Buscar</button>
           </div>
-            <table id="example" class="table table-striped" style="width:100%;">
+            <table id="example" class="table table-hover" style="width:100%;">
                 <thead><tr><th>Técnico</th>
                                 <th>Curso</th>
                                 <th>Nome da Disciplina</th>
@@ -82,6 +76,6 @@
 
 
         </main>
-        @include('../footer')
+
     </body>
 </html>

@@ -25,9 +25,11 @@ return new class extends Migration
             $table->integer('id_faculdade_in_docente');
             $table->integer('id_user')->nullable();
             $table->string('email')->unique();
+            $table->string('assinado_docente')->default("Não");
+            $table->string('assinado_up')->default("Não");
             $table->timestamp('email_verified_at')->nullable();
             $table->foreign('id_nivel')->references('id_nivel')->on('nivels')->onDelete('cascade');
-           // $table->foreign('id_user')->references('id_user')->on('users')->onDelete('cascade');
+            $table->foreign('id_user')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('id_faculdade_in_docente')->references('id_faculdade')->on('faculdades')->onDelete('cascade');
             $table->timestamps();
         });

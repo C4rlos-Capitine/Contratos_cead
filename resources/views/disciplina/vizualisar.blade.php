@@ -24,7 +24,7 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+
    
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
@@ -32,11 +32,15 @@
     });
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Visualizar disciplinas</label></div>
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
             <div id="info">
+            <h1 class="mt-4">Disciplinas</h1>
+       
                 <script>
                     $(document).ready(function(){
                         new DataTable('#example');
@@ -91,7 +95,7 @@
             
                     
                     <p>curso: {{$curso->designacao_curso}}</p>
-                <table id="example" class="table table-striped" style="width:100%">
+                <table id="example" class="table table-hover" style="width:100%">
                     <thead><tr><th>designação</th><th>sigla</th><th>ano</th><th>semestre</th><th>horas de contacto</th><th></th></tr></thead>
                     <tbody>
                     @foreach($disciplinas as $disciplina)
@@ -142,6 +146,6 @@
             </div>
         </div>
     </div>
-    </main>
-    @include('../footer')
+                </div>
+
 </body>

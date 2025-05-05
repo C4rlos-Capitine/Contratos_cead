@@ -21,7 +21,7 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-tecnico-form').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
@@ -44,11 +44,14 @@
     });
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Registar Técnico</label></div>
+@include('side2')
+        
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+    <div class="container-fluid">
         <div id="info">
+        <h1 class="mt-4">Registar Técnico de Laboratório</h1>
             <div id="feedback"></div>
             <form id="tecnico-reg" class="needs-validation">
             @csrf
@@ -132,7 +135,8 @@
             </div>
         </div>
     </div>
-</main>
+</div>
+</div>
 
 <!-- bootstrap modal-->
 <div class="modal fade bd-example-modal-lg" id="modal-lista-users" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
@@ -172,6 +176,6 @@
             </div>
         </div>
     </div>
-@include('../footer')
+
 </body>
 </html>

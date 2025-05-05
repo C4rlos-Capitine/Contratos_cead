@@ -5,29 +5,43 @@
         <title>Contratos CEAD</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="csrf-token" content="{{ csrf_token() }}">
-        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
- 
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{{asset('assets/favicon.ico')}}" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{{ asset('css/styles.css')}}" rel="stylesheet" />
+
    <!-- CSS -->
-        <script src="{{ asset('jquery-3.7.0.js') }}"></script>
-        <link rel="stylesheet" href="{{ asset('body-style.css') }}">
+      <!--  <script src="{{ asset('jquery-3.7.0.js') }}"></script>-->
+      <!--  <link rel="stylesheet" href="{{ asset('body-style.css') }}">-->
         <link href="{{ asset('main.css') }}" rel="stylesheet">
-        <link href="{{ asset('bootstrap-5.2.3-dist/css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
         <link href="{{ asset('fontawsome/css/all.min.css') }}" rel="stylesheet">
         <link href="{{ asset('fontawsome/css/fontawesome.min.css') }}" rel="stylesheet">
         <link href="{{ asset('bootstrap.min.css') }}" rel="stylesheet">
-        <link href="{{ asset('dataTables.bootstrap5.min.css') }}" rel="stylesheet">
         <link href="{{ asset('tailwind.min.css') }}" rel="stylesheet">
         <link href="{{ asset('popup.css') }}" rel="stylesheet">
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
         <link rel="shortcut icon" href="cead.png" type="image/x-icon">
-        <!-- Other CSS files -->
+        <!-- Estilos -->
 
-        <!-- JavaScript -->
-        <script src="{{ asset('jquery-3.7.0.js') }}"></script>
-        <script src="{{ asset('dataTables.bootstrap5.min.js') }}"></script>
-        <script src="{{ asset('jquery.dataTables.min.js') }}"></script>
-        <script src="{{ asset('load_smart_table.js') }}"></script>
+<link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap5.css"/>
+
+<!-- Scripts -->
+
+        <!-- Other CSS files -->
+        <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz9ATKxIep9tiCxS/Z9fNfEXiDAYTujMAeBAsjFuCZSmKbSSUnQlmh/jp3" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script>
+<script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap5.js"></script>
+
         <!--<script src="{{ asset('javascript/contracto2.js') }}"></script>-->
         <script src="{{asset('javascript/docente_verificar_campos.js')}}"></script>
         <script src="{{ asset('javascript/funcoes2.js') }}"></script>
@@ -39,6 +53,11 @@
         <script src="{{asset('javascript/docente_verificar_campos.js')}}"></script>
         <script src="{{asset('javascript/add_disciplina.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+                <!-- Bootstrap core JS-->
+                <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{asset('js/scripts.js')}}"></script>
        <!--<script src="{{ asset('javascript/template-controller2.js') }}"></script>-->
 <!-- Other JS files -->
    <!-- ... -->

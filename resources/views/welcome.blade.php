@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    
     @include('head')
     <style>
         
@@ -29,6 +28,9 @@
         }
         .modal-content{
             padding: 30px;
+        }
+        .aloc-btn{
+            margin-left: 20px;
         }
     </style>
 
@@ -71,7 +73,15 @@ $(document).ready(function(){
                 datasets: [{
                     label: '# Docentes por Genero',
                     data: [estatisticas.masculino, estatisticas.femenino],
-                    borderWidth: 1
+                    backgroundColor: [
+                        'rgba(225, 241, 10, 0.7)', // Cor para 'Masculino'
+                        'rgba(225, 241, 10, 0.7)',  // Cor para 'Femenino'
+                    ],
+                    borderColor: [
+                        'rgba(24, 173, 21, 0.7)',  // Borda para 'Masculino'
+                        'rgba(24, 173, 21, 0.7)',   // Borda para 'Femenino'
+                    ],
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -117,7 +127,17 @@ $(document).ready(function(){
                 datasets: [{
                     label: '# Docentes por Nivel',
                     data: [data.licenciado, data.mestre, data.doutor],
-                    borderWidth: 1
+                    backgroundColor: [
+                        'rgba(225, 241, 10, 0.7)', 
+                        'rgba(225, 241, 10, 0.7)',  
+                        'rgba(225, 241, 10, 0.7)', 
+                    ],
+                    borderColor: [
+                        'rgba(24, 173, 21, 0.7)', 
+                        'rgba(24, 173, 21, 0.7)', 
+                        'rgba(24, 173, 21, 0.7)', 
+                    ],
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -170,7 +190,15 @@ $(document).ready(function(){
                 datasets: [{
                     label: '# Contratados por genero',
                     data: [data.masculino, data.femenino],
-                    borderWidth: 1
+                        backgroundColor: [
+                        'rgba(225, 241, 10, 0.7)', // Cor para 'Masculino'
+                        'rgba(225, 241, 10, 0.7)',  // Cor para 'Femenino'
+                    ],
+                    borderColor: [
+                        'rgba(24, 173, 21, 0.7)', // Borda para 'Masculino'
+                        'rgba(24, 173, 21, 0.7)',  // Borda para 'Femenino'
+                    ],
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -223,7 +251,7 @@ $(document).ready(function(){
             label: 'Contratos assinados pelos docentes',
             data: [data.docentes_assinaram, data.nao_assinaram],
             backgroundColor: [
-                'rgb(255, 99, 132)',
+                'rgb(213, 249, 10)',
                 'rgb(54, 162, 235)'
             ],
             hoverOffset: 4
@@ -285,7 +313,7 @@ $(document).ready(function(){
             label: 'Contratos assinados pelo representante da UP',
             data: [data.assinados, data.nao_assinaram],
             backgroundColor: [
-                'rgb(255, 99, 132)',
+                'rgb(213, 249, 10)',
                 'rgb(54, 162, 235)'
             ],
             hoverOffset: 4
@@ -315,193 +343,158 @@ $(document).ready(function(){
 
 </script>
 
-<body class="antialiased">
-   @include('header')
 
+<body>
+
+    @include('side2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('home1').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
-        function open_list(id){
-            
-            console.log(id)
-            //$('body').addClass('modal-opened');
-            $('#modal-lista').modal('show');
-            
-        }
+        document.getElementById('home1').style.backgroundColor = "rgba(224, 234, 223, 0.88)";
     });
        // document.getElementById('home1').style.backgroundColor = "blue";
         
     </script>
 
-
-<main class="main-section">
-    @include('side')
-    <div class="content-section">
-    <div id="content-header"><label id="cont-title">Home</label></div>
-     <!-- Scrollable modal -->
-     <div class="modal fade bd-example-modal-lg" id="modal-lista" style="margin-top:50px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
-                
-                <div class="modal-content">
-                
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+        <div class="container-fluid">
+        <div id="info">
+            <div class="modal fade bd-example-modal-lg" id="modal-lista" style="margin-top:50px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    
+                    <div class="modal-content">
+                    
+                    </div>
                 </div>
             </div>
-        </div>
-    <div id="info">
+                <h1 class="mt-4">Estatisticas de um ano</h1>
+
+            <div class="col-md-4">
+                
+                <div class="input-group has-validation">
+                    <span class="input-group-text" id="inputGroupPrepend">escreva o ano</span>
+                    <input type="number" class="form-control" id="ano_contrato" name="ano_contrato" min="1900" max="2100" aria-describedby="inputGroupPrepend" required>
+                    <div class="invalid-feedback">
+                    Ano invávido
+                    </div>
+                    <button class="rounded bg-green-600 text-white px-2 py-1" onclick="get_byAno()">Buscar</button>
+                </div>
+                
+                </div>
         
-    
-      
-    <div class="col-md-4">
-          <label for="validationCustomUsername" class="form-label">Estatisticas de um ano</label>
-          <div class="input-group has-validation">
-            <span class="input-group-text" id="inputGroupPrepend">escreva o ano</span>
-            <input type="number" class="form-control" id="ano_contrato" name="ano_contrato" min="1900" max="2100" aria-describedby="inputGroupPrepend" required>
-            <div class="invalid-feedback">
-              Ano invávido
-            </div>
-            <button class="rounded bg-green-600 text-white px-2 py-1" onclick="get_byAno()">Buscar</button>
-          </div>
-          
-        </div>
-
-            <br>
-            <div class="row-section" >
-                @if($total_disciplinas == $total_alocadas)
-                    <div class="alert alert-success" role="alert">
-                        Já foram alocadas todas as disciplinas para os contratos de {{date("Y")}}
+                    <br>
+                    <div class="row-section" >
+                        @if($total_disciplinas == $total_alocadas)
+                            <div class="alert alert-success" role="alert">
+                                Já foram alocadas todas as disciplinas para os contratos de {{date("Y")}}
+                            </div>
+                        @else
+                        <div class="alert alert-warning" role="alert">
+                                Foram alocadas {{$total_alocadas}} das {{$total_disciplinas}}
+                            </div>
+                        @endif
                     </div>
-                @else
-                <div class="alert alert-warning" role="alert">
-                        Foram alocadas {{$total_alocadas}} das {{$total_disciplinas}}
-                    </div>
-                @endif
-            </div>
-          
-            <div class="row-section" style="padding:0">
-                <div class="card">
-                    <canvas id="myChart"></canvas>
-                </div>
-                <div class="card">
-                    <canvas id="myChart2"></canvas>
-                </div>
-                <div class="card">
-                    <canvas id="myChart3"></canvas>
-                </div>
-            </div>
-            <div class="row-section" style="padding:0">
-                <div class="card">
-                    <canvas id="myChart4"></canvas>
-                </div>
-                <div class="card">
-                    <canvas id="myChart5"></canvas>
-                </div>
                 
-                <div class="card bg-light mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Contratados</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Docentes: {{ $total_docentes }}</h5>
-                    <p class="card-text">Contratados para tutoria {{$contratados}}.</p>
-                </div>
-                </div>
-
-            </div>
-            
-
-
-            @php
-            $controlador = 1;
-            @endphp
-
-            <h4>Estatisticas dos cursos</h4>
-
-            @foreach ($cada_curso as $curso)
-                @if($controlador == 1)
                     <div class="row-section" style="padding:0">
-                @endif
-
-                <div class="card border-warning mb-3" style="width: 80%;">
-                    <div class="card-header">Curso: {{ $curso['designacao_curso'] }}<label>(Centro {{ $curso['nome_centro'] }})</label></div>
-                    <div class="card-body">
-                    
-                        <h5 class="card-title">Alocadas: <label id="alocada-{{ $curso['id_curso'] }}">{{ $curso['nao_associadas'] }}</label></h5>
-                        @php
-                            $total_disciplinas = $curso['nao_associadas'];
-                            $total_disciplinas_curso = $curso['total_disciplinas'];
-                            $percentagem = intval($total_disciplinas) * 100;
-                            $percentagem2 = 0;
-                            if (intval($total_disciplinas_curso) > 0) {
-                                $percentagem2 = number_format($percentagem / intval($total_disciplinas_curso), 2);
-                            }
-                            $faltam = $total_disciplinas_curso - $total_disciplinas;
-                        @endphp
-                        <h5 class="card-title">Faltam: <label id="nao-alocada-{{ $curso['id_curso'] }}">{{ $faltam }}</label> <button class="rounded bg-green-600 text-white px-2 py-1" onclick="open_list({{ $curso['id_curso']}})">ver<button></h5>
-                        <p class="card-text">Total das disciplinas do curso: {{ $curso['total_disciplinas'] }}</p>
-                    
-                        <div class="progress">
-                            <div class="progress-bar" role="progressbar" id="progress-bar-{{ $curso['id_curso'] }}" style="width: {{ $percentagem2 }}%" aria-valuenow="{{ $percentagem2 }}%" aria-valuemin="0" aria-valuemax="{{ $curso['total_disciplinas'] }}">{{ $percentagem2.'%' }}</div>
+                        <div class="card">
+                            <canvas id="myChart"></canvas>
+                        </div>
+                        <div class="card">
+                            <canvas id="myChart2"></canvas>
+                        </div>
+                        <div class="card">
+                            <canvas id="myChart3"></canvas>
                         </div>
                     </div>
-                </div>
-
-                @if($controlador == 3)
+                    <div class="row-section" style="padding:0">
+                        <div class="card">
+                            <canvas id="myChart4"></canvas>
+                        </div>
+                        <div class="card">
+                            <canvas id="myChart5"></canvas>
+                        </div>
+                        
+                        <div class="card bg-light mb-3" style="max-width: 18rem;">
+                            <div class="card-header">Contratados</div>
+                            <div class="card-body">
+                                <h5 class="card-title">Docentes: {{ $total_docentes }}</h5>
+                            <p class="card-text">Contratados para tutoria {{$contratados}}.</p>
+                        </div>
+                        </div>
+        
                     </div>
+                    
+        
+        
                     @php
                     $controlador = 1;
                     @endphp
-                @else
-                    @php
-                    $controlador++;
-                    @endphp
-                @endif
-            @endforeach
-
-            @if($controlador !== 1)
-                </div>
-            @endif
-
+        
+                    <h4>Estatisticas dos cursos</h4>
+        
+                    @foreach ($cada_curso as $curso)
+                        @if($controlador == 1)
+                            <div class="row-section" style="padding:0">
+                        @endif
+        
+                        <div class="card border-warning mb-3" style="width: 80%;">
+                            <div class="card-header">Curso: {{ $curso['designacao_curso'] }}<label>(Centro {{ $curso['nome_centro'] }})</label></div>
+                            <div class="card-body">
+                            
+                                <h5 class="card-title">Alocadas: <label id="alocada-{{ $curso['id_curso'] }}">{{ $curso['nao_associadas'] }}</label></h5>
+                                @php
+                                    $total_disciplinas = $curso['nao_associadas'];
+                                    $total_disciplinas_curso = $curso['total_disciplinas'];
+                                    $percentagem = intval($total_disciplinas) * 100;
+                                    $percentagem2 = 0;
+                                    if (intval($total_disciplinas_curso) > 0) {
+                                        $percentagem2 = number_format($percentagem / intval($total_disciplinas_curso), 2);
+                                    }
+                                    $faltam = $total_disciplinas_curso - $total_disciplinas;
+                                @endphp
+                                <h5 class="card-title">Faltam: <label id="nao-alocada-{{ $curso['id_curso'] }}">{{ $faltam }}</label> <button class="rounded bg-green-600 text-white px-2 py-1" onclick="open_list({{ $curso['id_curso']}})">ver<button></h5>
+                                <p class="card-text">Total das disciplinas do curso: {{ $curso['total_disciplinas'] }}</p>
+                            
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" id="progress-bar-{{ $curso['id_curso'] }}" style="width: {{ $percentagem2 }}%" aria-valuenow="{{ $percentagem2 }}%" aria-valuemin="0" aria-valuemax="{{ $curso['total_disciplinas'] }}">{{ $percentagem2.'%' }}</div>
+                                </div>
+                            </div>
+                        </div>
+        
+                        @if($controlador == 3)
+                            </div>
+                            @php
+                            $controlador = 1;
+                            @endphp
+                        @else
+                            @php
+                            $controlador++;
+                            @endphp
+                        @endif
+                    @endforeach
+        
+                    @if($controlador !== 1)
+                        </div>
+                    @endif
+        
+        
+        </div>
     </div>
+</div>
+
     
   
-      
-</main>
 
-<footer>
-    <div class="row">
-        <div class="col-lg-3 col-md-6">
-            <div class="footer-widget">
-            Campus de Lhanguene, Av. Trabalho, nº 2482, Bairro Chamanculo “C”, Maputo - Moçambique.
-            (+258) 84 90 01 80 4
-            up.cead@gmail.com
-            </div>
-        </div>
 
-        <div class="col-lg-3 col-md-6">
-            <div class="footer-widget">
-            &copy;UP-Maputo
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-md-6">
-            <div class="footer-widget">
-                Contactos & Endereço
-                <div class="footer-dec">
-                    Campus de Lhanguene, Avenida do Trabalho, nº 2482, Bairro Chamanculo “C”, Maputo - Moçambique
-
-                    (+258) 84 90 01 80 4
-                    (+258) 84 20 26 75 9
-                   
-                   up.cead@gmail.com
-                   cead@up.ac.mz
-                </div>
-            </div>
-        </div>
-    </div>
-    </footer>
     <input type="hidden" name="id_docente" id="id_docente">
     <!--<input type="hidden" name="id_docente" id="">-->
     </body>
     
     <script src="{{asset('javascript/jquery-3.7.0.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{asset('js/scripts.js')}}"></script>
     <script>
         var dataAtual = new Date();
 
@@ -524,7 +517,7 @@ $(document).ready(function(){
                     var $html = '<ol><h1>lista</h1><div id="feedback"></div>';
                     for (let i = 0; i < disciplinas.length; i++) {
                         console.log(id);
-                        $html += '<li style="margin-left:20px">' + disciplinas[i].nome_disciplina + '<select style="margin-left:20px" onchange="set_id_docente(this.value)" id="select_' + id + '_' + i + '"><option selected disabled>Escolha</option></select><button class="rounded bg-green-600 text-white px-2 py-1" id="\'' + disciplinas[i].codigo_disciplina + '\'" onclick="alocar(\'' + id + '\',  \'' + disciplinas[i].codigo_disciplina + '\', this.id )">Alocar</button></li>';
+                        $html += '<li style="margin-left:20px">' + disciplinas[i].nome_disciplina + '<select style="margin-left:20px" onchange="set_id_docente(this.value)" id="select_' + id + '_' + i + '"><option selected disabled>Escolha</option></select><button class="rounded bg-green-600 text-white px-2 py-1 aloc-btn" id="\'' + disciplinas[i].codigo_disciplina + '\'" onclick="alocar(\'' + id + '\',  \'' + disciplinas[i].codigo_disciplina + '\', this.id )">Alocar</button></li>';
                         // AJAX request for populating select options
                         $.ajax({
                             type: 'GET',

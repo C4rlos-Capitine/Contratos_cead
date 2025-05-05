@@ -16,6 +16,7 @@ use \App\Models\ano_contrato;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 class DocenteController extends Controller
 {
     public function register_form(){
@@ -58,10 +59,10 @@ class DocenteController extends Controller
     
             // Criar um novo usuário
             $user = new User;
-            $user->name = $request->nome; 
+            $user->name = $request->apelido; 
             $user->email = $request->email;
             $user->password = Hash::make('zxcvbnm');
-            $user->tipo_user = 2;
+            $user->tipo_user = 3;
             $user->save();
             
             // Criar um novo docente
@@ -75,6 +76,7 @@ class DocenteController extends Controller
             $docente->email = $request->email;
             $docente->genero = $request->genero;
             $docente->id_faculdade_in_docente = $request->faculdade;
+            $docente->id_user = DB::getPdo()->lastInsertId();;
             $docente->save();
             
             // Retornar o ID do docente recém-criado
@@ -109,7 +111,19 @@ class DocenteController extends Controller
             ->first();
         //$docente = Docente::where('email', $request->email)
         //return response()->json($docente);
-            return view('docente.dados', ['docente' => $docente])->render();
+            return view('docente.dados', ['docente' => $docente, 'niveis'=>Nivel::all(), 'faculdades'=>Faculdade::all()])->render();
+    }
+    public function find2($id_user=null)
+    {
+ 
+        $docente = Docente::select('*')
+            ->join('nivels', 'nivels.id_nivel', '=', 'docentes.id_nivel')
+            ->join('faculdades', 'faculdades.id_faculdade', '=', 'docentes.id_faculdade_in_docente')
+            ->where('id_user', $id_user )
+            ->first();
+        //$docente = Docente::where('email', $request->email)
+        //return response()->json($docente);
+            return view('docente.dados', ['docente' => $docente, 'niveis'=>Nivel::all(), 'faculdades'=>Faculdade::all()])->render();
     }
  
 
@@ -132,7 +146,24 @@ class DocenteController extends Controller
         return response()->json(["response"=>Docente::count()]);
     }
 
-    public function get_count_genero(){
+    public function update(Request $request)
+    {
+       // return response()->json(['response'=>$request->all()]);
+        try{
+            //Log::info("request data", ['response'=>$request->all()]);
+            $affected = DB::table('docentes')
+            ->where('id_docente', $request->id)
+            ->update(['nome_docente' => $request->nome, 'apelido_docente' => $request->apelido,'id_nivel'=>$request->nivel, 'nacionalidade'=>$request->nacionalidade, 'bi'=>$request->bi, 'nuit'=>$request->nuit, 'id_faculdade_in_docente'=>$request->faculdade]);
+            //Log::info("password check", ['affected'=> $affected]);
+            return response()->json(['response' => 'dados actualizados com sucesso', 'status'=>1], 201);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage(), 'status'=>0]);
+        }
+
+    }
+
+    public function get_count_genero()
+    {
         $total = Docente::count();
         $masculino = Docente::where('genero', 'masculino')->count();
         $femenino = Docente::where('genero', 'femenino')->count();

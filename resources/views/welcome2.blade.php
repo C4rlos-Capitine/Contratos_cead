@@ -300,7 +300,7 @@
         </script>
 
 <body class="antialiased">
-   @include('header')
+
 
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
@@ -312,13 +312,13 @@
         
     </script>
 
+@include('side2')
+        
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+    <div class="container-fluid">
 
-<main class="main-section">
-@include('side')
-        
-        
-    <div class="content-section">
-    <div id="content-header"><label id="cont-title">Home</label></div>
      <!-- Scrollable modal -->
      <div class="modal fade bd-example-modal-lg" id="modal-lista" style="margin-top:50px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
@@ -438,45 +438,13 @@
     
   
       
-</main>
-
-<footer>
-    <div class="row">
-        <div class="col-lg-3 col-md-6">
-            <div class="footer-widget">
-            Campus de Lhanguene, Av. Trabalho, nº 2482, Bairro Chamanculo “C”, Maputo - Moçambique.
-            (+258) 84 90 01 80 4
-            up.cead@gmail.com
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-md-6">
-            <div class="footer-widget">
-            &copy;UP-Maputo
-            </div>
-        </div>
-        
-        <div class="col-lg-3 col-md-6">
-            <div class="footer-widget">
-                Contactos & Endereço
-                <div class="footer-dec">
-                    Campus de Lhanguene, Avenida do Trabalho, nº 2482, Bairro Chamanculo “C”, Maputo - Moçambique
-
-                    (+258) 84 90 01 80 4
-                    (+258) 84 20 26 75 9
-                   
-                   up.cead@gmail.com
-                   cead@up.ac.mz
-                </div>
-            </div>
-        </div>
-    </div>
-    </footer>
     <input type="hidden" name="id_docente" id="id_docente">
     <!--<input type="hidden" name="id_docente" id="">-->
     </body>
-    
     <script src="{{asset('javascript/jquery-3.7.0.js')}}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="{{asset('js/scripts.js')}}"></script>
     <script>
         var dataAtual = new Date();
 
@@ -499,7 +467,7 @@
                 var $html = '<ol><h1>lista</h1><div id="feedback"></div>';
                 for (let i = 0; i < disciplinas.length; i++) {
                     console.log(id);
-                    $html += '<li style="margin-left:20px">' + disciplinas[i].nome_disciplina + '<select style="margin-left:20px" onchange="set_id_docente(this.value)" id="select_' + id + '_' + i + '"><option selected disabled>Escolha</option></select><button class="rounded bg-green-600 text-white px-2 py-1" id="\'' + disciplinas[i].codigo_disciplina + '\'" onclick="alocar(\'' + id + '\',  \'' + disciplinas[i].codigo_disciplina + '\', this.id )">Alocar</button></li>';
+                    $html += '<li style="margin-left:20px">' + disciplinas[i].nome_disciplina + '<select style="margin-left:20px" onchange="set_id_docente(this.value)" id="select_' + id + '_' + i + '"><option selected disabled>Escolha</option></select><button class="rounded bg-green-600 text-white px-2 py-1 aloc-btn" id="\'' + disciplinas[i].codigo_disciplina + '\'" onclick="alocar(\'' + id + '\',  \'' + disciplinas[i].codigo_disciplina + '\', this.id )">Alocar</button></li>';
                     // AJAX request for populating select options
                     $.ajax({
                         type: 'GET',

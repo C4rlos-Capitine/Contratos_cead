@@ -23,7 +23,7 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
+
 
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
@@ -31,10 +31,14 @@
     });
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Registar Disciplina</label></div>
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+            <div id="info">
+            <h1 class="mt-4">Registar Disciplina/Módulo</h1>
             <div id="info">
                 <h3></h3>
                 <div id="feedback"></div>
@@ -149,6 +153,6 @@
             </div>
 
         </div>
-    </main>
-    @include('../footer')
+</div>
+
 </body>

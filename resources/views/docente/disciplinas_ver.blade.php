@@ -17,18 +17,18 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-docente-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Home</label></div>
-            <div id="info">
+@include('side2')
+        
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+    <div class="container-fluid">
                 <script>
                     $(document).ready(function(){
                         new DataTable('#example');
@@ -60,11 +60,11 @@
         </div>
           
         
-    </main>
-    @include('../footer')
+                </div>
+                </div>
     <script>
          function pdf(id, ano){
-             window.location.href = "/contrato/gerar_pdf?id_docente="+id+"&ano="+ano;
+             window.location.href = "/contrato/"+id+"/"+ano;
         }
     </script>
 </body>

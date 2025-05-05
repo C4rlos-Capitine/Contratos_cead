@@ -638,6 +638,41 @@ function reg_tecnico(event) {
     }
 }
 
+function reg_area(event){
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        type: 'POST',
+        url: '/area/save',
+        data: $('#area-reg').serialize(),
+        success: function (data) {
+            if (jQuery.isEmptyObject(data.errors)) {
+                console.log(data.response);
+                console.log(data);
+                $('#feedback').html('<div class="alert alert-success">' + data.response + '</div>');
+                
+                // Chama a função get_areas passando o id_docente
+                get_areas(data.id_docente);
+            } else {
+                var errorsHtml = '<div class="alert alert-danger"><ul>';
+                $.each(data.errors, function (key, value) {
+                    errorsHtml += '<li>' + value + '</li>';
+                    console.log(value);
+                });
+                errorsHtml += '</ul></div>';
+                $('#feedback').html(errorsHtml);
+            }
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
 
 function get_areas(id_docente) {
     $.ajaxSetup({
@@ -776,7 +811,7 @@ function addDisciplina(){
             id_docente: document.getElementById('id_docente').value,
             id_curso: document.getElementById('curso').value,
             codigo_disciplina: document.getElementById('disciplina').value,
-            tipo_contrato: document.getElementById('tipo_contrato').value,
+            tipo_contrato: 1,
             ano: document.getElementById("ano_contrato").value  
 
         },

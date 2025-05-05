@@ -21,10 +21,8 @@
     </style>
 
 <body class="antialiased">
-   @include('header2')
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
-        document.getElementById('load-docente-view').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
         var bi;
         var nuit;
         console.log('validacao.js');
@@ -56,11 +54,15 @@
     
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Registar Docente</label></div>
-        <div id="info">
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+      
+            <div id="info">
+            <h1 class="mt-4">Registar Tutor/Docente</h1>
             <div id="feedback"></div>
             <form id="docente-reg" class="needs-validation">
             @csrf
@@ -179,6 +181,5 @@
             </div>
         </div>
     </div>
-    </main>
-    @include('../footer')
+
 </body>

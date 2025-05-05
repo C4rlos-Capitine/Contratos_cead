@@ -27,16 +27,14 @@
         });
     </script>
 <body class="antialiased">
-@include('header2')
-
-<main class="main-section">
-    @include('side')
-    <div class="content-section">
-        <div id="content-header">
-            <label id="cont-title">Meu Perfil</label>
-        </div>
+@include('side2')
+        
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+    <div class="container-fluid">
         <div id="info">
-
+        <h1 class="mt-4">Perfil do Utilizador</h1>
             <div id="feedback"></div>
 
 
@@ -59,14 +57,17 @@
                 </tr>
                 
             </table>
-            </div>
-
             <div class="row">
-            <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="show_editarForm()">Editar Dados</button></div>
-            <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="mudar_senhaForm()">Alterar senha</button></div>
+                <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="show_editarForm()"><i class="fa-solid fa-user-pen" style="padding:5px"></i>Editar Dados</button></div>
+                <div id="div-button"><button type="button" class="rounded bg-green-600 text-white px-2 py-1" onclick="mudar_senhaForm()"><i class="fa-solid fa-user-pen" style="padding:5px"></i>Alterar senha</button></div>
+            </div>
+        </div>
+
+
     </div>
     </div>
-</main>
+    </body>
+
 
 
 
@@ -158,7 +159,6 @@
     
 </script>
 
-@include('../footer')
 </body>
 
 <!-- bootstrap modal-->

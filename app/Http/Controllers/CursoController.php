@@ -82,12 +82,12 @@ class CursoController extends Controller
         return response()->json($cursos);
     }
 
-    public function ver_detalhes(Request $request)
+    public function ver_detalhes($id_curso=null)
     {
         $cursos = Curso::select('*')
         ->join('faculdades', 'faculdades.id_faculdade', '=', 'cursos.id_faculdade_in_curso')
         
-        ->where("id_curso", $request->id_curso)->first();
+        ->where("id_curso", $id_curso)->first();
         $docente = Docente::select("nome_docente", "apelido_docente")
             ->where("id_docente", $cursos->id_docente_dir_curso)
             ->firstOr(function () {
@@ -114,7 +114,11 @@ class CursoController extends Controller
 
             $affected = DB::table('cursos')
               ->where('id_curso', $cursos->id_curso)
-              ->update(['id_docente_dir_curso' => $cursos->id_docente_dir_curso]);
+              ->update(['id_docente_dir_curso' => $cursos->id_docente_dir_curso, 
+                        'designacao_curso' => $cursos->designacao_curso,
+                        'sigla_curso' => $cursos->sigla_curso,
+                        'id_faculdade_in_curso' => $cursos->faculdade,
+                        ]);
         
             return response()->json(["response" => "Atualizado com sucesso"]);
         } catch (\Exception $e) {

@@ -18,7 +18,7 @@
     </style>
 
 <body class="antialiased">
-   @include('../header2')
+
 
    <script defer>
     document.addEventListener("DOMContentLoaded", function() {
@@ -26,22 +26,24 @@
     });
     </script>
 
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-        <div id="content-header"><label id="cont-title">Visualizar Cursos</label></div>
-        <div id="info">
-
+@include('side2')
+        
+        <div id="page-content-wrapper">
+            @include('nav')
+                <!-- Page content-->
+            <div class="container-fluid">
+            <div id="info">
+            <h1 class="mt-4">Cursos</h1>
+</br>
+                <a href="/curso/reg" style="margin-right:0" class="rounded bg-green-600 text-white px-2 py-1">Novo curso</a>
             <script>
                 $(document).ready(function(){
                     new DataTable('#example');
                 })
             
             </script>
-            </head>
-            <body>
-
-            <table id="example" class="table table-striped" style="width:100%">
+    
+            <table id="example" class="table table-hover" style="width:100%">
                 <thead><tr><th>Designação do curso</th><th>Faculdade</th><th>Sigla</th><th>Centro</th><th></th><th></th></tr></thead>
                 <tbody>
                 @foreach($cursos as $curso)
@@ -50,14 +52,14 @@
                         <td>{{$curso->sigla_faculdade}}</td>
                         <td>{{$curso->sigla_curso}}</td>
                         <td>{{$curso->nome_centro}}</td>
-                        <td><a id="{{$curso->id_curso}}" width="fit-content" href="/disciplina/vizualisar?id_curso={{$curso->id_curso}}" class="rounded bg-green-600 text-white px-2 py-1">Ver disciplinas</a></td>
-                        <td><a id="{{$curso->id_curso}}" width="fit-content" href="/curso/sobre?id_curso={{$curso->id_curso}}" class="rounded bg-green-600 text-white px-2 py-1">Mais..</a></td>
+                        <td><a id="{{$curso->id_curso}}" width="fit-content" href="/disciplina/vizualisar/{{$curso->id_curso}}" class="rounded bg-green-600 text-white px-2 py-1">Ver disciplinas</a></td>
+                        <td><a id="{{$curso->id_curso}}" width="fit-content" href="/curso/sobre/{{$curso->id_curso}}" class="rounded bg-green-600 text-white px-2 py-1">Mais..</a></td>
                         
                     </tr>
                 @endforeach
             </tbody>
             </table>
         </div>
-    </main>
-    @include('../footer')
+            </div>
+
 </body>

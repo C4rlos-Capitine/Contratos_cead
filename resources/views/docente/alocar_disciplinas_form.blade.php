@@ -452,67 +452,67 @@ function remover(id_docente, cod_disciplina) {
 
 
 <body class="antialiased">
-   @include('../header2')
-
-
-<main class="main-section">
-        @include('side')
-    <div class="content-section">
-    
-    <div class="modal fade bd-example-modal-lg" id="modal-lista" style="margin-top:300px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
-                <div class="modal-dialog modal-lg">
-                    
-                  <div id="lista-modal-content" class="modal-content">
-                    <div id="feedback-modal-list"></div>
-                    
-                  </div>
+@include('side2')
+        
+<div id="page-content-wrapper">
+    @include('nav')
+        <!-- Page content-->
+    <div class="container-fluid">
+    <div id="info">
+            <h1 class="mt-4">Alocar disciplinas</h1>
+            <div class="modal fade bd-example-modal-lg" id="modal-lista" style="margin-top:300px;" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+              <div class="modal-dialog modal-lg">
+                  
+                <div id="lista-modal-content" class="modal-content">
+                  <div id="feedback-modal-list"></div>
+                  
                 </div>
               </div>
-        <div id="content-header"><label id="cont-title">Alocar disciplinas à docente</label></div>
+            </div>
+      
         
-            <div id="info">
+            
             <i class="fa-sharp fa-solid fa-circle-info" style="cursor: pointer"></i>
             @csrf
 		<!--<form id="adicionar-disc">-->
                 <div id="feedback"></div>
            
-                <div class="row">
+                <div class="row g-3 align-items-center">
                 
+                    
+                    <div class="col-auto">
                     <label class="input-label" for="floatingInput">Nome do docente</label>
-                    <div class="form-floating mb-3" style="width:50%">
                         <input required="true"  type="text" class="form-control" onkeyup="buscar_docente(this.value)" id="docente" name="docente" placeholder="Docente">
-                        <label class="input-label" for="floatingInput">Docente</label>
                         <ul class="list" style="background:#E0E0E0"></ul>
                     </div>
                     
                     
-                    <div class="col-md-3">
+                    <div class="col-auto">
                     <label class="input-label" for="floatingInput">Ano do contrato</label>
                       <input required="true" id="ano_contrato" type="number" name="ano_contrato" min="1900" max="2100" step="1" class="form-control">
                     </div>
-        
-            </div>
+                    <div class="col-auto" style="padding-left:30px">
+                        <button id="buscar_dados" type="submit" onclick="buscar_dados()" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1">Buscar disciplinas</button>
+                    </div>
                 <!--<div class="column">-->
                 
                 <!--</div>-->
             </div>
-            <div class="col-md-3" style="padding-left:30px">
-                <button id="buscar_dados" type="submit" onclick="buscar_dados()" width="fit-content" class="rounded bg-green-600 text-white px-2 py-1">Buscar disciplinas</button>
-            </div>
-            <div class="row" style="padding-left:30px">
+
+            <div class="row g-3 align-items-center">
                 <!--<div class="column">-->
-                <div class="col-md-3">
-                <label>Curso<span style="color:red">*</span></label>
-                 <select id="curso" name="curso" class="form-select" id="validationCustom04" required>
-                 
-                 <option selected disabled value="">Curso</option>   
-                 @foreach($cursos as $curso)
-                     <option value="{{$curso->id_curso}}">{{ $curso->designacao_curso }}</option>
-                 @endforeach
-                 
-                 </select>
-             </div>
-                <div class="col-md-3">
+                <div class="col-auto">
+                  <label>Curso<span style="color:red">*</span></label>
+                  <select id="curso" name="curso" class="form-select" id="validationCustom04" required>
+                  
+                  <option selected disabled value="">Curso</option>   
+                  @foreach($cursos as $curso)
+                      <option value="{{$curso->id_curso}}">{{ $curso->designacao_curso }}</option>
+                  @endforeach
+                  
+                  </select>
+                </div>
+                <div class="col-auto">
                     <label>Ano<span style="color:red">*</span></label>
                     <select id="ano" name="ano" class="form-select"  required>
                     <option selected disabled value="">Ano</option>
@@ -522,8 +522,8 @@ function remover(id_docente, cod_disciplina) {
                     <option value="4">4 Ano</option>
                     </select>
                 </div>
-                <div class="row" style="padding-left:20px">
-                <div class="col-md-3">
+                
+                <div class="col-auto">
                   <label>Semestre<span style="color:red">*</span></label></label>
                     <select id="semestre" name="semestre" class="form-select"required>
                     <option selected disabled value="">Semestre</option>
@@ -534,23 +534,18 @@ function remover(id_docente, cod_disciplina) {
                 </div>
                 <!--</div>-->
                 <!--<div class="column">-->
-                <div class="col-md-3">
+                <div class="col-auto">
                     <label>Disciplina/Modulo<span style="color:red">*</span></label></label>
                     <select id="disciplina" name="disciplina" class="form-select" required>
-                    <option selected disabled value="">Disciplinas</option>   
+                      <option selected disabled value="">Disciplinas</option>   
                     </select>
                 </div>
+                  <div class="col-auto">
+                    <button width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="addDisciplina()">Adicionar disciplina</button>
                 </div>
+              </div>
                 
-            </div>
-        <!--</form>-->
-           
-       
-        <div class="div-button" style="margin-left:50px">
-            <div class="col-md-3">
-                <button width="fit-content" class="rounded bg-green-600 text-white px-2 py-1" onclick="addDisciplina()">Adicionar disciplina</button>
-            </div>
-        </div>
+
 
             <form method="POST" id="form">
             @csrf
@@ -561,7 +556,7 @@ function remover(id_docente, cod_disciplina) {
             <input type="hidden" name="designacao_nivel" id="designacao_nivel">
             
             </form>
-            <table id="tb-data" class="table table-striped" width="60%">
+            <table id="tb-data" class="table table-hover" width="100%">
                 <thead>
                     <tr><th id="header" colspan="6" scope="col">Modulos Lecionados</th></tr>
                     <tr>
@@ -578,8 +573,9 @@ function remover(id_docente, cod_disciplina) {
             </div>
         </div>
     </div>
-
-</main>
+</div>
+</div>
+</div>
 
 <div id="modal-msg" class="modal" style="margin-top:100px">
   <div class="modal-dialog">

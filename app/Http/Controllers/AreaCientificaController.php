@@ -8,9 +8,30 @@ use App\Models\area_cientifica;
 use App\Models\Docente;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Log;
 
 class AreaCientificaController extends Controller
 {
+
+
+    public function reg_form(){
+        return view('disciplina.reg_area');
+    }
+
+    public function save(Request $request){
+        try{
+            $area = new area_cientifica;
+            $area->cod_area = $request->cod_area;
+            $area->designacao_area = $request->nome_area;
+            $area->save();
+            return response()->json(['response' => 'Area Registada com sucesso', 'status'=>"success"]);
+        } catch (\Exception $e) {
+            return response()->json(['response' => $e->getMessage()]);
+            //\Log::error($e->getMessage());
+            //return response()->json(['response' => "O contrato já existe", 'status'=>"error"]);
+        }
+    }
+
     public function get_areas(){
         return response()->json( ['areas'=>$areas = area_cientifica::all()]);
     }
@@ -38,6 +59,7 @@ class AreaCientificaController extends Controller
             // Retornando uma resposta de sucesso
             return response()->json(['response' => 'Área alocada com sucesso!'], 200);
         }catch (\Exception $e) {
+            Log::info("Exce", ['error' => $e]);
             $nomeDocente = DB::table('docentes')
             ->where('id_docente', $request->input('id_docente'))
             ->value('nome_docente');
