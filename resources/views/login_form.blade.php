@@ -18,6 +18,13 @@
     <link href="{{asset('tailwind.min.css')}}" rel="stylesheet">
     <link href="{{asset('popup.css')}}" rel="stylesheet">
     <link href="{{asset('tailwind.min.css')}}" rel="stylesheet">
+               <link rel="stylesheet" type="text/css" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap-extended.min.css">
+<link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/fonts/simple-line-icons/style.min.css">
+<link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/colors.min.css">
+<link rel="stylesheet" type="text/css" href="https://pixinvent.com/stack-responsive-bootstrap-4-admin-template/app-assets/css/bootstrap.min.css">
+<link href="https://fonts.googleapis.com/css?family=Montserrat&display=swap" rel="stylesheet">
+ 
     <style>
         body {
             display: flex;
@@ -119,7 +126,7 @@
         </div>
     </div>
     <div class="text-center">
-        <button class="rounded bg-green-600 text-white px-2 py-1" type="submit">Entrar</button>
+        <button class="rounded bg-yellow-400 text-white px-2 py-1" type="submit">Entrar</button>
     </div>
 </form>
 </body>

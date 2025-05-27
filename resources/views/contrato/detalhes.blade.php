@@ -207,6 +207,11 @@
                                     <td></td>
                                     <td><a class="rounded bg-green-600 text-white px-2 py-1" href="/contrato/download/{{$contrato->ano_contrato}}/{{$docente->id_docente}}">Baixar Contrato</a></td>
                                 </tr>
+                            @elseif($contrato->resultado_ta=="Pendente")
+                              <tr>
+                                    <td></td>
+                                    <td><a class="rounded bg-green-600 text-white px-2 py-1" href="/contrato/{{$docente->id_docente}}/{{$contrato->ano_contrato}}">Ver contrato</a></td>
+                                </tr>
                             @else
                                 <tr>
                                     <td>Anexar Justificação do TA</td>

@@ -93,7 +93,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/representante/ativo', [RepresentanteController::class, 'get_representanteAtivo'])->name('get_representanteAtivo')->middleware('auth');
     Route::get('/representante/ver', [RepresentanteController::class, 'get_all'])->name('get_all')->middleware('auth');
     Route::get('/representante/get/{id}', [RepresentanteController::class, 'get_representante'])->name('get_representante')->middleware('auth');
-    //get_all
+    Route::post('/representante/alterar_representante/{id}', [RepresentanteController::class, 'alterar_representante'])->name('alterar_representante')->middleware('auth');
+    
+    //alterar_representante
 
     Route::get('/docente/ver_disciplinas/{ano}/{id_docente}', [ContratoController::class, 'get_disciplinas_contrato'])->name('get_disciplinas_contrato')->middleware('auth');
     Route::get('/contrato/ver_disciplina_by_email', [ContratoController::class, 'disciplina_by_email'])->name('disciplina_by_email')->middleware('auth');
@@ -108,6 +110,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/contrato/detalhes/{ano}/{id_docente}', [ContratoController::class, 'detalhes'])->name('detalhes')->middleware('auth');
     Route::get('/contrato/download/{ano}/{id_docente}', [ContratoController::class, 'downloadFicheiroPorDocenteEAno'])->name('downloadFicheiroPorDocenteEAno')->middleware('auth');
 
+    Route::get('/contrato/preview', [PDFController::class, 'previewContrato'])->name('downloadFicheiroPorDocenteEAno')->middleware('auth');
     //
 //ver_contratos_no_ta
     Route::get('/curso/reg', [CursoController::class, 'register_form'])->name('register_form')->middleware('auth');
@@ -141,7 +144,9 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/disciplina/get_disciplinas_curso', [DisciplinaController::class, 'get_disciplinas_curso'])->name('get_disciplinas_curso')->middleware('auth');
     Route::get('/disciplina/check_if_alocada', [DisciplinaController::class, 'check_if_alocada'])->name('check_if_alocada')->middleware('auth');
     Route::get('/disciplina/get_by_categoria', [DisciplinaController::class, 'get_by_categoria'])->name('get_by_categoria')->middleware('auth');
-    
+    Route::get('/disciplina/find/{codigo_disciplina}', [DisciplinaController::class, 'find'])->name('find')->middleware('auth');
+    Route::get('/disciplina/{codigo_disciplina}/edit', [DisciplinaController::class, 'edit'])->name('disciplina.edit');
+    Route::put('/disciplina/{codigo_disciplina}', [DisciplinaController::class, 'update'])->name('disciplina.update');
 
     Route::get('/docente/reg', [DocenteController::class, 'register_form'])->name('register_form')->middleware('auth');
     Route::post('/docente/save', [DocenteController::class, 'save'])->name('save')->middleware('auth');
@@ -160,7 +165,9 @@ Route::middleware(['auth'])->group(function () {
     //update
     Route::post('/docente/update', [DocenteController::class, 'update'])->name('update')->middleware('auth');
     Route::get('/docente/sem_contrato', [DocenteController::class, 'get_docentes_sem_contrato'])->name('get_docentes_sem_contrato')->middleware('auth');
-    
+    //get_docentes_sem_contrato2
+     Route::get('/docente/sem_contrato2', [DocenteController::class, 'get_docentes_sem_contrato2'])->name('get_docentes_sem_contrato2')->middleware('auth');
+   
     Route::get('/docente/contratados_genero', [DocenteController::class, 'get_count_contrados_genero'])->name('get_count_contrados_genero')->middleware('auth');
     Route::get('/docente/contrato', [ContratoController::class, 'getContratosDocente'])->name('getContratosDocente')->middleware('auth');
     //upload
@@ -174,7 +181,10 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/faculdade/list', [FaculdadeController::class, 'get_list'])->name('get_list')->middleware('auth');
     Route::get('/faculdade/docentes', [FaculdadeController::class, 'get_docentes'])->name('get_docentes')->middleware('auth');
     //Route::get('/centros/teste', [CentroRecursoController::class, 'teste'])->name('teste');
-
+    Route::get('/faculdade/edit/{id}', [FaculdadeController::class, 'edit'])->name('edit')->middleware('auth');
+    Route::post('/faculdade/update/{id}', [FaculdadeController::class, 'update'])->name('update')->middleware('auth');
+    
+    
     Route::get('/tec/reg',[TecnicoController::class, 'form'])->name('form')->middleware('auth');
     Route::post('/tec/save',[TecnicoController::class, 'save'])->name('save')->middleware('auth');//getAllTecnicos
     Route::get('/tec/all',[TecnicoController::class, 'get_all'])->name('get_all')->middleware('auth');
@@ -188,6 +198,16 @@ Route::middleware(['auth'])->group(function () {
     //detalhes
     Route::post('/clausulas/update/{id}', [ClausulaController::class, 'update']);
    // Route::delete('/clausulas/{id}', [ClausulaController::class, 'destroy']);
+
+    Route::get('/centros/reg', [CentroRecursoController::class, 'register_form'])->name('register_form');
+    Route::post('/centros/save', [CentroRecursoController::class, 'save'])->name('save');
+    Route::get('/centros/ver', [CentroRecursoController::class, 'list'])->name('list');
+    Route::get('/centros/get', [CentroRecursoController::class, 'get'])->name('get');
+    Route::delete('/centros/delete/{id}', [CentroRecursoController::class, 'delete'])->name('delete');
+    Route::get('/centros/edit/{id}', [CentroRecursoController::class, 'edit'])->name('edit');
+    Route::post('/centros/update', [CentroRecursoController::class, 'update'])->name('update');
+    Route::get('/centro_recursos/list', [CentroRecursoController::class, 'list2'])->name('list2');
+
    
 });
 Route::get('/centros/teste', [CentroRecursoController::class, 'teste'])->name('teste');

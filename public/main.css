@@ -6,6 +6,14 @@ body{
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
+
+.list-group-flush .list-group-item 
+{
+    padding: 10px !important;
+}
+
+
+
 .row{
     display: flex;
     flex-direction: row;
@@ -139,7 +147,7 @@ footer {
 .menu-label{
     margin-left: 10px;
     text-decoration: white;
-    color: white;
+    color: green;
     cursor: pointer;
 }
 #quit{
@@ -262,7 +270,8 @@ margin-top: 10px;
 
 
 .rounded{
-width: fit-content;
+    width: fit-content;
+    padding: max-content !important;
 }
 
 }

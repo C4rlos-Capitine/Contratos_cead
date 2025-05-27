@@ -16,8 +16,8 @@
         }
     }
     #tb-data{
-      width: 80%;
-      margin-left: 50px;
+      width: 100%;
+      margin-left: 10px;
     }
     .info{
       width: 80%;
@@ -396,6 +396,8 @@ for (var i = 0; i < disciplinas.length; i++) {
 var arrDisciplinas = [];
 
 function remover(id_docente, cod_disciplina) {
+  if(confirm("Tem certeza que deseja remover a disciplina?")){
+    console.log("ola");
     console.log(id_docente);
     console.log(cod_disciplina);
     var ano_contrato = document.getElementById("ano_contrato").value
@@ -440,6 +442,7 @@ function remover(id_docente, cod_disciplina) {
             alert("Error occurred during the request.");
         }
     });
+  }
 }
 
 
@@ -613,7 +616,6 @@ function remover(id_docente, cod_disciplina) {
 
 
 
-@include('../footer')
 <script>
 
 function gerar_contrato(){

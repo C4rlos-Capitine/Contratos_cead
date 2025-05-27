@@ -20,6 +20,44 @@ class DisciplinaController extends Controller
         $area_cientifica = Area_cientifica::all();
         return view('disciplina.reg_form' , ['categorias'=>$categoria, 'cursos'=>$cursos, 'areas'=>$area_cientifica]);
     }
+    public function find($codigo_disciplina=null)
+    {
+        $disciplina = Disciplina::where('codigo_disciplina', $codigo_disciplina)
+        ->join('categorias', 'categorias.id_cat_disciplina', '=', 'disciplinas.id_cat_disciplina')
+        ->join('cursos', 'cursos.id_curso', '=', 'disciplinas.id_curso_in_disciplina')
+        ->join('area_cientificas', 'area_cientificas.cod_area', '=', 'disciplinas.cod_area_in_disciplina')
+        ->first();
+        if ($disciplina) {
+            return response()->json(['response' => $disciplina]);
+        } else {
+            return response()->json(['response' => 'Disciplina não encontrada'], 404);
+        }
+    }
+
+    public function edit($codigo_disciplina)
+    {
+        $disciplina = Disciplina::where('codigo_disciplina', $codigo_disciplina)
+            ->join('categorias', 'categorias.id_cat_disciplina', '=', 'disciplinas.id_cat_disciplina')
+            ->join('cursos', 'cursos.id_curso', '=', 'disciplinas.id_curso_in_disciplina')
+            ->join('area_cientificas', 'area_cientificas.cod_area', '=', 'disciplinas.cod_area_in_disciplina')
+            ->select('disciplinas.*', 'categorias.designacao_categoria', 'cursos.designacao_curso', 'area_cientificas.designacao_area')
+            ->first();
+
+        $categorias = Categoria::all();
+        $cursos = Curso::all();
+        $areas = Area_cientifica::all();
+
+        if ($disciplina) {
+            return view('disciplina.edit_form', [
+                'disciplina' => $disciplina,
+                'categorias' => $categorias,
+                'cursos' => $cursos,
+                'areas' => $areas
+            ]);
+        } else {
+            return response()->json(['response' => 'Disciplina não encontrada'], 404);
+        }
+    }
 
     public function save(Request $data)
     {
@@ -102,6 +140,26 @@ class DisciplinaController extends Controller
         }
     }
 
+    public function update(Request $request, $codigo_disciplina)
+    {
+        $disciplina = Disciplina::where('codigo_disciplina', $codigo_disciplina)->first();
+        if (!$disciplina) {
+            return redirect()->back()->with('error', 'Disciplina não encontrada');
+        }
+
+        $disciplina->nome_disciplina = $request->input('nome_disciplina');
+        $disciplina->sigla_disciplina = $request->input('sigla');
+        $disciplina->id_cat_disciplina = $request->input('id_categoria');
+        $disciplina->id_curso_in_disciplina = $request->input('id_curso');
+        $disciplina->ano = $request->input('ano_curso');
+        $disciplina->semestre = $request->input('semestre_curso');
+        $disciplina->horas_contacto = $request->input('horas_c');
+        $disciplina->cod_area_in_disciplina = $request->input('cod_area');
+        $disciplina->save();
+
+        return redirect()->route('disciplina.edit', $codigo_disciplina)->with('success', 'Disciplina atualizada com sucesso!');
+    }
+
     public function get_disciplinas_only(){
         $disciplina = Disciplina::select('*')
             ->join('categorias', 'categorias.id_cat_disciplina', '=', 'disciplinas.id_cat_disciplina')->get();
@@ -114,8 +172,9 @@ class DisciplinaController extends Controller
             ->join('categorias', 'categorias.id_cat_disciplina', '=', 'disciplinas.id_cat_disciplina')
             ->where('cursos.id_curso', $id_curso)
             ->orderByDesc('ano')
+            ->orderByDesc('semestre')
             ->get();
-    
+   // return response()->json($disciplina);
        return view('disciplina.vizualisar', ['disciplinas' => $disciplina, 'curso'=>$curso])->render();
         //return response()->json($disciplina);
     }

@@ -8,6 +8,15 @@ use Illuminate\Database\Eloquent\Model;
 class Faculdade extends Model
 {
     use HasFactory;
-    //public $timestamp = false;
-    //protected $primarykey = 'nome_faculdade';
+
+    protected $table = 'faculdades';
+
+    protected $fillable = [
+        'nome_faculdade',
+        'sigla_faculdade',
+    ];
+
+    protected $primaryKey = 'id_faculdade'; // Corrected property name
+
+    public $timestamps = false; // Corrected syntax for disabling timestamps
 }

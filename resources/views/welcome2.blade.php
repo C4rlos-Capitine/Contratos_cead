@@ -21,6 +21,29 @@
             border: solid 1px #b3dca3;
             border-radius: 5px;
         }
+        .aloc-btn{
+            margin-left: 20px !important;
+        }
+        .teachers{
+            position: absolute;
+            margin-left: 20px !important;
+            background-color:rgba(60, 58, 58, 0.36);
+            padding:.4rem;
+            right: 8rem;
+            
+        }
+        .list-item{
+            position: relative;
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+            padding: .4rem;
+        }
+        .modal-content{
+            position: relative;
+            padding: .8rem;
+        }
     </style>
 
         <script>
@@ -375,15 +398,28 @@
                 <div class="card">
                     <canvas id="myChart5"></canvas>
                 </div>
-                <div class="card bg-light mb-3" style="max-width: 18rem;">
-                    <div class="card-header">Contratados</div>
-                    <div class="card-body">
-                        <h5 class="card-title">Docentes: {{ $total_docentes }}</h5>
-                    <p class="card-text">Contratados para tutoria {{$contratados}}.</p>
-                </div>
-                </div>
-            </div>
-
+        @php
+                       $percentagem_alocads = ($total_alocadas/$total_disciplinas) * 100;
+                        @endphp
+                        <div class="col-xl-3 col-sm-6 col-12">
+                            <div class="card">
+                            <div class="card-content">
+                                <div class="card-body">
+                                <div class="media d-flex">
+                                    <div class="align-self-center">
+                                    <i class="icon-graph success font-large-2 float-left"></i>
+                                    </div>
+                                    <div class="media-body text-right">
+                                   
+                                        <h3>{{ number_format($percentagem_alocads, 2) }} %</h3>
+                                    <span>Alocação de disciplinas</span>
+                                    </div>
+                                </div>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
+</div>
             @php
             $controlador = 1;
             @endphp
@@ -467,12 +503,13 @@
                 var $html = '<ol><h1>lista</h1><div id="feedback"></div>';
                 for (let i = 0; i < disciplinas.length; i++) {
                     console.log(id);
-                    $html += '<li style="margin-left:20px">' + disciplinas[i].nome_disciplina + '<select style="margin-left:20px" onchange="set_id_docente(this.value)" id="select_' + id + '_' + i + '"><option selected disabled>Escolha</option></select><button class="rounded bg-green-600 text-white px-2 py-1 aloc-btn" id="\'' + disciplinas[i].codigo_disciplina + '\'" onclick="alocar(\'' + id + '\',  \'' + disciplinas[i].codigo_disciplina + '\', this.id )">Alocar</button></li>';
+                    $html += '<li class="list-item" style="margin-left:20px">' + disciplinas[i].nome_disciplina + '<select class="teachers" style="margin-left:20px" onchange="set_id_docente(this.value)" id="select_' + id + '_' + i + '"><option selected disabled>Escolha</option></select><button class="rounded bg-green-600 text-white px-2 py-1 aloc-btn" id="\'' + disciplinas[i].codigo_disciplina + '\'" onclick="alocar(\'' + id + '\',  \'' + disciplinas[i].codigo_disciplina + '\', this.id )">Alocar</button></li>';
                     // AJAX request for populating select options
                     $.ajax({
                         type: 'GET',
-                        url: '/docente/sem_contrato', // Put your URL here
-                        data: { ano: document.getElementById('ano_contrato').value },
+                        url: '/docente/sem_contrato2', // Put your URL here
+                            data: { ano: document.getElementById('ano_contrato').value, 
+                                    codigo_disciplina: disciplinas[i].codigo_disciplina },
                         success: function(response) {
                             // Populate select options dynamically
                             console.log(response);

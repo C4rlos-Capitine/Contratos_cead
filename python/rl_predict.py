@@ -9,11 +9,11 @@ CORS(app)
 
 
 # Carregar o modelo treinado e o encoder
-modelo2 = joblib.load('C:\\wamp64\\www\\cead_template2\\my_system\\python\\modelo_docente_rl.joblib')
-encoder2 = joblib.load('C:\\wamp64\\www\\cead_template2\\my_system\\python\\encoder_docente_rl.joblib')
+modelo2 = joblib.load('C:\\wamp64\\www\\cead_pro\\python\\modelo_docente_rl.joblib')
+encoder2 = joblib.load('C:\\wamp64\\www\\cead_pro\\python\\encoder_docente_rl.joblib')
 # Carregar o modelo treinado e o encoder
-modelo_disciplina = joblib.load('C:\\wamp64\\www\\cead_template2\\my_system\\python\\modelo_rl.joblib')
-encoder_disciplina = joblib.load('C:\\wamp64\\www\\cead_template2\\my_system\\python\\encoder_rl.joblib')
+modelo_disciplina = joblib.load('C:\\wamp64\\www\\cead_pro\\python\\modelo_rl.joblib')
+encoder_disciplina = joblib.load('C:\\wamp64\\www\\cead_pro\\python\\encoder_rl.joblib')
 
 @app.route('/prever_disciplinas', methods=['GET'])
 def prever_combinacoes():

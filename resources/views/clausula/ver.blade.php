@@ -41,6 +41,7 @@
                 <h1 class="mt-4">Cláusula do Contrato</h1>
     </br>
                 <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/clausulas/create">Nova Clausula<i class="fa-solid fa-plus action-secondary"></i></a>  
+                <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/contrato/preview">Pré - visualizar<i class="fa-regular fa-eye action-secondary"></i></a>  
     
                 <div id="feedback"></div>
                 </br>

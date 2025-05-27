@@ -79,7 +79,6 @@
                 <label class="form-label">Gênero</label><br>
                 <label><input required="true" type="radio" name="genero_representante" value="Masculino"> Masculino</label><br>
                 <label><input required="true" type="radio" name="genero_representante" value="Feminino"> Feminino</label><br>
-                <label><input required="true" type="radio" name="genero_representante" value="Outro"> Outro</label>
             </div>
         </div>
     </div>
@@ -88,6 +87,7 @@
         
 </form>
 <button class="rounded bg-green-600 text-white px-2 py-1" onclick="loadRepresentantes()">Representante no ativo</button>
+<button class="rounded bg-green-600 text-white px-2 py-1" onclick="listRepresentantes()">Alterar representante  no ativo</button>
 <!--<button class="rounded bg-green-600 text-white px-2 py-1">Historico de representa</button>-->
 
         </div>
@@ -118,6 +118,28 @@
                         <!-- As linhas de dados serão inseridas aqui -->
                     </tbody>
                 </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bd-example-modal-lg" id="select-representante-modal" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="list_docentes_title">Representantes Ativos</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+              <form id="form-alterar"  class="needs-validation">
+                <select id="select-representante" class="form-select">
+                    <option value="">Selecione o representante...</option>
+                </select>
+                <button class="btn btn-primary" id="form-alterar">Alterar</button>
+                </form>
+               
             </div>
         </div>
     </div>
@@ -159,6 +181,32 @@
             }
         });
     });
+
+    $('#form-alterar').on('submit', function(e){
+    e.preventDefault();
+    var id = $('#select-representante').val();
+    if(!id){
+        alert('Selecione um representante!');
+        return;
+    }
+    $.ajax({
+        type: 'POST',
+        url: '/representante/alterar_representante/' + id,
+        data: {
+            _token: $('meta[name="csrf-token"]').attr('content'),
+            id_representante: id
+        },
+        success: function(response){
+            console.log(response);
+            $('#select-representante-modal').modal('hide');
+            $('#feedback').html('<div class="alert alert-success">Representante ativo alterado com sucesso!</div>');
+        },
+        error: function(xhr){
+            $('#select-representante-modal').modal('hide');
+            $('#feedback').html('<div class="alert alert-danger">Erro ao alterar representante.</div>');
+        }
+    });
+});
 });
 function loadRepresentantes() {
     $.ajax({
@@ -187,6 +235,30 @@ function loadRepresentantes() {
             alert('Erro ao carregar os representantes.');
         }
     });
+}
+
+function listRepresentantes(){
+    console.log('listRepresentantes');
+    $.ajax({
+        type: 'GET',
+        url: '/representante/ver', // URL para buscar os representantes
+        success: function (response) {
+            // Limpa o conteúdo existente no corpo da tabela
+           // $('#select-representante-modal').empty();
+
+            // Itera sobre os dados retornados e adiciona as linhas na tabela
+            response.forEach(function(representante) {
+                const option = `<option value="${representante.id_representante}">${representante.nome_representante} ${representante.apelido_representante}</option>`;
+                $('#select-representante').append(option);
+            });
+
+            // Abre o modal
+            $('#select-representante-modal').modal('show');
+        },
+        error: function () {
+            alert('Erro ao carregar os representantes.');
+        }
+    }); 
 }
     </script>
 </body>

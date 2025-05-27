@@ -30,6 +30,7 @@
             <a class="list-group-item list-group-item-action list-group-item-light p-3" data-value="/curso/reg_form" onclick="loadPage(this)"><i class="fas fa-object-ungroup" style="color: #004D40;margin-right: 5px;"></i>Áreas Científicas</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" data-value="/disciplina/reg" onclick="loadPage(this)"><i class="fas fa-object-ungroup" style="color: #004D40;margin-right: 5px;"></i>Disciplinas</a>
             <a class="list-group-item list-group-item-action list-group-item-light p-3" data-value="/docente/vizualisar" onclick="loadPage(this)"><i class="fas fa-chalkboard-teacher" style="color: #004D40;margin-right: 5px;"></i>Tutores</a>
+            <a class="list-group-item list-group-item-action list-group-item-light p-3" data-value="/centros/reg" onclick="loadPage(this)"><i class="fas fa-book" style="color: #004D40;margin-right: 5px;"></i>Centros de Recursos</a>
             <!--<div class="dropdown pb-1">
                 <a class="list-group-item list-group-item-action list-group-item-light p-3 dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">Docentes</a>
                 <ul class="dropdown-menu dropdown-menu-dark text-small shadow">

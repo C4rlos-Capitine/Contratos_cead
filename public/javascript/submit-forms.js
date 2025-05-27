@@ -60,11 +60,10 @@ function reg_faculdade() {
                     const row = $('<tr></tr>');
                     row.append($('<td></td>').text(faculdade.nome_faculdade));
                     row.append($('<td></td>').text(faculdade.sigla_faculdade));
-                    
-                    //const buttonHtml = `<button id="'${docente.id_docente}'" onclick="disciplinas_docente('${docente.id_docente}')">Ver Disciplinas</button>`;
-                    //row.append($('<td></td>').html(buttonHtml));
-                   // const buttonHtml2 = `<button id="'${docente.id_docente}'" onclick="gerar('${docente.id_docente}')">Gerar</button>`;
-                   // row.append($('<td></td>').html(buttonHtml2));
+                    const btAccoes = `<i class="fa-solid fa-trash action"></i>
+                                <i class="fa-solid fa-pen-to-square action" data-id="${faculdade.id_faculdade}" onclick="editFaculdade(this)"></i>
+                                <i class="fa-solid fa-eye action" data-id="" onclick="detalhesFaculdade(this)"></i>`;
+                    row.append($('<td></td>').html(btAccoes));
                     tbody.append(row);
                 });
                 $('#modal-lista-faculdades').modal('show');
@@ -73,6 +72,10 @@ function reg_faculdade() {
                 alert("error");
             }
         });
+    }
+
+    function editFaculdade(element) {
+        window.location.href = '/faculdade/edit/' + element.getAttribute('data-id');
     }
 
 
@@ -303,6 +306,7 @@ function reg_curso() {
     //REGISTAT DISCIPLINA
 function reg_disciplina(event)
 {
+    if(confirm("Tem a certeza que pretende registar disciplina/módulo?")){
     $.ajaxSetup({
         headers: {
           'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -335,6 +339,7 @@ function reg_disciplina(event)
                 alert("error");
             }
         });
+    }
 }
 
 function validar_docente(event)
@@ -479,6 +484,7 @@ function disciplinas_docente(id){
 
 
 function gerar(id){
+        if(confirm("Gerar contrato?")){
     
     $.ajaxSetup({
         headers: {
@@ -511,9 +517,11 @@ function gerar(id){
         }
     });
 }
+}
 
 //REGISTAR DOCENTE
 function reg_docente(event) {
+    if(confirm("Tem a certeza que pretende registar docente?")){
     event.preventDefault();
     erros_bi_nuit = [];
     var iterator = 0;
@@ -576,6 +584,7 @@ function reg_docente(event) {
                 alert("error");
             }
         });
+    }
     }
 }
 function reg_tecnico(event) {
@@ -754,6 +763,7 @@ function get_areas2(id_docente) {
 }
 
 function alocar_area(docente, area){
+    if(confirm("Tem a certeza que pretende alocar área?")){
     console.log(docente)
     console.log(area);
     console.log(area);
@@ -789,10 +799,57 @@ function alocar_area(docente, area){
         }
     });
 }
+}
+
+
+function buscarDisciplinas(id_docente, ano_contrato){
+    $.ajax({
+    type: 'GET',
+    url: '/docente/get_disciplinas',
+    data: {
+      id_docente: id_docente,
+      //tipo_contrato: $("#tipo_contrato").val(),
+      ano: ano_contrato
+    },
+    success: function (data) {
+      console.log(data.response);
+
+      if (data.response.length === 0) {
+        alert("Docente sem disciplina alocada");
+        return;
+      }
+
+      var $tbody = $("#tb-data tbody");
+
+      // Remove todas as linhas, exceto a primeira
+      $tbody.find("tr:not(:first-child)").remove();
+
+      // Adiciona as novas linhas com os dados recebidos
+      data.response.forEach(function (item) {
+        var row = `
+          <tr id="${item.codigo_disciplina_in_leciona}">
+            <td>${item.nome_disciplina}</td>
+            <td>${item.horas_contacto}</td>
+            <td>${item.designacao_curso}</td>
+            <td>${item.ano}</td>
+            <td>${item.semestre}</td>
+            <td>
+              <button onclick="remover('${$("#id_docente").val()}', '${item.codigo_disciplina_in_leciona}', ${item.ano})">Remover</button>
+            </td>
+          </tr>
+        `;
+        $tbody.append(row);
+      });
+    },
+    error: function () {
+      alert("error");
+    }
+  });
+}
 
 
 function addDisciplina(){
- 
+    if(confirm("Tem a certeza que pretende alocar disciplina/módulo ?")){
     console.log(document.getElementById('id_docente').value)
     console.log(document.getElementById('curso').value)
     //event.preventDefault(); // Prevent the form from being submitted traditionally
@@ -819,30 +876,11 @@ function addDisciplina(){
             if (jQuery.isEmptyObject(data.errors)){
                 console.log(data.response);
                 //console.log(data.novo_registo);
-                var novoRegisto = data.novo_registo;
+             
                 $('#feedback').html('<div class="alert alert-success">' + data.response + '</div>');
-                document.getElementById('#feedback').innerHTML = '<div class="alert alert-success">' + data.response + '</div>';
-                //$('#feedback').delay(5000).hide(0);
-                //$('#curso-reg')[0].reset();
-                //var selectobject = document.getElementById("disciplina");
-                //var text= selectobject.options[selectobject.selectedIndex].text;
-                var table = document.getElementById("tb-data");
-                var row = table.insertRow(table.rows.length);
-                var cell1 = row.insertCell(0);
-                var cell2 = row.insertCell(1);
-                var cell3 = row.insertCell(2);
-                var cell4 = row.insertCell(3);
-                var cell5 = row.insertCell(4);
-                var cell6 = row.insertCell(5);
-    
-                
-                cell1.innerHTML = novoRegisto[0].nome_disciplina;
-                cell2.innerHTML = "--"//novoRegisto.horas_contacto ;
-                cell3.innerHTML = novoRegisto[0].designacao_curso;
-                cell4.innerHTML = document.getElementById("ano").value;
-                cell5.innerHTML = document.getElementById('semestre').value;
-                cell6.innerHTML = '<button type="hidden" onclick="remover('+document.getElementById("id_docente").value+', '+item.codigo_disciplina_in_leciona+', '+item.ano+')">Remover</button>';
-       
+
+                // Adiciona a linha na tabela
+                buscarDisciplinas(document.getElementById('id_docente').value, document.getElementById('ano_contrato').value);    
             }else{
                 var errorsHtml = '<div class="alert alert-danger"><ul>';
                     $.each(data.errors, function (key, value) {
@@ -860,6 +898,7 @@ function addDisciplina(){
             alert("error");
         }
     });
+}
   
   }
 

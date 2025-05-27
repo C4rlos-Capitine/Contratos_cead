@@ -32,7 +32,9 @@ class DocenteController extends Controller
                 'email' => 'required|email|unique:users,email|unique:docentes,email',
                 'bi' => 'required|size:13|unique:docentes,bi',
                 'nuit' => 'required|size:8|unique:docentes,nuit',
-                'genero'=> 'required'
+                'genero'=> 'required',
+                'data_nascimento' => 'nullable|date',
+                'ano_comeco_carreira' => 'nullable|integer|min:1900|max:' . date('Y')
             ];
     
             // Custom error messages
@@ -46,7 +48,12 @@ class DocenteController extends Controller
                 'nuit.required' => 'O campo NUIT é obrigatório.',
                 'nuit.size' => 'O NUIT deve ter exatamente 8 caracteres.',
                 'nuit.unique' => 'O NUIT já está em uso.',
-                'genero.required' => 'Selecione o genero'
+                'genero.required' => 'Selecione o genero',
+                'data_nascimento.date' => 'A data de nascimento deve ser uma data válida.',
+                'ano_comeco_carreira.integer' => 'O ano de começo de carreira deve ser um número.',
+                'ano_comeco_carreira.min' => 'O ano de começo de carreira deve ser maior que 1900.',
+                'ano_comeco_carreira.max' => 'O ano de começo de carreira não pode ser maior que o ano atual.',
+
             ];
     
             // Perform validation
@@ -355,6 +362,36 @@ class DocenteController extends Controller
         $result = Docente::whereNotIn('id_docente', $notInSubquery)->get();
         return response()->json($result);
     }
+
+    public function get_docentes_sem_contrato2(Request $request)
+    {
+$cod_area = Disciplina::select('cod_area_in_disciplina')
+    ->where('codigo_disciplina', $request->codigo_disciplina)
+    ->first();
+
+if (!$cod_area) {
+    return response()->json(['response' => 'Disciplina não encontrada'], 404);
+}
+
+Log::info("cod_area", ['response' => $cod_area->cod_area_in_disciplina]);
+
+$ano = $request->ano;
+
+$subquery = DB::table('contratos')
+    ->select('id_docente_in_contrato')
+    ->where('ano_contrato', $ano);
+
+$result = DB::table('docentes')
+    ->join('area_docente', 'docentes.id_docente', '=', 'area_docente.id_docente')
+    ->where('area_docente.id_area', $cod_area->cod_area_in_disciplina) // ✅ corrigido aqui
+    ->whereNotIn('docentes.id_docente', $subquery)
+    ->select('docentes.*')
+    ->get();
+
+return response()->json($result);
+
+    }
+
 
   
 

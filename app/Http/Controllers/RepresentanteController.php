@@ -91,6 +91,61 @@ class RepresentanteController extends Controller
             return response()->json(['error' => 'Erro ao obter o representante: ' . $e->getMessage()]);
         }
     }
+
+    public function update(Request $data, $id)
+    {
+        try {
+            // Regras de validação
+            $rules = [
+                'nome_representante' => 'required|string|max:255',
+                'apelido_representante' => 'required|string|max:255',
+                'genero_representante' => 'required|string|in:Masculino,Feminino,Outro',
+                'id_nivel_contrantante' => 'required|exists:nivels,id_nivel',
+            ];    
+
+        }catch (\Exception $e) {
+            Log::info("request data", ['response' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao atualizar o representante: ' . $e->getMessage()]);
+        }
+    }
+    
+    public function alterar_representante(Request $data, $id)
+    {
+
+        //return response()->json($data->all());
+        try {
+            // Validação simples (opcional)
+            $representante = \App\Models\Representante::find($id);
+            if (!$representante) {
+                return response()->json(['error' => 'Representante não encontrado.'], 404);
+            }
+
+            // Busca o registro atual de representante ativo
+            $ativo = \DB::table('table_representante_ativo')->first();
+
+            if ($ativo) {
+                // Atualiza o representante ativo existente
+                \DB::table('table_representante_ativo')
+                    ->where('id_representante_ativo', 1)
+                    ->update([
+                        'id_representante' => $data->id_representante,
+                        'updated_at' => now()
+                    ]);
+            } else {
+                // Cria um novo registro se não existir
+                \DB::table('table_representante_ativo')->insert([
+                    'id_representante' => $id,
+                    'created_at' => now(),
+                    'updated_at' => now()
+                ]);
+            }
+
+            return response()->json(['success' => 'Representante ativo alterado com sucesso!']);
+        } catch (\Exception $e) {
+            Log::info("request data", ['response' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao atualizar o representante: ' . $e->getMessage()]);
+        }
+    }
     public function get_representanteAtivo()
     {
         try {

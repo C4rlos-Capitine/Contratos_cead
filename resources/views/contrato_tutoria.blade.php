@@ -27,7 +27,7 @@
         }
         p {
             text-align: justify;
-            line-height: 1.2;
+            line-height: 1.5;
         }
         table {
             border-collapse: collapse;
@@ -68,6 +68,20 @@
         $imagePath = public_path('header.png');
         $imageData = base64_encode(file_get_contents($imagePath));
         $imageSrc = 'data:image/png;base64,' . $imageData;
+         $nivel_representante = "doutor(a)";
+            if($representante->id_nivel_contrantante  == 1) {
+                if ($representante->id_nivel_contrantante == 1) {
+                    $nivel_representante = ($representante->genero_representante == "Feminino") ? "doutora" : "doutor";
+                } elseif ($representante->id_nivel_contrantante == 2) {
+                    $nivel_representante = "mestre";
+                } elseif ($representante->id_nivel_contrantante >= 3) {
+                    $nivel_representante = ($representante->genero_representante == "Feminino") ? "Prof. Doutora" : "Prof. Doutor";
+                }
+                } else {
+                    $nivel_representante = "doutor";
+                }
+             
+            
         @endphp
         <img src="{{ $imageSrc }}" width="90%" height="150px" alt="Image">
     </header>
@@ -80,7 +94,7 @@
         @endphp
 
         @if($docente->id_nivel == 1)
-            @php
+          @php
                 $remuneracao = 800;
                 $nivel = "Dr";
                 $nivel_contratado = "licenciado"
@@ -111,25 +125,15 @@
             $outrasClausulas = $clausulas->where('ordem_clausula', '!=', 0);
         @endphp
 
-        @if($docente->id_nivel == 1)
-            @php
-                $remuneracao = 800;
-                $nivel = "Dr";
-                $nivel_contratado = "licenciado";
-            @endphp
-        @elseif($docente->id_nivel == 2)
-            @php
-                $remuneracao = 1000;
-                $nivel = "MSc";
-                $nivel_contratado = "Mestre";
-            @endphp
-        @elseif($docente->id_nivel == 3)
-            @php
-                $remuneracao = 1200;
-                $nivel = "Prof(a) Doutor(a)";
-                $nivel_contratado = "Doutor";
-            @endphp
-        @endif
+        @php
+            if($docente->id_nivel == 1) {
+                $nivel = ($docente->genero_docente == "Feminino") ? "doutora" : "doutor";
+            } elseif($docente->id_nivel == 2) {
+                $nivel = "mestre";
+            } elseif($docente->id_nivel == 3) {
+                $nivel = ($docente->genero_docente == "Feminino") ? "Prof. Doutora" : "Prof. Doutor";
+            }
+        @endphp
 
         <div class="doc-title"><h2>TERMO DO CONTRATO</h2></div>
 
@@ -178,10 +182,23 @@
         </table>
         </div>
 
-        <!-- Renderizar as outras cláusulas -->
+      <!-- Renderizar as outras cláusulas -->
         @foreach($outrasClausulas as $clausula)
-            <div class="doc-title"><b>{{ $clausula->ordem_clausula }}ª ({{ $clausula->titulo_clausula }})</b></div>
-            <p>{!! nl2br($clausula->descricao_clausula) !!}</p>
+    </br>
+            <div class="doc-title"><b>{{ $clausula->ordem_clausula }}ª {{ $clausula->titulo_clausula }}</b></br></div>
+            <div class="doc-title"><b>{{ $clausula->subtitulo_clausula }}</b></div>
+            @php
+                // Adiciona recuo nas linhas que começam com número e ponto após quebra de linha
+                $descricao = preg_replace(
+                    '/(^|\r\n|\n|\r)(\d+\.)/',
+                    '$1<span style="display:inline-block; margin-left: 50px;">$2',
+                    $clausula->descricao_clausula
+                );
+                // Fecha o span no final da linha
+                $descricao = preg_replace('/(<span[^>]*>.*?)(\r\n|\n|\r)/', '$1</span>$2', $descricao);
+            @endphp
+            <p>{!! nl2br($descricao) !!}</p>
+            </br>
         @endforeach
 
         <section id="data">Maputo,_______de_______________20__</section>
@@ -190,12 +207,12 @@
         <div class="footer-child" align="left" style="width: 50%;float: left;">
             <label style="font-weight: bold; padding-left:20px">O Contratante</label><br><br>
             <label>______________________________________</label><br>
-            <small style="margin:10%;width:100%">(Profª. Doutora Marisa Guião de Mendonça)</small>
+            <small style="margin:10%;width:100%">( {{$nivel_representante}} {{$representante->nome_representante }})</small>
         </div>
         <div class="footer-child" align="left" style="width: 50%;float: left;">
             <label style="font-weight: bold;padding-left:20px">O Contratado</label><br><br>
             <label>____________________________________</label><br>
-            <small style="margin:10%;width:100%">({{ $nivel }} {{$docente->nome_docente}})</small>
+            <small style="margin:10%;width:100%;">({{ $nivel }} {{$docente->nome_docente}})</small>
         </div>
     </footer>
 </body>

@@ -19,6 +19,7 @@ use App\Models\Tipo_contrato;
 use App\Models\Contrato_laboratorio;
 use App\Models\clausula_contrato;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 
 
@@ -70,6 +71,21 @@ class PDFController extends Controller
                 ->get();
             }
             return $disciplinas;
+    }
+
+    private static function get_representanteAtivo()
+    {
+        try {
+            $representantes = DB::table('table_representante_ativo')
+                ->join('representantes', 'table_representante_ativo.id_representante', '=', 'representantes.id_representante')
+                ->select('*')
+                ->get()->first();
+
+            return $representantes;
+        } catch (\Exception $e) {
+            Log::info("request data", ['response' => $e->getMessage()]);
+            return response()->json(['error' => 'Erro ao obter os representantes ativos: ' . $e->getMessage()]);
+        }
     }
 
     public function generate(Request $request){
@@ -152,6 +168,7 @@ class PDFController extends Controller
 public function generatePdf_contrato($id_docente = null, $ano = null)
 {
     $docente = PDFController::getDocente($id_docente);
+    
     $disciplinas = PDFController::getDisciplinasLecionadas($id_docente, 1, $ano);
     $clausulas = PDFController::get_clausulas();
     $contrato = DB::table('contratos')->where('id_docente_in_contrato', $id_docente)
@@ -183,14 +200,87 @@ public function generatePdf_contrato($id_docente = null, $ano = null)
                 $clausula->descricao_clausula
             );
         }
+        $representante = PDFController::get_representanteAtivo();
 
     // Passar os dados para a view
     $bladeView = 'contrato_tutoria'; // Nome do arquivo Blade
-    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas'))->render();
+    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas', 'representante'))->render();
     $filename = 'contrato.pdf';
 
     // Gerar o PDF
     $this->pdfService->generatePdf($html, $filename);
+}
+
+public function previewContrato()
+{
+    $clausulas = PDFController::get_clausulas();
+    // Mock docente
+    $docente = (object)[
+        'id_nivel' => 2,
+        'nivel' => 'Mestre',
+        'nome_docente' => 'João Exemplo',
+        'bi' => '123456789',
+        'nuit' => '987654321',
+        'nacionalidade' => 'Moçambicana',
+        'remuneracao_hora' => '1000',
+    ];
+
+    // Mock disciplinas
+    $disciplinas = collect([
+        (object)[
+            'nome_disciplina' => 'Matemática',
+            'horas_contacto' => 20,
+            'designacao_curso' => 'Engenharia',
+            'ano' => 1,
+            'semestre' => 1,
+            'nome_centro' => 'Centro A'
+        ],
+        (object)[
+            'nome_disciplina' => 'Física',
+            'horas_contacto' => 15,
+            'designacao_curso' => 'Engenharia',
+            'ano' => 1,
+            'semestre' => 2,
+            'nome_centro' => 'Centro B'
+        ]
+    ]);
+
+    // Mock cláusulas com campos necessários
+   
+    $contrato = (object)[
+        'carga_horaria' => '40'
+    ];
+
+
+    $ano = date('Y');
+
+    // Substituir placeholders nas cláusulas
+    foreach ($clausulas as $clausula) {
+        $clausula->descricao_clausula = str_replace(
+            ['{{nivel}}', '{{nome_docente}}', '{{bi}}', '{{nuit}}', '{{nacionalidade}}', '{{ano}}', '{{remuneracao_hora}}', '{{carga_horaria}}'],
+            [
+                '<b>' . $docente->nivel . '</b>',
+                '<b>' . $docente->nome_docente . '</b>',
+                '<b>' . $docente->bi . '</b>',
+                '<b>' . $docente->nuit . '</b>',
+                '<b>' . $docente->nacionalidade . '</b>',
+                '<b>' . $ano . '</b>',
+                '<b>' . $docente->remuneracao_hora . '</b>',
+                '<b>' . $contrato->carga_horaria . '</b>'
+            ],
+            $clausula->descricao_clausula
+        );
+    }
+        $representante = PDFController::get_representanteAtivo();
+
+    // Renderizar a view normalmente (sem gerar PDF)
+     $bladeView = 'contrato_tutoria_preview'; // Nome do arquivo Blade
+    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas', 'representante'))->render();
+    $filename = 'contrato.pdf';
+
+    // Gerar o PDF
+    $this->pdfService->generatePdf($html, $filename);
+    //return view('contrato_tutoria', compact('docente', 'disciplinas', 'clausulas'));
 }
     public function generatePdf_lab($ano = null, $id_tecnico=null)
     {

@@ -65,85 +65,90 @@
             <h1 class="mt-4">Registar Tutor/Docente</h1>
             <div id="feedback"></div>
             <form id="docente-reg" class="needs-validation">
-            @csrf
-             
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                            <label class="input-label" for="floatingInput">Nome:<span style="color:red">*</span></label>
-                            <input type="text" class="form-control" name="nome" placeholder="nome" autocomplete="off">
-                            </div>
-                        </div>
-                    
-                        <div class="col">
-                            <div class="form-group">
-                            <label class="input-label" for="floatingInput">Apelido:<span style="color:red">*</span></label>
-                            <input  type="text" class="form-control" name="apelido" placeholder="apelido" autocomplete="off">
-                            <small id="emailHelp" class="form-text text-muted">50 caracteres no maximo</smal>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <div class="form-group">
-                                <label class="input-label" for="floatingInput">BI:<span style="color:red">*</span></label>
-                                <input required="true" id="bi" type="text" class="form-control" name="bi" placeholder="bi" autocomplete="off">
-                                <small id="bi_msg_req" class="form-text text-muted">13 caracteres</small>
-                            </div>
-                        </div>
-                   
-                  
-                        <div class="col">
-                            <div class="form-group">
-                                <label class="input-label" for="floatingInput">Nuit:<span style="color:red">*</span></label>
-                                <input required="true" id="nuit" type="text" class="form-control" name="nuit" placeholder="nuit" autocomplete="off">
-                                <small id="nuit_msg_req" class="form-text text-muted">8 caracteres</small>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row">
-                        <div class="col">
-                            <label class="input-label" for="floatingInput">Nacionalidade:<span style="color:red">*</span></label>
-                            <input required="true" type="text" class="form-control" name="nacionalidade" placeholder="nacionalidade">
-                            
-                        </div>
-                    
-                        <div class="col">
-                            <label class="input-label" for="floatingInput">Email:<span style="color:red">*</span></label>
-                            <input required="true" type="text" class="form-control" name="email" placeholder="email">
-                            <small id="emailHelp" class="form-text text-muted">deve conter &quot;@&quot;</smal>
-                        </div>
-                    </div>
-                    <div class="row">
-                    <div class="col-md-6">
-                        <label for="validationCustom04" class="form-label">Nivel:<span style="color:red">*</span></label>
-                        <select id="nivel" name="nivel" class="form-select" required>
-                            <option selected disabled value="">Escolha..</option>
-                            @foreach($niveis as $nivel)
-                                <option value="{{$nivel->id_nivel}}">{{$nivel->designacao_nivel}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="validationCustom04" class="form-label">Faculdade</label>
-                        <select id="faculdade" name="faculdade" class="form-select" required>
-                            <option selected disabled value="">Escolha..</option>
-                            @foreach($faculdades as $faculdade)
-                                <option value="{{$faculdade->id_faculdade}}">{{$faculdade->nome_faculdade}}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
-            
-                Genero:
-                <br>
-                Masculino:<input type="radio" value="masculino" name="genero"><br>
-                Femenino:
-                <input  type="radio" value="femenino" name="genero">
-                <div class="row" id="div-button">
-                    <button class="rounded bg-green-600 text-white px-2 py-1" id="submit" onclick="reg_docente(event)">Registar</button>
-                </div>
-            </form>
+    @csrf
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="input-label" for="nome">Nome:<span style="color:red">*</span></label>
+                <input type="text" class="form-control" name="nome" placeholder="nome" autocomplete="off">
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="input-label" for="apelido">Apelido:<span style="color:red">*</span></label>
+                <input type="text" class="form-control" name="apelido" placeholder="apelido" autocomplete="off">
+                <small id="emailHelp" class="form-text text-muted">50 caracteres no máximo</small>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="form-group">
+                <label class="input-label" for="bi">BI:<span style="color:red">*</span></label>
+                <input required id="bi" type="text" class="form-control" name="bi" placeholder="bi" autocomplete="off">
+                <small id="bi_msg_req" class="form-text text-muted">13 caracteres</small>
+            </div>
+        </div>
+        <div class="col">
+            <div class="form-group">
+                <label class="input-label" for="nuit">Nuit:<span style="color:red">*</span></label>
+                <input required id="nuit" type="text" class="form-control" name="nuit" placeholder="nuit" autocomplete="off">
+                <small id="nuit_msg_req" class="form-text text-muted">8 caracteres</small>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="input-label" for="nacionalidade">Nacionalidade:<span style="color:red">*</span></label>
+            <input required type="text" class="form-control" name="nacionalidade" placeholder="nacionalidade">
+        </div>
+        <div class="col">
+            <label class="input-label" for="email">Email:<span style="color:red">*</span></label>
+            <input required type="text" class="form-control" name="email" placeholder="email">
+            <small id="emailHelp" class="form-text text-muted">deve conter "@"</small>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <label class="input-label" for="data_nascimento">Data de Nascimento:</label>
+            <input type="date" class="form-control" name="data_nascimento" placeholder="Data de nascimento">
+        </div>
+        <div class="col">
+            <label class="input-label" for="ano_comeco_carreira">Ano de Começo de Carreira:</label>
+            <input type="number" class="form-control" name="ano_comeco_carreira" placeholder="Ano de começo de carreira" min="1900" max="{{ date('Y') }}">
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-6">
+            <label for="nivel" class="form-label">Nivel:<span style="color:red">*</span></label>
+            <select id="nivel" name="nivel" class="form-select" required>
+                <option selected disabled value="">Escolha..</option>
+                @foreach($niveis as $nivel)
+                    <option value="{{$nivel->id_nivel}}">{{$nivel->designacao_nivel}}</option>
+                @endforeach
+            </select>
+        </div>
+        <div class="col-md-6">
+            <label for="faculdade" class="form-label">Faculdade</label>
+            <select id="faculdade" name="faculdade" class="form-select" required>
+                <option selected disabled value="">Escolha..</option>
+                @foreach($faculdades as $faculdade)
+                    <option value="{{$faculdade->id_faculdade}}">{{$faculdade->nome_faculdade}}</option>
+                @endforeach
+            </select>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            Gênero:<br>
+            Masculino: <input type="radio" value="masculino" name="genero"><br>
+            Feminino: <input type="radio" value="femenino" name="genero">
+        </div>
+    </div>
+    <div class="row" id="div-button">
+        <button class="rounded bg-green-600 text-white px-2 py-1" id="submit" onclick="reg_docente(event)">Registar</button>
+    </div>
+</form>
         </div>
     
     </div>

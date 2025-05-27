@@ -181,6 +181,16 @@
                             <label class="input-label" for="floatingInput">Email</label>
                         </div>
                     </div>
+                    <div class="row">
+                    <div class="col">
+                        <label class="input-label" for="data_nascimento">Data de Nascimento:</label>
+                        <input type="date" class="form-control" name="data_nascimento" value="{{$docente->data_nascimento}}" placeholder="Data de nascimento" disabled>
+                    </div>
+                    <div class="col">
+                        <label class="input-label" for="ano_comeco_carreira">Ano de Começo de Carreira:</label>
+                        <input type="number" class="form-control" name="ano_comeco_carreira" placeholder="Ano de começo de carreira" min="1900" max="{{ date('Y') }}" value="{{$docente->ano_comeco_carreira}}" disabled>
+                    </div>
+                </div>
                 <h3>Informação Académica</h3>
                 <input type="hidden" id="temp-faculdade" value="{{$docente->id_faculdade_in_docente}}">
                 <input type="hidden" id="temp-nivel" value="{{$docente->id_nivel}}">
@@ -344,6 +354,16 @@
                             <input required="true" id="nuit" type="text" class="form-control" name="nuit" value="{{$docente->nuit}}" placeholder="nuit" autocomplete="off">
                             <small id="nuit_msg_req" class="form-text text-muted">8 caracteres</small>
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        <label class="input-label" for="data_nascimento">Data de Nascimento:</label>
+                        <input type="date" class="form-control" name="data_nascimento" value="{{$docente->data_nascimento}}" placeholder="Data de nascimento">
+                    </div>
+                    <div class="col">
+                        <label class="input-label" for="ano_comeco_carreira">Ano de Começo de Carreira:</label>
+                        <input type="number" class="form-control" name="ano_comeco_carreira" placeholder="Ano de começo de carreira" min="1900" max="{{ date('Y') }}" value="{{$docente->ano_comeco_carreira}}">
                     </div>
                 </div>
                 <div class="row">
