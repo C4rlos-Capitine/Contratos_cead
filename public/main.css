@@ -270,8 +270,8 @@ margin-top: 10px;
 
 
 .rounded{
-    width: fit-content;
-    padding: max-content !important;
+    width: fit-content !important;
+    padding: fit-content !important;
 }
 
 }
