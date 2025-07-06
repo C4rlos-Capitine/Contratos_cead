@@ -7,7 +7,7 @@
     <title>Contrato</title>
     <style>
         body {
-            font-family: Garamond;
+            
             font-size: 12px;
             line-height: 1.7;
         }
@@ -29,6 +29,10 @@
         p {
             text-align: justify;
             line-height: 1.2;
+            font-family:{{$fonte->nome_font}}
+        }
+        span{
+            font-family:{{$fonte->nome_font}}
         }
         table {
             border-collapse: collapse;
@@ -63,8 +67,8 @@
         }
     </style>
 </head>
-<body>
-    <header>
+<body style="font-family: {{ $fonte->nome_font }}; font-size: {{ $tamanhoFonte->tamanho_fonte }}px; line-height: 1.7;">
+    <header style="font-family:{{$fonte->nome_fonte}}">
         @php
         $imagePath = public_path('header.png');
         $imageData = file_exists($imagePath) ? base64_encode(file_get_contents($imagePath)) : null;
@@ -113,12 +117,12 @@
         <p>{!! nl2br($clausulaIntroducao->descricao_clausula) !!}</p>
     @endif
 
-    <div class="doc-title"><b>Primeira</b></div>
-    <div class="doc-title"><b>(Objecto do contrato)</b></div>
+    <div class="doc-title" style="font-family:{{$fonte->nome_fonte}}"><b>Primeira</b></div>
+    <div class="doc-title" style="font-family:{{$fonte->nome_fonte}}"><b>(Objecto do contrato)</b></div>
     <p>
         O presente Contrato tem por objecto a prestação de serviços a tempo parcial como Tutor de Especialidade, no âmbito da actividade do Centro de Educação Aberta e à Distância (CEAD), nos seguintes módulos:
     </p>
-    <div class="table">
+    <div class="table" style="font-family:{{$fonte->nome_fonte}}">
         <table>
             <tr>
                 <th class="modulos-col">Módulo</th>
@@ -145,12 +149,12 @@
 
 <!-- Renderizar as outras cláusulas -->
 @foreach($outrasClausulas as $clausula)
-    <div class="doc-title"><b>{{ $clausula->ordem_clausula }}ª ({{ $clausula->titulo_clausula }})</b></div>
+    <div class="doc-title" style="font-family:{{$fonte->nome_fonte}}"><b>{{ $clausula->ordem_clausula }}ª ({{ $clausula->titulo_clausula }})</b></div>
     @php
         // Adiciona recuo nas linhas que começam com número e ponto após quebra de linha
         $descricao = preg_replace(
             '/(^|\r\n|\n|\r)(\d+\.)/',
-            '$1<span style="display:inline-block; margin-left: 30px; padding:30px;">$2',
+            '$1<span style="display:inline-block; margin-left: 30px; padding:30px; font-family:{{$fonte->nome_fonte}}">$2',
             $clausula->descricao_clausula
         );
         // Fecha o span no final da linha

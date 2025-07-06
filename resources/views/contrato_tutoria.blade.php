@@ -6,9 +6,9 @@
     <title>Contrato</title>
     <style>
         body {
-            font-family: Garamond;
             font-size: 12px;
             line-height: 1.7;
+            margin-top: 0;
         }
         main {
             width: 90%;
@@ -16,7 +16,11 @@
             text-align: center;
         }
         header {
+            margin-top: 0;
             text-align: center;
+        }
+        #header-img{
+            margin-top: 0;
         }
         footer {
             text-align: center;
@@ -62,7 +66,7 @@
         }
     </style>
 </head>
-<body>
+<body style="font-family: {{ $fonte->nome_font }}; font-size: {{ $tamanhoFonte->tamanho_fonte }}px; line-height: 1.7;">
     <header>
         @php
         $imagePath = public_path('header.png');
@@ -83,7 +87,7 @@
              
             
         @endphp
-        <img src="{{ $imageSrc }}" width="90%" height="150px" alt="Image">
+        <img id="header-img" src="{{ $imageSrc }}" width="90%" height="150px" alt="Image">
     </header>
     <main>
     @php
@@ -181,7 +185,7 @@
             @endforeach
         </table>
         </div>
-
+        </br>
       <!-- Renderizar as outras cláusulas -->
         @foreach($outrasClausulas as $clausula)
     </br>

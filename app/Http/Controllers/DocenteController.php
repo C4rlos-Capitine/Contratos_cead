@@ -243,6 +243,7 @@ class DocenteController extends Controller
         try {
             //return response()->json(["response"=>$request->all()]);
             //$cont = App\Http\Controllers\LecionaController check_disciplinas_in_contrato($request);
+
             $rules = [
                 'ano' => 'required',
                 'id_docente' => 'required',
@@ -315,6 +316,16 @@ class DocenteController extends Controller
             ->where('lecionas.id_tipo_contrato_in_leciona', 1)
             ->get();
 
+            $totalHoras = DB::table('lecionas')
+            ->join('disciplinas', 'disciplinas.codigo_disciplina', '=', 'lecionas.codigo_disciplina_in_leciona')
+            ->where('ano_contrato', $request->ano)
+            ->where('id_docente_in_leciona', $request->codigo_disciplina)
+            ->sum('horas_contacto');
+
+            DB::table('contratos')
+            ->where('id_docente_in_contrato', $request->id_docente)
+            ->where('ano_contrato',  $request->ano)
+            ->update(['carga_horaria' => $totalHoras]);
             //'response' => 'disciplina alocada com sucesso', 
             return response()->json(['response' => 'disciplina alocada com sucesso','novo_registo' => $novo_registo, 'status'=>1], 201);
         } catch (\Exception $e) {

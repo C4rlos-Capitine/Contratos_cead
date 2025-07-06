@@ -6,6 +6,10 @@
     }
     nav.navbar.navbar-expand-lg.navbar-light.bg-light.border-bottom {
     background-color: #FFF59D !important;
+    /* position: fixed;
+    top: 0;
+    z-index: 1000;
+    width: 100%;*/
 }
   </style>
  <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">

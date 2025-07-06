@@ -18,6 +18,8 @@ use App\Models\Leciona;
 use App\Models\Tipo_contrato;
 use App\Models\Contrato_laboratorio;
 use App\Models\clausula_contrato;
+use App\Models\Table_fonte;
+use App\Models\tamanho_fonte;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
@@ -201,10 +203,11 @@ public function generatePdf_contrato($id_docente = null, $ano = null)
             );
         }
         $representante = PDFController::get_representanteAtivo();
-
+   $fonte = Table_fonte::where('id_fonte', 1)->first();
+     $tamanhoFonte = tamanho_fonte::where('id_tamanho_fonte', 1)->first();
     // Passar os dados para a view
     $bladeView = 'contrato_tutoria'; // Nome do arquivo Blade
-    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas', 'representante'))->render();
+    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas', 'representante', 'fonte', 'tamanhoFonte'))->render();
     $filename = 'contrato.pdf';
 
     // Gerar o PDF
@@ -272,10 +275,12 @@ public function previewContrato()
         );
     }
         $representante = PDFController::get_representanteAtivo();
+        $fonte = Table_fonte::where('id_fonte', 1)->first();
+        $tamanhoFonte = tamanho_fonte::where('id_tamanho_fonte', 1)->first();
 
     // Renderizar a view normalmente (sem gerar PDF)
      $bladeView = 'contrato_tutoria_preview'; // Nome do arquivo Blade
-    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas', 'representante'))->render();
+    $html = view($bladeView, compact('docente', 'disciplinas', 'clausulas', 'representante', 'fonte', 'tamanhoFonte'))->render();
     $filename = 'contrato.pdf';
 
     // Gerar o PDF

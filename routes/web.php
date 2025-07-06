@@ -19,6 +19,9 @@ use App\Http\Controllers\ContratoLaboratorioController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\TecnicoController;
 use App\Http\Controllers\Contracto_labController;
+use App\Http\Controllers\FonteController;
+
+use App\Http\Controllers\tamanho_fonteController;
 
 use App\Http\Controllers\ClausulaController;
 
@@ -207,8 +210,11 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/centros/edit/{id}', [CentroRecursoController::class, 'edit'])->name('edit');
     Route::post('/centros/update', [CentroRecursoController::class, 'update'])->name('update');
     Route::get('/centro_recursos/list', [CentroRecursoController::class, 'list2'])->name('list2');
-
+   // Route::post('/fonte/save', [FonteController::class, 'save'])->name('save');
+    //Route::get('/fonte/get', [FonteController::class, 'get'])->name('get');
+    Route::post('/fonte/update', [FonteController::class, 'update'])->name('update');
    
+    Route::post('/tamanho_fonte/update', [tamanho_fonteController::class, 'update'])->name('update');   
 });
 Route::get('/centros/teste', [CentroRecursoController::class, 'teste'])->name('teste');
 Route::post('/disciplina/associar_save', [DisciplinaController::class, 'associar_ao_curso'])->name('associar_ao_curso');

@@ -60,7 +60,7 @@ try:
     print(f"sensibilidade (recall): {recall:.2}")
     # Salvar o modelo treinado e o encoder
     joblib.dump(model, 'C:\\wamp64\\www\\cead_pro\\python\\modelo_rl.joblib')
-    joblib.dump(encoder, 'C:\\wamp64\\www\\cead_pro\\ython\\encoder_rl.joblib')
+    joblib.dump(encoder, 'C:\\wamp64\\www\\cead_pro\\python\\encoder_rl.joblib')
     print("Modelo treinado e salvo com sucesso!")
 
 except FileNotFoundError:

@@ -37,13 +37,19 @@ class ContratoController extends Controller
                 $hcontacto += $disciplina->horas_contacto;
             }
 
+            $totalHoras = DB::table('lecionas')
+            ->join('disciplinas', 'disciplinas.codigo_disciplina', '=', 'lecionas.codigo_disciplina_in_leciona')
+            ->where('ano_contrato', $request->ano)
+            ->where('id_docente_in_leciona', $request->id_docente)
+            ->sum('horas_contacto');
+
             $total_ganho = $hcontacto * $docente->remuneracao_hora;            ;
 
             $contrato = new Contrato;
             $contrato->id_docente_in_contrato = $request->id_docente;
             $contrato->id_tipo_contrato_in_contrato = $request->tipo_contrato;
             $contrato->ano_contrato = $request->ano;
-            $contrato->carga_horaria = $hcontacto;
+            $contrato->carga_horaria = $totalHoras;
             $contrato->remuneracao = $total_ganho;
             $contrato->assinado_docente = "Não";
             $contrato->assinado_up = "Não";
@@ -250,6 +256,7 @@ class ContratoController extends Controller
         }
 
     }
+
     public static function getDisciplinasLecionadas($id_docente, $tipo_contrato)
     {
   

@@ -20,6 +20,23 @@
         padding: 5px;
         text-align: left;
     }
+    #font-1{
+        font-family: Verdana;
+    }
+    #font-2{
+        font-family: Times;
+    }
+    #font-3{
+        font-family:   'Gill Sans';
+    }
+    #font-4{
+        font-family: Helvetica;
+    }
+    #font-5{
+        font-family: Calibri;
+    }
+
+    
 
 
 </style>
@@ -39,10 +56,42 @@
         <div class="container-fluid">
             <div id="info">
                 <h1 class="mt-4">Cláusula do Contrato</h1>
-    </br>
-                <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/clausulas/create">Nova Clausula<i class="fa-solid fa-plus action-secondary"></i></a>  
-                <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/contrato/preview">Pré - visualizar<i class="fa-regular fa-eye action-secondary"></i></a>  
-    
+                </br>
+                <div class="row">
+                    <div class="col">
+                        <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/clausulas/create">Nova Clausula<i class="fa-solid fa-plus action-secondary"></i></a>  
+                    </div>
+                    <div class="col">
+                        <a class="rounded bg-green-600 text-white px-2 py-1 new-reg" href="/contrato/preview">Pré - visualizar<i class="fa-regular fa-eye action-secondary"></i></a>  
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-6">
+                        <label class="input-group-text" for="inputGroupSelect01">Fontes</label>
+                            <select class="form-select" id="inputGroupSelect02" onchange="updateFonte(this.value)">
+                                <option selected>Selecione a fonte</option>
+                                <option id="font-1" value="Verdana">Verdana</option>
+                                <option id="font-2" value="Times">Times New Roman</option>
+                                <option id="font-3" value="Gill Sans">Gill Sans</option>
+                                <option id="font-4" value="Helvetica">Helvetica</option>
+                                <option id="font-5" value="Calibri">Calibri</option>
+                                <option id="font-6" value="sans-serif">sans-serif</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col">
+                        <div class="input-group mb-6">
+                        <label class="input-group-text" for="inputGroupSelect01">Fontes</label>
+                            <select class="form-select" id="inputGroupSelect02" onchange="updateTamanhoFonte(this.value)">
+                                <option selected>Selecione o tamanho da fonte</option>
+                                <option value="10">10 pt</option>
+                                <option value="11">11 pt</option>
+                                <option value="12">12 pt</option>
+                                <option value="13">13 pt</option>
+                                <option value="14">14 pt</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
                 <div id="feedback"></div>
                 </br>
                 <table id="example" class="table table-hover" style="width:100%">
@@ -187,6 +236,54 @@
 
     function detalhesClausula(element){
         window.location.href = "/clausulas/detalhes/"+element.getAttribute('data-id');
+    }
+
+    function updateFonte(new_font){
+        const formData = $('#clausula-reg').serialize();
+        $.ajaxSetup({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST', // Método HTTP PUT
+            url: `/fonte/update`, // URL com o ID da cláusula
+            data: {new_font:new_font}, // Dados do formulário
+            success: function (response) {
+                console.log(response)
+                alert(response);
+            },
+            error: function (xhr) {
+                // Exibe erros de validação ou outros erros
+                console.log(xhr)
+                    alert('Erro ao atualizar a cláusula.');
+            
+            }
+        });
+    }
+
+    function updateTamanhoFonte(new_font){
+        const formData = $('#clausula-reg').serialize();
+        $.ajaxSetup({
+            headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+        $.ajax({
+            type: 'POST', // Método HTTP PUT
+            url: `/tamanho_fonte/update`, // URL com o ID da cláusula
+            data: {new_size:new_font}, // Dados do formulário
+            success: function (response) {
+                console.log(response)
+                alert(response);
+            },
+            error: function (xhr) {
+                // Exibe erros de validação ou outros erros
+                console.log(xhr)
+                    alert('Erro ao atualizar a cláusula.');
+            
+            }
+        });
     }
     </script>
 
