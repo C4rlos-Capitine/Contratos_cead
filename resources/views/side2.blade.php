@@ -46,11 +46,11 @@
                         <span class="d-none d-sm-inline mx-1"><i class="fa-solid fa-file-contract" style="color: #004D40;margin-right: 5px;"></i>Contratos</span>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                    <div id="load-contrato-view" data-value="/clausulas/ver" class="nav-content clickable"><label class="menu-label">Cláusulas</label></div>
-                        <div id="load-contrato-view" data-value="/contrato/ver" class="nav-content clickable"><label class="menu-label">Contratos de Tutoria</label></div>
-                        <div id="load-contrato-view" data-value="/contrato_ta/contrato_trib_admnistrativo/" class="nav-content clickable"><label class="menu-label">Contratos no TA</label></div>
-                        <div id="load-contrato-view-lab" data-value="/contrato/ver_lab" class="nav-content clickable"><label class="menu-label">Contratos de técnico de laboratório</label></div>
-                        <div id="load-contrato-gerar" data-value="/contrato/gerar" class="nav-content clickable"><label class="menu-label">Gerar Contrato</label></div>
+                    <div id="load-contrato-view" data-value="/clausulas/ver" class="nav-content clickable" onclick="loadPage(this)"><label class="menu-label">Cláusulas</label></div>
+                        <div id="load-contrato-view" data-value="/contrato/ver" class="nav-content clickable" onclick="loadPage(this)"><label class="menu-label">Contratos de Tutoria</label></div>
+                        <div id="load-contrato-view" data-value="/contrato_ta/contrato_trib_admnistrativo/" class="nav-content clickable" onclick="loadPage(this)"><label class="menu-label">Contratos no TA</label></div>
+                        <div id="load-contrato-view-lab" data-value="/contrato/ver_lab" class="nav-content clickable" onclick="loadPage(this)"><label class="menu-label">Contratos de técnico de laboratório</label></div>
+                        <div id="load-contrato-gerar" data-value="/contrato/gerar" class="nav-content clickable" onclick="loadPage(this)"><label class="menu-label">Gerar Contrato</label></div>
                     </ul>
                 </div><!-- /clausulas/ver -->
         @elseif(auth()->user()->tipo_user == 2)
