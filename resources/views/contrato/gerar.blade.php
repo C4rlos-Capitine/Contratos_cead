@@ -73,6 +73,81 @@
         }
     });
 }
+
+
+function disciplinas_docente(id){
+    //ano_contrato
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: '/docente/get_disciplinas',
+        data: { ano: document.getElementById('ano_contrato').value, id_docente: id }, // Passa o id_docente aqui
+        success: function (response) {
+            console.log(response);
+            console.log(response);
+            const tbody = $('#disciplinas');
+            tbody.empty(); // Clear the table before filling
+           // $('#list_docentes_title').text(`Lista de áreas ${id_docente}`);
+
+            // Iterate over the data and create table rows
+            response.response.forEach(disciplina => {
+                const row = $('<tr></tr>');
+                row.append($('<td></td>').text(disciplina.nome_disciplina));
+                row.append($('<td></td>').text(disciplina.designacao_curso));
+                //const buttonHtml = `<button id="'${disciplina.codigo_disciplina_in_leciona}'" onclick="disciplinas_docente('${docente.id_docente}')">Ver Disciplinas</button>`;
+                //row.append($('<td></td>').html(buttonHtml));
+                tbody.append(row);
+            });
+           $('#modal-lista-disciplinas').modal('show');
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+
+
+function gerar(id){
+        if(confirm("Gerar contrato?")){
+    
+    $.ajaxSetup({
+        headers: {
+          'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    console.log("ola");
+    event.preventDefault(); // Prevent the form from being submitted traditionally
+
+    console.log("ola");
+    $.ajax({
+        type: 'POST',
+        url: '/contrato/create',
+        data: {id_docente: id, tipo_contrato: 1, ano: document.getElementById("ano_contrato").value},
+        success: function (data) {
+            console.log(data.response);
+           // $('#feedback').html('alert(<div class="alert alert-success">' + data.response + '</div>)');
+           alert(data.response);
+           $(`#${id}`).remove();
+           if(data.status == "success"){
+            $('.modal-body').html('<div class="alert alert-success">' + data.response + '</div>');
+           }else{
+            $('.modal-body').html('<div class="alert alert-danger">' + data.response + '</div>');
+           }
+          
+          //$('.modal').show();
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
+}
+
             </script>
 
             <div class="input-group has-validation">
