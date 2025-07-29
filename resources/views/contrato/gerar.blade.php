@@ -37,7 +37,42 @@
                 $(document).ready(function(){
                     new DataTable('#example');
                 })
-            
+            function get_docentesAlocados_ano(){
+    //ano_contrato
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+
+    $.ajax({
+        type: 'GET',
+        url: '/contrato/docentes_alocados',
+        data: { ano: document.getElementById('ano_contrato').value }, // Passa o id_docente aqui
+        success: function (response) {
+            console.log(response);
+            console.log(response);
+            const tbody = $('#docentes_alocados');
+            tbody.empty(); // Clear the table before filling
+           // $('#list_docentes_title').text(`Lista de áreas ${id_docente}`);
+
+            // Iterate over the data and create table rows
+            response.docentes.forEach(docente => {
+                const row = $('<tr></tr>');
+                row.append($('<td></td>').text(docente.nome_docente));
+                const buttonHtml = `<button class="rounded bg-green-600 text-white px-2 py-1" id="'${docente.id_docente}'" onclick="disciplinas_docente('${docente.id_docente}')">Ver Disciplinas</button>`;
+                row.append($('<td></td>').html(buttonHtml));
+                const buttonHtml2 = `<button class="rounded bg-green-600 text-white px-2 py-1" id="'${docente.id_docente}'" onclick="gerar('${docente.id_docente}')">Gerar</button>`;
+                row.append($('<td></td>').html(buttonHtml2));
+                tbody.append(row);
+            });
+           // $('#modal-lista').modal('show');
+        },
+        error: function () {
+            alert("error");
+        }
+    });
+}
             </script>
 
             <div class="input-group has-validation">

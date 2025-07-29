@@ -178,4 +178,72 @@
     </div>
 
 </body>
+
+<script>
+     function get_tecnicos(){
+        var cod_disciplinas;
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    
+        $.ajax({
+            type: 'GET',
+            url: '/tec/all',
+            success: function (response) {
+                const tbody = $('#tecnicos');
+                tbody.empty(); 
+    
+                response.response.forEach(tecnico => {
+                    const row = $('<tr></tr>');
+                    row.append($('<td></td>').text(tecnico.nome_tecnico + ' ' + tecnico.apelido_tecnico));
+                    row.append($('<td></td>').text(tecnico.designacao_curso));
+    
+                    
+                    // Criar o select para disciplinas
+                    const selectDisciplina = $('<select></select>').attr('data-id-curso', tecnico.id_curso);
+                    selectDisciplina.append('<option value="">Selecione uma disciplina</option>');
+                    selectDisciplina.on('change', function() {
+                        // $('#codigo_disciplina').val = $(this).val();
+                        alert('Disciplina selecionada: ' + $(this).val());
+                        cod_disciplinas = $(this).val();
+                    });
+                    // Buscar as disciplinas para o curso
+                    $.ajax({
+                        type: 'GET',
+                        url: `/disciplina/get_disciplinas_curso?id_curso=${tecnico.id_curso}`,
+                        success: function (disciplinas) {
+                            disciplinas.forEach(disciplina => {
+                                selectDisciplina.append(
+                                    $('<option></option>')
+                                        .val(disciplina.codigo_disciplina)
+                                        .text(disciplina.nome_disciplina)
+                                );
+                               
+                            });
+                        },
+                        error: function () {
+                            alert("Erro ao carregar disciplinas");
+                        }
+                    });
+                    
+                    row.append($('<td></td>').append(selectDisciplina));
+                    tbody.append(row);
+                    // Adicionar coluna com botão
+                const button = $('<button>Gerar Contrato</button>').text('Gerar Contrato').on('click', function() {
+                    
+                    alert('Botão clicado para: ' + tecnico.id_tecnico+' disciplina'+' '+cod_disciplinas);
+                    reg_contr_laboratorio(tecnico.id_tecnico, cod_disciplinas, tecnico.id_curso, document.getElementById('ano').value)
+                });
+                row.append($('<td></td>').append(button));
+                });
+                $('#modal-lista-users').modal('show');
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+</script>
 </html>

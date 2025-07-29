@@ -24,6 +24,47 @@
         document.addEventListener("DOMContentLoaded", function() {
             document.getElementById('load-user-form').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
         });
+           function get_users(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    
+        $.ajax({
+            type: 'GET',
+            url: '/user/ver',
+// Passa o id_docente aqui
+            success: function (response) {
+                console.log(response);
+                console.log(response);
+                const tbody = $('#users');
+                tbody.empty(); // Clear the table before filling
+               // $('#list_docentes_title').text(`Lista de áreas ${id_docente}`);
+    
+                // Iterate over the data and create table rows
+                response.response.forEach(user => {
+                    const row = $('<tr></tr>');
+                    row.append($('<td></td>').text(user.name));
+                    if(user.tipo_user == 1){
+                        row.append($('<td></td>').text('Administrador'));
+                    }else{
+                        row.append($('<td></td>').text('Gestor')); 
+                    }
+                    
+                    //const buttonHtml = `<button id="'${docente.id_docente}'" onclick="disciplinas_docente('${docente.id_docente}')">Ver Disciplinas</button>`;
+                    //row.append($('<td></td>').html(buttonHtml));
+                   // const buttonHtml2 = `<button id="'${docente.id_docente}'" onclick="gerar('${docente.id_docente}')">Gerar</button>`;
+                   // row.append($('<td></td>').html(buttonHtml2));
+                    tbody.append(row);
+                });
+                $('#modal-lista-users').modal('show');
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
     </script>
 <body class="antialiased">
 

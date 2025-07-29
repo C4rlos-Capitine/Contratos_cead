@@ -29,6 +29,44 @@
     document.addEventListener("DOMContentLoaded", function() {
         document.getElementById('load-faculdade-form').style.backgroundColor = "rgba(9, 32, 76, 0.882)";
     });
+      function get_faculdades(){
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+    
+        $.ajax({
+            type: 'GET',
+            url: '/faculdade/vizualisar',
+// Passa o id_docente aqui
+            success: function (response) {
+                console.log(response);
+                console.log(response);
+                const tbody = $('#faculdades');
+                tbody.empty(); // Clear the table before filling
+               // $('#list_docentes_title').text(`Lista de áreas ${id_docente}`);
+    
+                // Iterate over the data and create table rows
+                response.faculdades.forEach(faculdade => {
+                    console.log(faculdade.nome_faculdade)
+                    const row = $('<tr></tr>');
+                    row.append($('<td></td>').text(faculdade.nome_faculdade));
+                    row.append($('<td></td>').text(faculdade.sigla_faculdade));
+                    const btAccoes = `<i class="fa-solid fa-trash action"></i>
+                                <i class="fa-solid fa-pen-to-square action" data-id="${faculdade.id_faculdade}" onclick="editFaculdade(this)"></i>
+                                <i class="fa-solid fa-eye action" data-id="" onclick="detalhesFaculdade(this)"></i>`;
+                    row.append($('<td></td>').html(btAccoes));
+                    tbody.append(row);
+                });
+                $('#modal-lista-faculdades').modal('show');
+            },
+            error: function () {
+                alert("error");
+            }
+        });
+    }
+
     </script>
 @include('side2')
         
