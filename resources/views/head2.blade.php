@@ -54,10 +54,10 @@
         <script src="{{ asset('javascript/funcoes2.js') }}"></script>
         <script src="{{ asset('javascript/buscar.js') }}"></script>
         <script src="{{ asset('javascript/funcoes_ver_contratos.js') }}"></script>
-        <script src="{{ asset('javascript/submit-forms.js') }}"></script>
-        <script src="{{ asset('javascript/update.js') }}"></script>
+        <script src="{{ url('javascript/submit-forms.js') }}"></script>
+        <script src="{{ url('javascript/update.js') }}"></script>
         <script src="{{ asset('javascript/template-controller.js') }}"></script>
-        <script src="{{asset('javascript/docente_verificar_campos.js')}}"></script>
+        <script src="{{url('javascript/docente_verificar_campos.js')}}"></script>
         <script src="{{asset('javascript/add_disciplina.js')}}"></script>
         <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
