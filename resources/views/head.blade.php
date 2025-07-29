@@ -60,7 +60,7 @@
     </style>
     <script src="Jquery/jq"></script>
     <!-- ... -->
-    <script src="javascript/submit-forms.js"></script>
+    <script src="{{asset('javascript/submit-forms.js')}}"></script>
     <script src="javascript/template-controller.js"></script>
     <!--<script src="javascript/template-controller2.js"></script>-->
     <!-- ... -->
